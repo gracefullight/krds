@@ -32,6 +32,7 @@ export const MuiButton: Components["MuiButton"] = {
   styleOverrides: {
     root: {
       borderRadius: getRadius("medium3"),
+      minWidth: "auto",
 
       variants: [
         // * variant
@@ -39,6 +40,23 @@ export const MuiButton: Components["MuiButton"] = {
           props: { variant: "outlined" },
           style: {
             border: 0,
+          },
+        },
+        {
+          props: {
+            variant: "text",
+          },
+          style: {
+            borderRadius: getRadius("small3"),
+            color: getPalette("text.basic"),
+
+            ":hover": {
+              backgroundColor: getPalette("button.text-fill-hover"),
+            },
+
+            ":active": {
+              backgroundColor: getPalette("button.text-fill-pressed"),
+            },
           },
         },
 
@@ -91,6 +109,176 @@ export const MuiButton: Components["MuiButton"] = {
           },
         },
 
+        // * variant, size
+        {
+          props: {
+            variant: "contained",
+            size: "xsmall",
+          },
+          style: {
+            paddingBottom: "4.5px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "4.5px",
+          },
+        },
+        {
+          props: {
+            variant: "contained",
+            size: "small",
+          },
+          style: {
+            paddingBottom: "8.5px",
+            paddingLeft: "12px",
+            paddingRight: "12px",
+            paddingTop: "8.5px",
+          },
+        },
+        {
+          props: {
+            variant: "contained",
+            size: "medium",
+          },
+          style: {
+            paddingBottom: "11px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
+            paddingTop: "11px",
+          },
+        },
+        {
+          props: {
+            variant: "contained",
+            size: "large",
+          },
+          style: {
+            paddingBottom: "13.5px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingTop: "13.5px",
+          },
+        },
+        {
+          props: {
+            variant: "contained",
+            size: "xlarge",
+          },
+          style: {
+            paddingBottom: "17.5px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+            paddingTop: "17.5px",
+          },
+        },
+        {
+          props: {
+            variant: "outlined",
+            size: "xsmall",
+          },
+          style: {
+            paddingBottom: "4.5px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "4.5px",
+          },
+        },
+        {
+          props: {
+            variant: "outlined",
+            size: "small",
+          },
+          style: {
+            paddingBottom: "8.5px",
+            paddingLeft: "12px",
+            paddingRight: "12px",
+            paddingTop: "8.5px",
+          },
+        },
+        {
+          props: {
+            variant: "outlined",
+            size: "medium",
+          },
+          style: {
+            paddingBottom: "11px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
+            paddingTop: "11px",
+          },
+        },
+        {
+          props: {
+            variant: "outlined",
+            size: "large",
+          },
+          style: {
+            paddingBottom: "13.5px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingTop: "13.5px",
+          },
+        },
+        {
+          props: {
+            variant: "outlined",
+            size: "xlarge",
+          },
+          style: {
+            paddingBottom: "17.5px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+            paddingTop: "17.5px",
+          },
+        },
+        {
+          props: {
+            variant: "text",
+            size: "xsmall",
+          },
+          style: {
+            paddingBottom: 0,
+            paddingLeft: "2px",
+            paddingRight: "2px",
+            paddingTop: 0,
+          },
+        },
+        {
+          props: {
+            variant: "text",
+            size: "small",
+          },
+          style: {
+            paddingBottom: "0.5px",
+            paddingLeft: "2px",
+            paddingRight: "2px",
+            paddingTop: "0.5px",
+          },
+        },
+        {
+          props: {
+            variant: "text",
+            size: "medium",
+          },
+          style: {
+            paddingBottom: "3px",
+            paddingLeft: "2px",
+            paddingRight: "2px",
+            paddingTop: "3px",
+          },
+        },
+        {
+          props: {
+            variant: "text",
+            size: "large",
+          },
+          style: {
+            paddingBottom: "5.5px",
+            paddingLeft: "2px",
+            paddingRight: "2px",
+            paddingTop: "5.5px",
+          },
+        },
+
         // * disabled
         {
           props: { disabled: true },
@@ -99,17 +287,20 @@ export const MuiButton: Components["MuiButton"] = {
             color: getPalette("text.disabled-on"),
           },
         },
+        // * disabled, variant
+        {
+          props: { disabled: true, variant: "text" },
+          style: {
+            backgroundColor: "transparent",
+            color: getPalette("text.disabled"),
+          },
+        },
 
         // * size
         {
           props: { size: "xsmall" },
           style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.xsmall"),
-
-            paddingBottom: "4.5px",
-            paddingLeft: "10px",
-            paddingRight: "10px",
-            paddingTop: "4.5px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.xsmall"),
@@ -121,11 +312,6 @@ export const MuiButton: Components["MuiButton"] = {
           style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.small"),
 
-            paddingBottom: "8.5px",
-            paddingLeft: "12px",
-            paddingRight: "12px",
-            paddingTop: "8.5px",
-
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.small"),
             },
@@ -135,11 +321,6 @@ export const MuiButton: Components["MuiButton"] = {
           props: { size: "medium" },
           style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.medium"),
-
-            paddingBottom: "11px",
-            paddingLeft: "16px",
-            paddingRight: "16px",
-            paddingTop: "11px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.medium"),
@@ -151,11 +332,6 @@ export const MuiButton: Components["MuiButton"] = {
           style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.large"),
 
-            paddingBottom: "13.5px",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            paddingTop: "13.5px",
-
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.large"),
             },
@@ -165,11 +341,6 @@ export const MuiButton: Components["MuiButton"] = {
           props: { size: "xlarge" },
           style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.large"),
-
-            paddingBottom: "17.5px",
-            paddingLeft: "24px",
-            paddingRight: "24px",
-            paddingTop: "17.5px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.large"),
