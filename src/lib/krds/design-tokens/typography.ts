@@ -113,6 +113,32 @@ const TYPOGRAPHY = {
         letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
       },
     },
+    label: {
+      large: {
+        fontSize: get(TOKENS, "responsive-pc.font-size.label.large.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      medium: {
+        fontSize: get(TOKENS, "responsive-pc.font-size.label.medium.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      small: {
+        fontSize: get(TOKENS, "responsive-pc.font-size.label.small.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      xsmall: {
+        fontSize: get(TOKENS, "responsive-pc.font-size.label.xsmall.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+    },
   },
 
   mobile: {
@@ -248,6 +274,32 @@ const TYPOGRAPHY = {
         fontSize: get(TOKENS, "responsive-mobile.font-size.body.xsmall.value"),
         fontWeight: 700,
         lineHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+    },
+    label: {
+      large: {
+        fontSize: get(TOKENS, "responsive-mobile.font-size.label.large.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      medium: {
+        fontSize: get(TOKENS, "responsive-mobile.font-size.label.medium.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      small: {
+        fontSize: get(TOKENS, "responsive-mobile.font-size.label.small.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
+        letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
+      },
+      xsmall: {
+        fontSize: get(TOKENS, "responsive-mobile.font-size.label.xsmall.value"),
+        fontWeight: 400,
+        lienHeight: 1.5,
         letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
       },
     },
