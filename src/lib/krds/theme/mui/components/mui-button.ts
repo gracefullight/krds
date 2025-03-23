@@ -1,3 +1,4 @@
+import type { VariantStyleProps } from "@/lib/krds/theme/mui/components/component.types";
 import type { Components } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 
@@ -102,7 +103,7 @@ export const MuiButton: Components["MuiButton"] = {
         // * size
         {
           props: { size: "xsmall" },
-          style: ({ theme }: { theme: Theme }) => ({
+          style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.xsmall"),
 
             paddingBottom: "4.5px",
@@ -117,7 +118,7 @@ export const MuiButton: Components["MuiButton"] = {
         },
         {
           props: { size: "small" },
-          style: ({ theme }: { theme: Theme }) => ({
+          style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.small"),
 
             paddingBottom: "8.5px",
@@ -132,7 +133,7 @@ export const MuiButton: Components["MuiButton"] = {
         },
         {
           props: { size: "medium" },
-          style: ({ theme }: { theme: Theme }) => ({
+          style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.medium"),
 
             paddingBottom: "11px",
@@ -147,7 +148,7 @@ export const MuiButton: Components["MuiButton"] = {
         },
         {
           props: { size: "large" },
-          style: ({ theme }: { theme: Theme }) => ({
+          style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.large"),
 
             paddingBottom: "13.5px",
@@ -162,7 +163,7 @@ export const MuiButton: Components["MuiButton"] = {
         },
         {
           props: { size: "xlarge" },
-          style: ({ theme }: { theme: Theme }) => ({
+          style: ({ theme }: VariantStyleProps) => ({
             ...getTypography("pc.label.large"),
 
             paddingBottom: "17.5px",
