@@ -1,5 +1,5 @@
 {
-  "name": "sample-root",
+  "name": "@gracefullight/krds-root",
   "version": "0.0.0",
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
