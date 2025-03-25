@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import "@gracefullight/krds/reset.css";
 import "@/app/globals.css";
 import Providers from "@/components/providers";
 import pretendardGov from "@/lib/fonts";
