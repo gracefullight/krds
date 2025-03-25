@@ -1,5 +1,5 @@
 import type { VariantStyleProps } from "@/lib/krds/theme/mui/components/component.types";
-import type { Components } from "@mui/material";
+import { type Components, buttonClasses } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 
 import { getPalette } from "@/lib/krds/design-tokens/palettes";
@@ -33,6 +33,14 @@ export const MuiButton: Components["MuiButton"] = {
     root: {
       borderRadius: getRadius("medium3"),
       minWidth: "auto",
+
+      [`& .${buttonClasses.startIcon}`]: {
+        marginRight: "4px",
+      },
+
+      [`& .${buttonClasses.endIcon}`]: {
+        marginLeft: "4px",
+      },
 
       variants: [
         // * variant

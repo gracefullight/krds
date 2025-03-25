@@ -1,4 +1,6 @@
 import styles from "@/app/page.module.css";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import { Box, Button, Link, Typography } from "@mui/material";
 
 export default function Home() {
@@ -22,6 +24,7 @@ export default function Home() {
             rel="noopener noreferrer"
             variant="contained"
             color="primary"
+            startIcon={<RocketLaunchIcon />}
           >
             Deploy now
           </Button>
@@ -31,6 +34,7 @@ export default function Home() {
             rel="noopener noreferrer"
             variant="outlined"
             color="secondary"
+            endIcon={<MenuBookIcon />}
           >
             Read our docs
           </Button>
