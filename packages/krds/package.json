@@ -1,0 +1,38 @@
+{
+  "name": "@gracefullight/krds",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "gracefullight",
+    "email": "gracefullight.dev@gmail.com"
+  },
+  "imports": {
+    "#/*": "./dist/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
+  },
+  "dependencies": {
+    "es-toolkit": "^1.33"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsup": "^8.4.0",
+    "typescript": "*"
+  },
+  "peerDependencies": {
+    "@mui/icons-material": "^6",
+    "@mui/material": "^6",
+    "react": "^19",
+    "react-dom": "^19"
+  }
+}

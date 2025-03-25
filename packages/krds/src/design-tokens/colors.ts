@@ -2,10 +2,10 @@ import type {
   ColorKey,
   ColorTheme,
   ColorValue,
-} from "@/lib/krds/design-tokens/token.types";
+} from "#/design-tokens/token.types";
 
-import TOKENS from "@/lib/krds/design-tokens/tokens";
 import { get } from "es-toolkit/compat";
+import TOKENS from "#/design-tokens/tokens";
 
 export function getColor<K extends ColorKey, T extends ColorTheme = "light">(
   key: K,

@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from "@mui/material";
 
-import TOKENS from "@/lib/krds/design-tokens/tokens";
 import { get } from "es-toolkit/compat";
+import TOKENS from "#/design-tokens/tokens";
 
 const TYPOGRAPHY = {
   pc: {

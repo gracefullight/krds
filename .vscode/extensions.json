@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "biomejs.biome",
+    "pflannery.vscode-versionlens",
+    "streetsidesoftware.code-spell-checker",
+    "wix.vscode-import-cost",
+    "YoavBls.pretty-ts-errors",
+    "vitest.explorer"
+  ]
+}

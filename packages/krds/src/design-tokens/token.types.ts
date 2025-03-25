@@ -1,4 +1,4 @@
-import type tokens from "@/lib/krds/design-tokens/tokens";
+import type tokens from "#/design-tokens/tokens";
 
 export type ColorTheme = "light" | "high-contrast";
 

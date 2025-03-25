@@ -3,11 +3,11 @@ import type {
   ColorTheme,
   PaletteKey,
   PaletteValue,
-} from "@/lib/krds/design-tokens/token.types";
+} from "#/design-tokens/token.types";
 
-import { getColor } from "@/lib/krds/design-tokens/colors";
-import TOKENS from "@/lib/krds/design-tokens/tokens";
 import { get } from "es-toolkit/compat";
+import { getColor } from "#/design-tokens/colors";
+import TOKENS from "#/design-tokens/tokens";
 
 declare module "@mui/material/styles" {
   interface ColorSchemeOverrides {

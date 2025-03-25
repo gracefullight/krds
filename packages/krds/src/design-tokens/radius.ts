@@ -1,5 +1,5 @@
-import TOKENS from "@/lib/krds/design-tokens/tokens";
 import { get } from "es-toolkit/compat";
+import TOKENS from "#/design-tokens/tokens";
 
 type NumberTokens = typeof TOKENS.primitive.number;
 

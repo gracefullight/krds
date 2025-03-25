@@ -1,10 +1,7 @@
 import type { VariantStyleProps } from "@/lib/krds/theme/mui/components/component.types";
 import { type Components, buttonClasses } from "@mui/material";
-import type { Theme } from "@mui/material/styles";
 
-import { getPalette } from "@/lib/krds/design-tokens/palettes";
-import { getRadius } from "@/lib/krds/design-tokens/radius";
-import { getTypography } from "@/lib/krds/design-tokens/typography";
+import { getPalette, getRadius, getTypography } from "@gracefullight/krds";
 
 // ? https://mui.com/material-ui/api/button/
 declare module "@mui/material/Button" {

@@ -1,8 +1,7 @@
 "use client";
 
-import { getColor } from "@/lib/krds/design-tokens/colors";
-import { getTypography } from "@/lib/krds/design-tokens/typography";
 import * as components from "@/lib/krds/theme/mui/components";
+import { getColor, getTypography } from "@gracefullight/krds";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
