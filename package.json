@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "prepare": "husky",
-    "publish-packages": "turbo run build && changeset version && changeset publish",
+    "publish-packages": "turbo run build --filter=./packages/* && changeset version && changeset publish",
     "test": "vitest",
     "test:ci": "vitest run"
   },
