@@ -5,7 +5,9 @@
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -19,7 +21,8 @@
     "lint-staged": "^15.5.0",
     "sort-package-json": "^3.0.0",
     "turbo": "^2.4.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.0.9"
   },
   "packageManager": "pnpm@10.6.5"
 }
