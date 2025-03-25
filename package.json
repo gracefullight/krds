@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "prepare": "husky",
+    "publish-packages": "turbo run build && changeset version && changeset publish",
     "test": "vitest",
     "test:ci": "vitest run"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.28.1",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",
