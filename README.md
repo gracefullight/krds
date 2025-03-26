@@ -6,6 +6,6 @@
 
 - KRDS typography and spacing rules applied
 - Accessible and contrast-friendly color palette
-- Harmonized UI components styled with KRDS UX principles
+- Harmonized UI components styled with user-centered KRDS design guidelines
 - Fully compatible with MUI v6
 - Easily extendable and customizable
