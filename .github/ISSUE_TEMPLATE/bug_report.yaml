@@ -1,0 +1,59 @@
+name: Bug Report 🐞
+description: 테마에서 발생한 버그를 제보해주세요.
+title: "[Bug] "
+labels: ["bug"]
+
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: 요약
+      placeholder: 예) 버튼 색상이 고대비모드에서 보이지 않음
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 스크린샷
+      description: 문제가 발생한 화면의 스크린샷을 첨부해주세요.
+      placeholder: drag & drop 또는 복사 붙여넣기
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 상세 설명
+      placeholder: |
+        - 기대 동작: 고대비모드에서 버튼 텍스트가 보여야 함
+        - 실제 동작: 텍스트가 사라짐
+        - 재현 방법:
+          1. 버튼 클릭
+          2. 다크모드로 전환
+    validations:
+      required: true
+
+  - type: input
+    id: platform
+    attributes:
+      label: 사용 환경 (OS / Browser 등)
+      placeholder: 예) macOS 14.3 / Chrome 122
+    validations:
+      required: true
+
+  - type: input
+    id: node_version
+    attributes:
+      label: Node.js 버전
+      placeholder: 예) 18.19.0
+    validations:
+      required: true
+
+  - type: input
+    id: theme_version
+    attributes:
+      label: 테마 버전
+      placeholder: 예) 1.2.0
+    validations:
+      required: true

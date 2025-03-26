@@ -1,0 +1,38 @@
+name: Question ❓
+description: 테마 사용 중 궁금한 점이 있다면 남겨주세요.
+title: "[Question] "
+labels: ["question", "needs triage"]
+
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: 질문 요약
+      placeholder: 예) 이 테마는 MUI v5도 지원하나요?
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 상세 설명
+      description: 더 자세한 맥락이나 관련 내용을 알려주세요.
+      placeholder: 여기에 구체적인 질문 내용을 적어주세요.
+    validations:
+      required: true
+
+  - type: input
+    id: platform
+    attributes:
+      label: 사용 환경 (선택)
+      placeholder: 예) macOS / Chrome
+    validations:
+      required: false
+
+  - type: input
+    id: theme_version
+    attributes:
+      label: 사용 중인 테마 버전 (선택)
+      placeholder: 예) 1.2.0
+    validations:
+      required: false
