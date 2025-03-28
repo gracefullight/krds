@@ -15,13 +15,13 @@
     "@gracefullight/krds": "workspace:*",
     "@hookform/devtools": "^4.3.3",
     "@hookform/resolvers": "^4.1.3",
-    "@mui/icons-material": "^6.4.8",
-    "@mui/material": "^6.4.8",
-    "@mui/material-nextjs": "^6.4.3",
-    "@tanstack/react-query": "^5.69.0",
-    "@tanstack/react-query-devtools": "^5.69.0",
+    "@mui/icons-material": "^7.0.0",
+    "@mui/material": "^7.0.0",
+    "@mui/material-nextjs": "^7.0.0",
+    "@tanstack/react-query": "^5.69.3",
+    "@tanstack/react-query-devtools": "^5.69.3",
     "ag-grid-community": "^33.2.1",
-    "es-toolkit": "^1.33.0",
+    "es-toolkit": "^1.34.1",
     "jotai": "^2.12.2",
     "jotai-devtools": "^0.11.0",
     "next": "15.2.4",
@@ -33,7 +33,7 @@
     "@types/node": "*",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "19.0.0-beta-3229e95-20250315",
+    "babel-plugin-react-compiler": "19.0.0-beta-aeaed83-20250323",
     "typescript": "*"
   }
 }
