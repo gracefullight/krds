@@ -5,6 +5,7 @@ import "@gracefullight/krds/reset.css";
 import "@/app/globals.css";
 import Providers from "@/components/providers";
 import pretendardGov from "@/lib/fonts";
+import { Container } from "@mui/material";
 
 export const metadata: Metadata = {
   title: {
@@ -22,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="ko" className={pretendardGov.className}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Container maxWidth="xlarge" component="main">
+            {children}
+          </Container>
+        </Providers>
       </body>
     </html>
   );
