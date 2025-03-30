@@ -92,7 +92,7 @@ const TYPOGRAPHY = {
         letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
       },
       small: {
-        fontSize: get(TOKENS, "responsive-pc.font-size.heading.medium.value"),
+        fontSize: get(TOKENS, "responsive-pc.font-size.heading.small.value"),
         fontWeight: 700,
         lineHeight: 1.5,
         letterSpacing: get(TOKENS, "primitive.typo.letter-spacing.0.value"),
@@ -249,7 +249,7 @@ const TYPOGRAPHY = {
       small: {
         fontSize: get(
           TOKENS,
-          "responsive-mobile.font-size.heading.medium.value",
+          "responsive-mobile.font-size.heading.small.value",
         ),
         fontWeight: 700,
         lineHeight: 1.5,

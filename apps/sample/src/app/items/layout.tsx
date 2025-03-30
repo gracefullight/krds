@@ -5,7 +5,7 @@ import type { PropsWithChildren } from "react";
 export default function ItemsLayout({ children }: PropsWithChildren) {
   return (
     <Box>
-      <Typography>Items</Typography>
+      <Typography variant="heading-large">Items</Typography>
       <RouterTabs
         items={[
           { title: "Item One", href: "/items/item-one" },

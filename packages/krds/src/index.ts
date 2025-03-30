@@ -1,3 +1,6 @@
+// ? declare type 포함
+import "#/components";
+
 // ? token helper
 export { BREAKPOINTS } from "#/design-tokens/breakpoints";
 export { getColor } from "#/design-tokens/colors";
