@@ -1,3 +1,9 @@
 html {
   font-size: 62.5%; /* 62.5% of 16px = 10px */
 }
+
+/* ? https://github.com/orioncactus/pretendard/tree/main/packages/pretendard-gov */
+body {
+  font-family:
+    "Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
