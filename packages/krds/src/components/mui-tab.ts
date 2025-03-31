@@ -9,9 +9,7 @@ export const MuiTab: Components["MuiTab"] = {
   defaultProps: {},
   styleOverrides: {
     root: {
-      [`&.${tabClasses.selected}`]: {
-        color: getPalette("text.secondary"),
-      },
+      color: getPalette("text.subtle"),
     },
   },
 };
