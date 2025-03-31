@@ -15,11 +15,11 @@ interface TabItem {
   segment?: string;
 }
 
-interface ServerTabsProps {
+interface RouterTabsProps {
   items: TabItem[];
 }
 
-export default function RouterTabs({ items }: ServerTabsProps) {
+export default function RouterTabs({ items }: RouterTabsProps) {
   const selectedSegment = useSelectedLayoutSegment();
 
   const activeIndex = items.findIndex(
@@ -33,7 +33,7 @@ export default function RouterTabs({ items }: ServerTabsProps) {
       <Tabs
         value={currentIndex}
         onChange={noop}
-        aria-label="Server Navigation Tabs"
+        aria-label="router navigation tabs"
       >
         {items.map((tab) => (
           <Tab
