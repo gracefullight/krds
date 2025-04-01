@@ -2,10 +2,10 @@ import RouterTabs from "@/components/ui/tabs/router-tabs";
 import { Box, Typography } from "@mui/material";
 import type { PropsWithChildren } from "react";
 
-export default function ItemsLayout({ children }: PropsWithChildren) {
+export default function RouterTabsLayout({ children }: PropsWithChildren) {
   return (
     <Box>
-      <Typography variant="heading-large">Items</Typography>
+      <Typography variant="heading-large">Router Tabs</Typography>
       <RouterTabs
         items={[
           { title: "Item One", href: "/items/item-one" },

@@ -78,7 +78,6 @@ export const MuiTabs: Components["MuiTabs"] = {
           props: { style: "fill" },
           style: {
             backgroundColor: getPalette("action.secondary"),
-            borderRadius: getRadius("medium3"),
 
             [`& .${tabsClasses.indicator}`]: {
               display: "none",
@@ -86,7 +85,38 @@ export const MuiTabs: Components["MuiTabs"] = {
 
             [`& .${tabClasses.root}.${tabClasses.selected}`]: {
               backgroundColor: getPalette("action.secondary-active"),
+              borderColor: getPalette("action.secondary-active"),
               color: getPalette("text.inverse-static"),
+            },
+          },
+        },
+        {
+          props: { style: "fill", type: "primary" },
+          style: {
+            [`& .${tabClasses.root}`]: {
+              borderBlock: `1px solid ${getPalette("border.gray")}`,
+
+              "&:first-of-type": {
+                borderBottomLeftRadius: getRadius("medium3"),
+                borderTopLeftRadius: getRadius("medium3"),
+                borderLeft: `1px solid ${getPalette("border.gray")}`,
+              },
+
+              "&:not(:first-of-type)": {
+                borderLeft: `1px solid ${getPalette("border.gray")}`,
+              },
+
+              "&:last-of-type": {
+                borderBottomRightRadius: getRadius("medium3"),
+                borderTopRightRadius: getRadius("medium3"),
+                borderRight: `1px solid ${getPalette("border.gray")}`,
+              },
+
+              [`&.${tabClasses.selected}`]: {
+                borderBlockColor: getPalette("action.secondary-active"),
+                borderLeftColor: getPalette("action.secondary-active"),
+                borderRightColor: getPalette("action.secondary-active"),
+              },
             },
           },
         },
