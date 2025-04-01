@@ -24,7 +24,7 @@
     "sort-package-json": "^3.0.0",
     "turbo": "^2.4.4",
     "typescript": "^5",
-    "vitest": "^3.0.9"
+    "vitest": "^3.1.1"
   },
-  "packageManager": "pnpm@10.6.5"
+  "packageManager": "pnpm@10.7.1"
 }
