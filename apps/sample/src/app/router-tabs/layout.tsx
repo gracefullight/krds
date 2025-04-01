@@ -8,8 +8,8 @@ export default function RouterTabsLayout({ children }: PropsWithChildren) {
       <Typography variant="heading-large">Router Tabs</Typography>
       <RouterTabs
         items={[
-          { title: "Item One", href: "/items/item-one" },
-          { title: "Item Two", href: "/items/item-two" },
+          { title: "Item One", href: "/router-tabs/item-one" },
+          { title: "Item Two", href: "/router-tabs/item-two" },
         ]}
       />
       <Box>{children}</Box>
