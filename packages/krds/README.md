@@ -36,4 +36,6 @@ export default function MuiProvider({ children }: PropsWithChildren) {
   - theme
   - button
   - typography
-- [ ] Mui 컴포넌트 추가 제공: 0.3.0
+- [x] Mui 컴포넌트 추가: 0.3.0
+  - link
+  - tabs
