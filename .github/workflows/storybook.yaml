@@ -37,7 +37,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build Storybook
         run: pnpm --filter=@gracefullight/krds-storybook build
