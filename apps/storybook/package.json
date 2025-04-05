@@ -1,24 +1,25 @@
 {
   "name": "@gracefullight/krds-storybook",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "storybook dev -p 6006",
-    "build": "storybook build"
+    "build": "storybook build",
+    "dev": "storybook dev -p 6006"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@gracefullight/krds": "workspace:*",
-    "@mui/material": "^7.0.1",
     "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
     "@mui/x-date-pickers": "^8.0.0-beta.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3",
-    "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-designs": "^8.2.1",
+    "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-onboarding": "^8.6.12",
     "@storybook/addon-themes": "^8.6.12",
     "@storybook/blocks": "^8.6.12",
