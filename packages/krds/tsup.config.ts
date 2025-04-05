@@ -5,5 +5,4 @@ export default defineConfig({
   entry: ["src/index.ts"],
   format: ["cjs", "esm"],
   publicDir: "src/public",
-  watch: ["src/**/*"],
 });

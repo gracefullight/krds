@@ -41,33 +41,34 @@ export default function Home() {
         </div>
       </main>
       <footer className={styles.footer}>
-        <Button
-          variant="text"
+        <Link
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
           size="small"
+          type="subtle-none"
+          icon="external"
         >
           Learn
-        </Button>
-        <Button
+        </Link>
+        <Link
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-          variant="text"
-          size="small"
+          type="subtle"
+          icon="external"
         >
           Examples
-        </Button>
-        <Button
+        </Link>
+        <Link
           href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-          variant="text"
-          size="small"
+          size="medium"
+          icon="external"
         >
-          Go to nextjs.org →
-        </Button>
+          Go to nextjs.org
+        </Link>
       </footer>
     </div>
   );
