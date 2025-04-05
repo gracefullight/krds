@@ -40,7 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Storybook
-        run: pnpm --filter=@gracefullight/krds-storybook build
+        run: pnpm turbo build --filter=@gracefullight/krds-storybook
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
