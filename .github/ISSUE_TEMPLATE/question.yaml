@@ -8,7 +8,7 @@ body:
     id: summary
     attributes:
       label: 질문 요약
-      placeholder: 예) 이 테마는 MUI v6만 지원하나요?
+      placeholder: 예) 이 테마는 MUI v7만 지원하나요?
     validations:
       required: true
 
