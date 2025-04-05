@@ -22,3 +22,5 @@ export * from "#/components/mui-tabs";
 export * from "#/components/mui-text-field";
 export * from "#/components/mui-tooltip";
 export * from "#/components/mui-typography";
+
+export * from "#/components/mui-x-date-pickers";
