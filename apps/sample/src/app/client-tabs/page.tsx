@@ -2,7 +2,7 @@
 
 import type { SyntheticEvent } from "react";
 
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 
 const tabs = [
@@ -22,35 +22,72 @@ const tabs = [
 
 export default function ClientTabsPage() {
   const [activeTab, setActiveTab] = useState(0);
+  const [secondaryTab, setSecondaryTab] = useState(0);
 
   const handleTabChange = (_: SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
   return (
-    <Box>
-      <Typography variant="heading-large">Client Tabs</Typography>
-      <Tabs value={activeTab} onChange={handleTabChange} style="fill">
+    <Stack gap={2} divider={<Divider />}>
+      <Box>
+        <Typography variant="heading-large">Client Tabs</Typography>
+        <Tabs value={activeTab} onChange={handleTabChange} style="fill">
+          {tabs.map((tab, index) => (
+            <Tab
+              key={tab.title}
+              label={tab.title}
+              id={`tab-${index}`}
+              aria-controls={`tabpanel-${index}`}
+            />
+          ))}
+        </Tabs>
         {tabs.map((tab, index) => (
-          <Tab
+          <Box
             key={tab.title}
-            label={tab.title}
-            id={`tab-${index}`}
-            aria-controls={`tabpanel-${index}`}
-          />
+            role="tabpanel"
+            hidden={activeTab !== index}
+            id={`tabpanel-${index}`}
+            aria-labelledby={`tab-${index}`}
+          >
+            {activeTab === index && tab.content}
+          </Box>
         ))}
-      </Tabs>
-      {tabs.map((tab, index) => (
-        <Box
-          key={tab.title}
-          role="tabpanel"
-          hidden={activeTab !== index}
-          id={`tabpanel-${index}`}
-          aria-labelledby={`tab-${index}`}
+      </Box>
+      <Box>
+        <Tabs
+          value={secondaryTab}
+          onChange={(_, newValue) => setSecondaryTab(newValue)}
+          type="secondary"
+          style="line"
         >
-          {activeTab === index && tab.content}
-        </Box>
-      ))}
-    </Box>
+          {tabs.map((tab, index) => (
+            <Tab
+              key={tab.title}
+              label={tab.title}
+              id={`tab-${index}`}
+              aria-controls={`tabpanel-${index}`}
+              sx={{
+                padding: "0px",
+              }}
+            />
+          ))}
+        </Tabs>
+        {tabs.map((tab, index) => (
+          <Box
+            key={tab.title}
+            role="tabpanel"
+            hidden={secondaryTab !== index}
+            id={`tabpanel-${index}`}
+            aria-labelledby={`tab-${index}`}
+            sx={{
+              padding: "0px",
+            }}
+          >
+            {secondaryTab === index && tab.content}
+          </Box>
+        ))}
+      </Box>
+    </Stack>
   );
 }

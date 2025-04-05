@@ -27,6 +27,7 @@ export const MuiTabs: Components["MuiTabs"] = {
 
       variants: [
         // * type
+        // * primary는 PC로만 제공
         {
           props: { type: "primary" },
           style: {
@@ -37,6 +38,7 @@ export const MuiTabs: Components["MuiTabs"] = {
             [`& .${tabClasses.root}`]: {
               ...getTypography("pc.heading.small"),
 
+              backgroundColor: getPalette("surface.white-subtle"),
               paddingBottom: "13.5px",
               paddingTop: "13.5px",
             },
@@ -75,6 +77,32 @@ export const MuiTabs: Components["MuiTabs"] = {
           },
         },
         {
+          props: { style: "line", type: "primary" },
+          style: {
+            [`& .${tabClasses.root}`]: {
+              borderBottom: `2px solid ${getPalette("border.gray")}`,
+              paddingLeft: "15px",
+              paddingRight: "15px",
+            },
+          },
+        },
+        {
+          props: { style: "line", type: "secondary" },
+          style: ({ theme }: VariantStyleProps) => ({
+            [`& .${tabClasses.root}`]: {
+              paddingLeft: "7.5px",
+              paddingRight: "7.5px",
+            },
+
+            [theme.breakpoints.down("medium")]: {
+              [`& .${tabClasses.root}`]: {
+                paddingLeft: "11.5px",
+                paddingRight: "11.5px",
+              },
+            },
+          }),
+        },
+        {
           props: { style: "fill" },
           style: {
             backgroundColor: getPalette("action.secondary"),
@@ -95,6 +123,8 @@ export const MuiTabs: Components["MuiTabs"] = {
           style: {
             [`& .${tabClasses.root}`]: {
               borderBlock: `1px solid ${getPalette("border.gray")}`,
+              paddingLeft: "27px",
+              paddingRight: "27px",
 
               "&:first-of-type": {
                 borderBottomLeftRadius: getRadius("medium3"),
@@ -119,6 +149,26 @@ export const MuiTabs: Components["MuiTabs"] = {
               },
             },
           },
+        },
+        {
+          props: { style: "fill", type: "secondary" },
+          style: ({ theme }: VariantStyleProps) => ({
+            [`& .${tabClasses.root}`]: {
+              paddingLeft: "12px",
+              paddingRight: "12px",
+
+              [`&.${tabClasses.selected}`]: {
+                borderRadius: getRadius("medium2"),
+              },
+            },
+
+            [theme.breakpoints.down("medium")]: {
+              [`& .${tabClasses.root}`]: {
+                paddingLeft: "15.5px",
+                paddingRight: "15.5px",
+              },
+            },
+          }),
         },
       ],
     },
