@@ -20,7 +20,6 @@ const meta: Meta<typeof Alert> = {
       control: { type: "select" },
     },
   },
-  args: { onClick: fn() },
 };
 
 export default meta;
