@@ -12,10 +12,8 @@ import { getTypography } from "#/design-tokens/typography";
 declare module "@mui/material/Alert" {
   interface AlertPropsColorOverrides {
     danger: true;
-    information: true;
 
     error: false;
-    info: false;
   }
 }
 
@@ -25,7 +23,7 @@ export const MuiAlert: Components["MuiAlert"] = {
       danger: <CancelIcon />,
       warning: <WarningIcon />,
       success: <CheckCircleIcon />,
-      information: <InfoIcon />,
+      info: <InfoIcon />,
     },
   },
   styleOverrides: {
@@ -112,7 +110,7 @@ export const MuiAlert: Components["MuiAlert"] = {
           },
         },
         {
-          props: { severity: "information" },
+          props: { severity: "info" },
           style: {
             backgroundColor: getPalette("surface.information-subtler"),
             outline: `1px solid ${getPalette("border.information-light")}`,

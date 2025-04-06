@@ -1,7 +1,6 @@
 import type { Meta } from "@storybook/react";
 
 import { Alert, AlertTitle } from "@mui/material";
-import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Alert> = {
   title: "KRDS/Alert",
@@ -16,7 +15,7 @@ const meta: Meta<typeof Alert> = {
   tags: ["autodocs"],
   argTypes: {
     severity: {
-      options: ["danger", "warning", "success", "information"],
+      options: ["danger", "warning", "success", "info"],
       control: { type: "select" },
     },
   },
