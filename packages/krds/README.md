@@ -30,12 +30,16 @@ export default function MuiProvider({ children }: PropsWithChildren) {
 
 ## TODO
 
-- [x] 디자인 토큰 헬퍼 제공: 0.1.0
-- [x] 초기화 스타일 제공: 0.1.1
+- [x] Mui 컴포넌트 추가: 0.4.0
+  - alert
+  - badge
+  - breadcrumbs
+- [x] Mui 컴포넌트 추가: 0.3.0
+  - link
+  - tabs
 - [x] Mui 테마 제공: 0.2.0
   - theme
   - button
   - typography
-- [x] Mui 컴포넌트 추가: 0.3.0
-  - link
-  - tabs
+- [x] 초기화 스타일 제공: 0.1.1
+- [x] 디자인 토큰 헬퍼 제공: 0.1.0
