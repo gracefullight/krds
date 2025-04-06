@@ -32,7 +32,12 @@ export const MuiButton: Components["MuiButton"] = {
   styleOverrides: {
     root: {
       borderRadius: getRadius("medium3"),
+      boxShadow: "none",
       minWidth: "auto",
+
+      ":hover": {
+        boxShadow: "none",
+      },
 
       [`& .${buttonClasses.startIcon}`]: {
         marginRight: "4px",
