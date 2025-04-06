@@ -1,5 +1,6 @@
 export * from "#/components/mui-accordion";
 export * from "#/components/mui-alert";
+export * from "#/components/mui-alert-title";
 export * from "#/components/mui-badge";
 export * from "#/components/mui-breadcrumbs";
 export * from "#/components/mui-button";

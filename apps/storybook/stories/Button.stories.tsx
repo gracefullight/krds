@@ -17,7 +17,9 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     color: {
       options: ["primary", "secondary", "tertiary"],
-      control: { type: "radio" },
+      control: {
+        type: "radio",
+      },
     },
     disabled: {
       control: { type: "boolean" },
@@ -38,7 +40,7 @@ export default meta;
 
 export const ExampleButton = {
   args: {
-    children: "Example Button",
+    children: "버튼",
     color: "primary",
     disabled: false,
     size: "medium",
