@@ -41,9 +41,6 @@ export const ExampleCheckbox = {
       <FormControlLabel
         control={<Checkbox {...args} defaultChecked />}
         label="체크박스"
-        slotProps={{
-          typography: {},
-        }}
       />
     );
   },
