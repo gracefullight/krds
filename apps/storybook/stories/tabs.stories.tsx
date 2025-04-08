@@ -15,7 +15,6 @@ const meta: Meta<typeof Tabs> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    // @ts-expect-error
     fill: {
       options: ["outlined", "contained"],
       control: { type: "radio" },
@@ -28,7 +27,7 @@ const meta: Meta<typeof Tabs> = {
       control: { type: "range", min: 0, max: 2, step: 1 },
     },
   },
-  arg: {
+  args: {
     onChange: fn(),
   },
 };

@@ -37,7 +37,6 @@ const meta: Meta<typeof Badge> = {
         type: "radio",
       },
     },
-    // @ts-expect-error
     fill: {
       options: ["contained", "outlined", "light"],
       control: {

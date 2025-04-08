@@ -20,7 +20,6 @@ const meta: Meta<typeof Link> = {
         type: "radio",
       },
     },
-    // @ts-expect-error
     size: {
       options: ["small", "medium", "large"],
       control: { type: "radio" },
