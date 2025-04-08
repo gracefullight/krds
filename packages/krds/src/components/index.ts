@@ -8,6 +8,8 @@ export * from "#/components/mui-checkbox";
 export * from "#/components/mui-chip";
 export * from "#/components/mui-circular-progress";
 export * from "#/components/mui-dialog";
+export * from "#/components/mui-dialog-content-text";
+export * from "#/components/mui-dialog-title";
 export * from "#/components/mui-drawer";
 export * from "#/components/mui-form-control-label";
 export * from "#/components/mui-form-helper-text";
