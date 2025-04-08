@@ -9,6 +9,8 @@ export * from "#/components/mui-chip";
 export * from "#/components/mui-circular-progress";
 export * from "#/components/mui-dialog";
 export * from "#/components/mui-drawer";
+export * from "#/components/mui-form-control-label";
+export * from "#/components/mui-form-helper-text";
 export * from "#/components/mui-linear-progress";
 export * from "#/components/mui-link";
 export * from "#/components/mui-menu";

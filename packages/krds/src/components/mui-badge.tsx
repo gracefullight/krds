@@ -141,6 +141,7 @@ export const MuiBadge: Components["MuiBadge"] = {
               borderRadius: getRadius("small2"),
               paddingLeft: "8px",
               paddingRight: "8px",
+              transform: "none",
             },
           },
         },

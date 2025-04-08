@@ -1,7 +1,7 @@
 import type { Components } from "@mui/material/styles";
 
 declare module "@mui/material/Typography" {
-  interface TypographyPropsVariantOverrides {
+  export interface TypographyPropsVariantOverrides {
     "display-large": true;
     "display-medium": true;
     "display-small": true;
@@ -21,6 +21,19 @@ declare module "@mui/material/Typography" {
     "body-small-bold": true;
     "body-xsmall": true;
     "body-xsmall-bold": true;
+
+    h1: false;
+    h2: false;
+    h3: false;
+    h4: false;
+    h5: false;
+    h6: false;
+    subtitle1: false;
+    subtitle2: false;
+    caption: false;
+    button: false;
+    body1: false;
+    body2: false;
   }
 }
 
