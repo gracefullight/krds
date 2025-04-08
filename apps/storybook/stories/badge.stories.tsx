@@ -31,6 +31,12 @@ const meta: Meta<typeof Badge> = {
         type: "select",
       },
     },
+    variant: {
+      options: ["standard", "dot", "text"],
+      control: {
+        type: "radio",
+      },
+    },
     // @ts-expect-error
     fill: {
       options: ["contained", "outlined", "light"],
@@ -42,12 +48,7 @@ const meta: Meta<typeof Badge> = {
     size: {
       options: ["medium", "large"],
       control: { type: "radio" },
-    },
-    variant: {
-      options: ["standard", "dot", "text"],
-      control: {
-        type: "radio",
-      },
+      if: { arg: "variant", eq: "text" },
     },
   },
 };
@@ -58,7 +59,8 @@ export const ExampleBadge = {
   args: {
     badgeContent: "3",
     color: "primary",
-    size: "medium",
     variant: "standard",
+    size: "medium",
+    fill: "contained",
   },
 };
