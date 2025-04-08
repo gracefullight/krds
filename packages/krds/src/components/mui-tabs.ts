@@ -9,7 +9,7 @@ import { getTypography } from "#/design-tokens/typography";
 declare module "@mui/material/Tabs" {
   interface TabsOwnProps {
     type?: "primary" | "secondary";
-    style?: "line" | "fill";
+    fill?: "outlined" | "contained";
   }
 }
 
@@ -17,7 +17,7 @@ export const MuiTabs: Components["MuiTabs"] = {
   defaultProps: {
     indicatorColor: "secondary",
     type: "primary",
-    style: "line",
+    fill: "outlined",
   },
   styleOverrides: {
     root: {
@@ -67,9 +67,9 @@ export const MuiTabs: Components["MuiTabs"] = {
           }),
         },
 
-        // * style
+        // * fill
         {
-          props: { style: "line" },
+          props: { fill: "outlined" },
           style: {
             [`& .${tabClasses.root}.${tabClasses.selected}`]: {
               color: getPalette("text.secondary"),
@@ -77,7 +77,7 @@ export const MuiTabs: Components["MuiTabs"] = {
           },
         },
         {
-          props: { style: "line", type: "primary" },
+          props: { fill: "outlined", type: "primary" },
           style: {
             [`& .${tabClasses.root}`]: {
               borderBottom: `2px solid ${getPalette("border.gray")}`,
@@ -87,7 +87,7 @@ export const MuiTabs: Components["MuiTabs"] = {
           },
         },
         {
-          props: { style: "line", type: "secondary" },
+          props: { fill: "outlined", type: "secondary" },
           style: ({ theme }: VariantStyleProps) => ({
             [`& .${tabClasses.root}`]: {
               paddingLeft: "7.5px",
@@ -103,7 +103,7 @@ export const MuiTabs: Components["MuiTabs"] = {
           }),
         },
         {
-          props: { style: "fill" },
+          props: { fill: "contained" },
           style: {
             backgroundColor: getPalette("action.secondary"),
 
@@ -119,7 +119,7 @@ export const MuiTabs: Components["MuiTabs"] = {
           },
         },
         {
-          props: { style: "fill", type: "primary" },
+          props: { fill: "contained", type: "primary" },
           style: {
             [`& .${tabClasses.root}`]: {
               borderBlock: `1px solid ${getPalette("border.gray")}`,
@@ -151,7 +151,7 @@ export const MuiTabs: Components["MuiTabs"] = {
           },
         },
         {
-          props: { style: "fill", type: "secondary" },
+          props: { fill: "contained", type: "secondary" },
           style: ({ theme }: VariantStyleProps) => ({
             [`& .${tabClasses.root}`]: {
               paddingLeft: "12px",

@@ -32,7 +32,7 @@ export default function ClientTabsPage() {
     <Stack gap={2} divider={<Divider />}>
       <Box>
         <Typography variant="heading-large">Client Tabs</Typography>
-        <Tabs value={activeTab} onChange={handleTabChange} style="fill">
+        <Tabs value={activeTab} onChange={handleTabChange} fill="contained">
           {tabs.map((tab, index) => (
             <Tab
               key={tab.title}
@@ -59,7 +59,7 @@ export default function ClientTabsPage() {
           value={secondaryTab}
           onChange={(_, newValue) => setSecondaryTab(newValue)}
           type="secondary"
-          style="line"
+          fill="contained"
         >
           {tabs.map((tab, index) => (
             <Tab
