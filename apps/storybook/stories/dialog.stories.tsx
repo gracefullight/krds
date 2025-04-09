@@ -1,5 +1,6 @@
 import type { Meta } from "@storybook/react";
 
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Dialog,
@@ -7,7 +8,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Dialog> = {
   title: "KRDS/Dialog",
@@ -39,19 +42,24 @@ export const ExampleDialog = {
     open: true,
     children: (
       <>
-        <DialogTitle>타이틀</DialogTitle>
+        <DialogTitle>
+          타이틀
+          <IconButton aria-label="close">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             대화 상자는 사용자에게 작업에 대해 알리고 중요한 정보를 포함하거나
             결정이 필요하거나 여러 작업을 포함할 수 있습니다.
           </DialogContentText>
-          <DialogActions>
-            <Button variant="outlined" color="tertiary">
-              닫기
-            </Button>
-            <Button autoFocus>저장</Button>
-          </DialogActions>
         </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" color="tertiary">
+            닫기
+          </Button>
+          <Button autoFocus>저장</Button>
+        </DialogActions>
       </>
     ),
   },

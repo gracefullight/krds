@@ -1,8 +1,10 @@
-import { type Components, chipClasses } from "@mui/material";
+import type { Components } from "@mui/material";
+import type { VariantStyleProps } from "#/components/component.types";
+
+import { chipClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
-import type { VariantStyleProps } from "./component.types";
 
 declare module "@mui/material/Chip" {
   interface ChipPropsSizeOverrides {
@@ -15,6 +17,7 @@ export const MuiChip: Components["MuiChip"] = {
     clickable: true,
     size: "medium",
   },
+
   styleOverrides: {
     root: {
       backgroundColor: getPalette("action.white"),

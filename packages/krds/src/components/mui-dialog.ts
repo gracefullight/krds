@@ -1,5 +1,9 @@
-import { type Components, dialogClasses } from "@mui/material";
-import type { VariantStyleProps } from "./component.types";
+import type { Components, Theme } from "@mui/material";
+import type { VariantStyleProps } from "#/components/component.types";
+
+import { dialogActionsClasses, dialogClasses } from "@mui/material";
+import { getPalette } from "#/design-tokens/palettes";
+import { getRadius } from "#/design-tokens/radius";
 
 declare module "@mui/material/Dialog" {}
 
@@ -8,6 +12,7 @@ export const MuiDialog: Components["MuiDialog"] = {
     maxWidth: "medium",
     fullWidth: true,
   },
+
   styleOverrides: {
     root: {
       variants: [
@@ -85,5 +90,36 @@ export const MuiDialog: Components["MuiDialog"] = {
         },
       ],
     },
+
+    paper: ({ theme }) => ({
+      borderRadius: getRadius("xlarge2"),
+      boxShadow: "none",
+      padding: "24px",
+      outline: `1px solid ${getPalette("border.gray")}`,
+
+      [(theme as Theme).breakpoints.down("medium")]: {
+        padding: "20px",
+      },
+
+      [`& .${dialogActionsClasses.root}`]: {
+        padding: "0 16px 16px 16px",
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          paddingLeft: "4px",
+          paddingRight: "4px",
+        },
+      },
+
+      variants: [
+        {
+          props: { maxWidth: "small" },
+          style: {
+            [`& .${dialogActionsClasses.root}`]: {
+              paddingBottom: 0,
+            },
+          },
+        },
+      ],
+    }),
   },
 };

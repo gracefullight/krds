@@ -1,4 +1,6 @@
-import { type Components, circularProgressClasses } from "@mui/material";
+import type { Components } from "@mui/material";
+
+import { circularProgressClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
 
 declare module "@mui/material/CircularProgress" {

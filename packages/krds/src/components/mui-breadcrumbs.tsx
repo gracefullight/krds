@@ -17,6 +17,7 @@ export const MuiBreadcrumbs: Components["MuiBreadcrumbs"] = {
     maxItems: 5,
     separator: <NavigateNextIcon />,
   },
+
   styleOverrides: {
     root: ({ theme }) => ({
       [`& .${breadcrumbsClasses.li} .${svgIconClasses.root}`]: {

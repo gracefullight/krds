@@ -1,4 +1,5 @@
 import type { Components, Theme } from "@mui/material";
+
 import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/DialogContentText" {}
