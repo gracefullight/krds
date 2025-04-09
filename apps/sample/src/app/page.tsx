@@ -1,46 +1,73 @@
-import styles from "@/app/page.module.css";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Grid, Link, Stack, Typography } from "@mui/material";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Typography variant="display-medium">NEXT.JS</Typography>
-        <Box component="ol">
-          <Typography component="li">
-            Get started by editing <code>src/app/page.tsx</code>.
-          </Typography>
-          <Typography component="li">
-            Save and see your changes instantly.
-          </Typography>
-        </Box>
+    <Grid
+      container
+      direction="column"
+      justifyContent="space-between"
+      alignItems="center"
+      sx={{
+        minHeight: "100svh",
+        padding: "80px",
+        gap: "64px",
+      }}
+    >
+      <Grid component="main">
+        <Stack direction="column" gap="32px">
+          <Typography variant="display-medium">NEXT.JS</Typography>
 
-        <div className={styles.ctas}>
-          <Button
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="primary"
-            startIcon={<RocketLaunchIcon />}
+          <Box
+            component="ol"
+            sx={{
+              listStylePosition: "inside",
+            }}
           >
-            Deploy now
-          </Button>
-          <Button
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="outlined"
-            color="secondary"
-            endIcon={<MenuBookIcon />}
-          >
-            Read our docs
-          </Button>
-        </div>
-      </main>
-      <footer className={styles.footer}>
+            <Typography
+              component="li"
+              sx={{
+                mb: 1,
+              }}
+            >
+              Get started by editing <code>src/app/page.tsx</code>.
+            </Typography>
+            <Typography component="li">
+              Save and see your changes instantly.
+            </Typography>
+          </Box>
+
+          <Grid container spacing={2}>
+            <Grid>
+              <Button
+                href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                color="primary"
+                startIcon={<RocketLaunchIcon />}
+              >
+                Deploy now
+              </Button>
+            </Grid>
+            <Grid>
+              <Button
+                href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outlined"
+                color="secondary"
+                endIcon={<MenuBookIcon />}
+              >
+                Read our docs
+              </Button>
+            </Grid>
+          </Grid>
+        </Stack>
+      </Grid>
+
+      <Grid component="footer" sx={{ display: "flex", gap: "24px" }}>
         <Link
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
@@ -69,7 +96,7 @@ export default function Home() {
         >
           Go to nextjs.org
         </Link>
-      </footer>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
