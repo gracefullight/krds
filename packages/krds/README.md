@@ -28,8 +28,16 @@ export default function MuiProvider({ children }: PropsWithChildren) {
 }
 ```
 
+```ts
+/// <reference types="@gracefullight/krds" />
+```
+
 ## TODO
 
+- [x] Mui 컴포넌트 추가: 0.6.0
+  - dialog
+  - drawer
+  - linear-progress
 - [x] Mui 컴포넌트 추가: 0.5.0
   - checkbox
   - chip
