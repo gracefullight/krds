@@ -33,7 +33,7 @@ export const MuiButton: Components["MuiButton"] = {
     root: {
       borderRadius: getRadius("medium3"),
       boxShadow: "none",
-      minWidth: "auto",
+      minWidth: "fit-content",
 
       ":hover": {
         boxShadow: "none",
@@ -298,6 +298,7 @@ export const MuiButton: Components["MuiButton"] = {
           style: {
             backgroundColor: getPalette("button.disabled-fill"),
             color: getPalette("text.disabled-on"),
+            outline: "none",
           },
         },
         // * disabled, variant
