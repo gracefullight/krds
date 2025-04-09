@@ -25,19 +25,19 @@ export default meta;
 
 export const ExampleAlert = {
   args: {
-    children: "메세지 내용 최대 1줄",
     severity: "success",
+    children: "메세지 내용 최대 1줄",
   },
 };
 
 export const ExampleAlertWithTitle = {
   args: {
+    severity: "success",
     children: (
       <>
         <AlertTitle>메세지 타이틀</AlertTitle>
         콘텐츠 내 알럿은 최대 2줄 이내로 작성합니다.
       </>
     ),
-    severity: "success",
   },
 };

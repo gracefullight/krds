@@ -33,17 +33,17 @@ const meta: Meta<typeof Button> = {
       control: { type: "radio" },
     },
   },
-  args: { onClick: fn() },
 };
 
 export default meta;
 
 export const ExampleButton = {
   args: {
-    children: "버튼",
     color: "primary",
     disabled: false,
     size: "medium",
     variant: "contained",
+    onClick: fn(),
+    children: "버튼",
   },
 };
