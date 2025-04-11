@@ -1,9 +1,17 @@
 import type { Components, Theme } from "@mui/material";
 
+import { BorderColor } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { selectClasses, svgIconClasses } from "@mui/material";
+import {
+  inputBaseClasses,
+  outlinedInputClasses,
+  selectClasses,
+  svgIconClasses,
+} from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
+import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
+import type { VariantStyleProps } from "./component.types";
 
 declare module "@mui/material/Select" {
   interface InputBasePropsSizeOverrides {
@@ -18,30 +26,61 @@ export const MuiSelect: Components["MuiSelect"] = {
     IconComponent: KeyboardArrowDownIcon,
   },
   styleOverrides: {
-    root: ({ theme }) => ({
-      [`& .${selectClasses.select}`]: {
-        ...getTypography("pc.label.large"),
-        // color: getPalette("text.disabled"),
-      },
-
-      [(theme as Theme).breakpoints.down("medium")]: {
-        [`& .${selectClasses.select}`]: {
-          ...getTypography("mobile.label.large"),
-        },
-      },
-
+    root: {
       [`& .${svgIconClasses.root}`]: {
         color: getPalette("icon.gray"),
         right: "16px",
       },
 
+      [`&.${selectClasses.disabled}`]: {
+        backgroundColor: getPalette("surface.disabled"),
+        color: getPalette("text.disabled-on"),
+
+        [`& .${selectClasses.select}`]: {
+          color: getPalette("text.disabled-on"),
+          WebkitTextFillColor: getPalette("text.disabled-on"),
+        },
+
+        [`& .${svgIconClasses.root}`]: {
+          color: getPalette("icon.gray"),
+        },
+      },
+
+      [`&.${outlinedInputClasses.root}`]: {
+        border: `1px solid ${getPalette("input.border")}`,
+
+        [`&.${selectClasses.focused}`]: {
+          borderColor: getPalette("input.border-active"),
+          borderWidth: "2px",
+        },
+
+        [`&.${selectClasses.error}`]: {
+          borderColor: getPalette("input.border-error"),
+          borderWidth: "2px",
+        },
+
+        [`& .${outlinedInputClasses.notchedOutline}`]: {
+          // * 배경색을 주기 위해 border 삭제
+          border: "none",
+        },
+      },
+
       variants: [
+        // * size
         {
           props: { size: "large" },
-          style: {
+          style: ({ theme }: VariantStyleProps) => ({
+            borderRadius: getRadius("medium3"),
+
             [`& .${selectClasses.select}`]: {
+              ...getTypography("pc.label.large"),
+
               padding: "13.5px 16px",
               paddingRight: "44px !important",
+
+              [(theme as Theme).breakpoints.down("medium")]: {
+                ...getTypography("mobile.label.large"),
+              },
             },
 
             [`& .${svgIconClasses.root}`]: {
@@ -49,37 +88,55 @@ export const MuiSelect: Components["MuiSelect"] = {
               height: "24px",
               top: "calc(50% - 12px)",
             },
-          },
+          }),
         },
         {
           props: { size: "medium" },
-          style: {
+          style: ({ theme }: VariantStyleProps) => ({
+            borderRadius: getRadius("medium2"),
+
             [`& .${selectClasses.select}`]: {
+              ...getTypography("pc.label.medium"),
+
               padding: "11px 16px",
               paddingRight: "40px !important",
+
+              [(theme as Theme).breakpoints.down("medium")]: {
+                ...getTypography("mobile.label.medium"),
+              },
             },
+
             [`& .${svgIconClasses.root}`]: {
               width: "20px",
               height: "20px",
               top: "calc(50% - 10px)",
             },
-          },
+          }),
         },
         {
           props: { size: "small" },
-          style: {
+          style: ({ theme }: VariantStyleProps) => ({
+            borderRadius: getRadius("medium1"),
+
             [`& .${selectClasses.select}`]: {
+              ...getTypography("pc.label.small"),
+
               padding: "8.5px 16px",
               paddingRight: "36px !important",
+
+              [(theme as Theme).breakpoints.down("medium")]: {
+                ...getTypography("mobile.label.small"),
+              },
             },
+
             [`& .${svgIconClasses.root}`]: {
               width: "16px",
               height: "16px",
               top: "calc(50% - 8px)",
             },
-          },
+          }),
         },
       ],
-    }),
+    },
   },
 };

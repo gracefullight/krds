@@ -20,6 +20,9 @@ const meta: Meta<typeof Select> = {
     displayEmpty: {
       control: { type: "boolean" },
     },
+    error: {
+      control: { type: "boolean" },
+    },
     size: {
       options: ["small", "medium", "large"],
       control: { type: "radio" },
@@ -36,6 +39,7 @@ export const ExampleSelect = {
   args: {
     disabled: false,
     displayEmpty: true,
+    error: false,
     size: "medium",
     value: "",
     children: [
