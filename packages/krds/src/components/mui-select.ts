@@ -23,6 +23,7 @@ export const MuiSelect: Components["MuiSelect"] = {
     displayEmpty: true,
     size: "medium",
     MenuProps: {
+      marginThreshold: 0,
       slotProps: {
         paper: {
           className: krdsSelectClasses.sizeMedium,
