@@ -1,6 +1,13 @@
 import type { Meta } from "@storybook/react";
 
-import { MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  type SelectProps,
+} from "@mui/material";
+import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Select> = {
   title: "KRDS/Select",
@@ -56,5 +63,22 @@ export const ExampleSelect = {
         옵션 3
       </MenuItem>,
     ],
+  },
+  render: (args: SelectProps) => {
+    return (
+      <Select
+        {...args}
+        id="select"
+        MenuProps={{
+          slotProps: {
+            paper: {
+              className: `size-${args.size}`,
+            },
+          },
+        }}
+      >
+        {args.children}
+      </Select>
+    );
   },
 };

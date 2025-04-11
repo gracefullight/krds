@@ -19,6 +19,7 @@ export * from "#/components/mui-icon-button";
 export * from "#/components/mui-linear-progress";
 export * from "#/components/mui-link";
 export * from "#/components/mui-menu";
+export * from "#/components/mui-menu-item";
 export * from "#/components/mui-pagination";
 export * from "#/components/mui-pagination-item";
 export * from "#/components/mui-radio";

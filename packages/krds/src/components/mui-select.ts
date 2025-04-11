@@ -1,17 +1,16 @@
 import type { Components, Theme } from "@mui/material";
+import type { VariantStyleProps } from "#/components/component.types";
 
-import { BorderColor } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
-  inputBaseClasses,
   outlinedInputClasses,
   selectClasses,
   svgIconClasses,
 } from "@mui/material";
+import { krdsSelectClasses } from "#/constants/classes";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
-import type { VariantStyleProps } from "./component.types";
 
 declare module "@mui/material/Select" {
   interface InputBasePropsSizeOverrides {
@@ -23,8 +22,16 @@ export const MuiSelect: Components["MuiSelect"] = {
   defaultProps: {
     displayEmpty: true,
     size: "medium",
+    MenuProps: {
+      slotProps: {
+        paper: {
+          className: krdsSelectClasses.sizeMedium,
+        },
+      },
+    },
     IconComponent: KeyboardArrowDownIcon,
   },
+
   styleOverrides: {
     root: {
       [`& .${svgIconClasses.root}`]: {
