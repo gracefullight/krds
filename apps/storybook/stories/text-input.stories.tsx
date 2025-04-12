@@ -1,10 +1,10 @@
 import type { Meta } from "@storybook/react";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { TextField, Typography } from "@mui/material";
+import { TextField } from "@mui/material";
 
 const meta: Meta<typeof TextField> = {
-  title: "KRDS/TextField",
+  title: "KRDS/TextInput",
   component: TextField,
   parameters: {
     design: {
