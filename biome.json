@@ -24,7 +24,8 @@
         "noUnusedVariables": "error"
       },
       "nursery": {
-        "noEnum": "error"
+        "noEnum": "error",
+        "noNestedTernary": "error"
       },
       "style": {
         "useConsistentArrayType": "error",
@@ -36,6 +37,11 @@
           }
         },
         "useImportType": "error"
+      },
+      "suspicious": {
+        "noEmptyBlockStatements": "error",
+        "useAwait": "error",
+        "useErrorMessage": "error"
       }
     },
     "ignore": [".vscode", "dist"]
