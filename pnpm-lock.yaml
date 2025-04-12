@@ -199,9 +199,6 @@ importers:
       playwright:
         specifier: ^1.51.1
         version: 1.51.1
-      prop-types:
-        specifier: ^15.8.1
-        version: 15.8.1
       storybook:
         specifier: ^8.6.12
         version: 8.6.12(prettier@2.8.8)
@@ -2827,6 +2824,7 @@ packages:
     resolution: {integrity: sha512-Quz3MvAwHxVYNXsOByL7xI5EB2WYOeFswqaHIA3qOK3isRWTxiplBEocmmru6XmxDB2L7jDNYtYA4FyimoAFEw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
+    bundledDependencies: []
 
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
