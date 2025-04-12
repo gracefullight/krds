@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
+    "moduleResolution": "bundler",
     "strict": true,
     "target": "ESNext"
   }

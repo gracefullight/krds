@@ -27,6 +27,9 @@ const config: StorybookConfig = {
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/experimental-addon-test"),
   ],
+  core: {
+    disableTelemetry: true,
+  },
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
@@ -43,10 +46,12 @@ const config: StorybookConfig = {
       shouldExtractLiteralValuesFromEnum: true,
       // Makes string and boolean types that can be undefined appear as inputs and switches
       shouldRemoveUndefinedFromOptional: true,
-      // Filter out third-party props from node_modules except @mui packages
+      // Filter out third-party props from node_modules except @mui and krds packages
       propFilter: (prop) =>
         prop.parent
-          ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
+          ? !/node_modules\/(?!@mui|@gracefullight\/krds)/.test(
+              prop.parent.fileName,
+            )
           : true,
     },
   },
