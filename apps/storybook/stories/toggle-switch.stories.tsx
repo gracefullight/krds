@@ -1,9 +1,9 @@
 import type { Meta } from "@storybook/react";
 
-import { Switch } from "@mui/material";
+import { FormControlLabel, Switch, type SwitchProps } from "@mui/material";
 
 const meta: Meta<typeof Switch> = {
-  title: "KRDS/Switch",
+  title: "KRDS/ToggleSwitch",
   component: Switch,
   parameters: {
     design: {
@@ -13,11 +13,34 @@ const meta: Meta<typeof Switch> = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    disabled: {
+      control: {
+        type: "boolean",
+      },
+    },
+    size: {
+      options: ["medium", "large"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
 };
 
 export default meta;
 
-export const ExampleSwitch = {
-  args: {},
+export const ExampleToggleSwitch = {
+  args: {
+    disabled: false,
+    size: "medium",
+  },
+  render: (args: SwitchProps) => {
+    return (
+      <FormControlLabel
+        control={<Switch {...args} defaultChecked />}
+        label="스위치"
+      />
+    );
+  },
 };
