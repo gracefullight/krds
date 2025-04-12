@@ -1,0 +1,37 @@
+import type { Components, Theme } from "@mui/material";
+
+import { stepLabelClasses } from "@mui/material";
+import { getTypography } from "#/design-tokens/typography";
+
+declare module "@mui/material/StepLabel" {}
+
+export const MuiStepLabel: Components["MuiStepLabel"] = {
+  defaultProps: {},
+  styleOverrides: {
+    root: ({ theme }) => ({
+      ...getTypography("pc.body.xsmall"),
+
+      alignItems: "flex-start",
+
+      [(theme as Theme).breakpoints.down("medium")]: {
+        ...getTypography("mobile.body.xsmall"),
+      },
+
+      [`& .${stepLabelClasses.label}`]: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+
+        [`&.${stepLabelClasses.alternativeLabel}`]: {
+          marginTop: 0,
+        },
+      },
+
+      [`& .${stepLabelClasses.labelContainer}.${stepLabelClasses.alternativeLabel}`]:
+        {
+          marginTop: "8px",
+          textAlign: "left",
+        },
+    }),
+  },
+};
