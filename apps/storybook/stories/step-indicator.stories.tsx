@@ -26,6 +26,9 @@ export default meta;
 export const ExampleStepIndicator = {
   args: {
     activeStep: 1,
+    sx: {
+      width: "500px",
+    },
     children: [
       <Step key="0">
         <StepLabel>
@@ -55,10 +58,6 @@ export const ExampleStepIndicator = {
     ],
   },
   render: (args: StepperProps) => {
-    return (
-      <Stepper {...args} sx={{ width: "500px" }}>
-        {args.children}
-      </Stepper>
-    );
+    return <Stepper {...args}>{args.children}</Stepper>;
   },
 };
