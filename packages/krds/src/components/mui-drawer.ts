@@ -1,10 +1,6 @@
-import {
-  type Components,
-  type Theme,
-  dialogTitleClasses,
-  iconButtonClasses,
-} from "@mui/material";
+import type { Components, Theme } from "@mui/material";
 
+import { dialogTitleClasses, iconButtonClasses } from "@mui/material";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
 

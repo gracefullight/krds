@@ -1,4 +1,6 @@
-import { type Components, linearProgressClasses } from "@mui/material";
+import type { Components } from "@mui/material";
+
+import { linearProgressClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 
