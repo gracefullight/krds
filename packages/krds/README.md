@@ -34,6 +34,10 @@ export default function MuiProvider({ children }: PropsWithChildren) {
 
 ## TODO
 
+- [x] Mui 컴포넌트 추가: 0.8.0
+  - stepper
+  - switch
+  - table
 - [x] Mui 컴포넌트 추가: 0.7.0
   - menu
   - pagination
