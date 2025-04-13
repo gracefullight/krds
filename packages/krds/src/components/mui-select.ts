@@ -35,6 +35,8 @@ export const MuiSelect: Components["MuiSelect"] = {
 
   styleOverrides: {
     root: {
+      padding: 0,
+
       [`& .${svgIconClasses.root}`]: {
         color: getPalette("icon.gray"),
         right: "16px",
