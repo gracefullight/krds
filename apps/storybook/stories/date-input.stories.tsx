@@ -1,0 +1,33 @@
+import type { Meta } from "@storybook/react";
+import type { DatePickerProps } from "node_modules/@mui/x-date-pickers";
+
+import { DatePicker } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+const meta: Meta<typeof DatePicker> = {
+  title: "KRDS/DateInput",
+  component: DatePicker,
+  parameters: {
+    design: {
+      type: "figma",
+      url: "https://www.figma.com/design/FQZqKPOEJVqFCFglsC5VUt/KRDS_v1.0.0--Community-?node-id=5135-13342&t=So0c6gcp9D4yY4IV-4",
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  argTypes: {},
+};
+
+export default meta;
+
+export const ExampleDateInput = {
+  args: {},
+  render: (args: DatePickerProps) => {
+    return (
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker {...args} />
+      </LocalizationProvider>
+    );
+  },
+};
