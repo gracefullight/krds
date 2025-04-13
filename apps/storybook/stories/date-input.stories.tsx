@@ -1,5 +1,5 @@
+import type { DatePickerProps } from "@mui/x-date-pickers";
 import type { Meta } from "@storybook/react";
-import type { DatePickerProps } from "node_modules/@mui/x-date-pickers";
 
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
