@@ -39,22 +39,26 @@ export const MuiTooltip: Components["MuiTooltip"] = {
       [`& .${tooltipClasses.tooltip}`]: {
         ...getTypography("pc.body.small"),
 
+        display: "flex",
+
         [(theme as Theme).breakpoints.down("medium")]: {
           ...getTypography("mobile.body.small"),
         },
 
+        [`& .${typographyClasses.root}`]: {
+          flex: 1,
+          marginRight: "8px",
+        },
+
         [`& .${iconButtonClasses.root}`]: {
-          padding: 0,
+          alignSelf: "flex-start",
+          padding: "3px 0 0 0",
 
           [`& .${svgIconClasses.root}`]: {
             width: "16px",
             height: "16px",
           },
         },
-      },
-
-      [`& .${tooltipClasses.arrow}`]: {
-        color: getPalette("surface.white-subtle"),
       },
 
       variants: [
@@ -65,7 +69,6 @@ export const MuiTooltip: Components["MuiTooltip"] = {
               backgroundColor: getPalette("surface.inverse"),
               borderRadius: getRadius("small3"),
               color: getPalette("text.basic-inverse"),
-              display: "flex",
               padding: "4px 12px",
 
               [`& .${tooltipClasses.arrow}`]: {
@@ -74,16 +77,6 @@ export const MuiTooltip: Components["MuiTooltip"] = {
 
               [`& .${iconButtonClasses.root} .${svgIconClasses.root}`]: {
                 color: getPalette("icon.inverse"),
-              },
-
-              [`& .${typographyClasses.root}`]: {
-                flex: 1,
-                marginRight: "8px",
-              },
-
-              [`& .${iconButtonClasses.root}`]: {
-                alignSelf: "flex-start",
-                paddingTop: "3px",
               },
             },
           },
@@ -95,9 +88,19 @@ export const MuiTooltip: Components["MuiTooltip"] = {
               backgroundColor: getPalette("surface.white-subtler"),
               borderRadius: getRadius("xlarge2"),
               outline: `1px solid ${getPalette("border.gray")}`,
+              color: getPalette("text.basic"),
+              padding: "24px",
 
               [`& .${tooltipClasses.arrow}`]: {
                 color: getPalette("surface.white-subtler"),
+
+                "::before": {
+                  outline: `1px solid ${getPalette("border.gray")}`,
+                },
+              },
+
+              [`& .${iconButtonClasses.root} .${svgIconClasses.root}`]: {
+                color: getPalette("icon.gray"),
               },
             },
           },

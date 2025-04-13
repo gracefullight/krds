@@ -16,6 +16,11 @@ const meta: Meta<typeof Tooltip> = {
   },
   tags: ["autodocs"],
   argTypes: {
+    arrow: {
+      control: {
+        type: "boolean",
+      },
+    },
     open: {
       control: {
         type: "boolean",
@@ -37,14 +42,14 @@ const meta: Meta<typeof Tooltip> = {
         "right-start",
         "right-end",
         "auto-start",
-        "auto-end,",
+        "auto-end",
       ],
       control: {
         type: "select",
       },
     },
     variant: {
-      options: ["default", "light"],
+      options: ["default", "rich"],
       control: {
         type: "radio",
       },
@@ -56,6 +61,7 @@ export default meta;
 
 export const ExampleTooltip = {
   args: {
+    arrow: true,
     open: true,
     placement: "bottom",
     variant: "default",
@@ -63,6 +69,31 @@ export const ExampleTooltip = {
       <>
         <Typography variant="body-small">
           아이콘 버튼에 제공되는 툴팁아이콘
+        </Typography>
+        <IconButton>
+          <CloseIcon />
+        </IconButton>
+      </>
+    ),
+    children: (
+      <IconButton>
+        <DeleteIcon />
+      </IconButton>
+    ),
+  },
+};
+
+export const ExampleRichTooltip = {
+  args: {
+    open: true,
+    placement: "bottom",
+    variant: "rich",
+    title: (
+      <>
+        <Typography variant="body-small">
+          툴팁은 150자 내외의 텍스트만 제공되어야 합니다. 내부에 닫기 버튼을
+          포함한 대화형 요소를 사용하지 않습니다. 본문을 가리지 않도록
+          주의합니다.
         </Typography>
         <IconButton>
           <CloseIcon />
