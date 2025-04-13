@@ -178,6 +178,9 @@ importers:
       '@storybook/experimental-addon-test':
         specifier: ^8.6.12
         version: 8.6.12(@vitest/browser@3.1.1)(@vitest/runner@3.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12(prettier@2.8.8))(vitest@3.1.1)
+      '@storybook/manager-api':
+        specifier: ^8.6.12
+        version: 8.6.12(storybook@8.6.12(prettier@2.8.8))
       '@storybook/react':
         specifier: ^8.6.12
         version: 8.6.12(@storybook/test@8.6.12(storybook@8.6.12(prettier@2.8.8)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.12(prettier@2.8.8))(typescript@5.8.3)
@@ -185,6 +188,9 @@ importers:
         specifier: ^8.6.12
         version: 8.6.12(@storybook/test@8.6.12(storybook@8.6.12(prettier@2.8.8)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.39.0)(storybook@8.6.12(prettier@2.8.8))(typescript@5.8.3)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(yaml@2.7.1))
       '@storybook/test':
+        specifier: ^8.6.12
+        version: 8.6.12(storybook@8.6.12(prettier@2.8.8))
+      '@storybook/theming':
         specifier: ^8.6.12
         version: 8.6.12(storybook@8.6.12(prettier@2.8.8))
       '@types/luxon':

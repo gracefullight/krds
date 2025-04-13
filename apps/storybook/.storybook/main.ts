@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
+  staticDirs: ["../public"],
   addons: [
     {
       name: getAbsolutePath("@storybook/addon-essentials"),
