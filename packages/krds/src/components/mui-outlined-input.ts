@@ -1,7 +1,12 @@
 import type { Components } from "@mui/material";
 import type { VariantStyleProps } from "#/components/component.types";
 
-import { outlinedInputClasses } from "@mui/material";
+import {
+  iconButtonClasses,
+  inputAdornmentClasses,
+  outlinedInputClasses,
+  svgIconClasses,
+} from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
@@ -41,6 +46,7 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
 
       [`& .${outlinedInputClasses.input}`]: {
         color: getPalette("text.basic"),
+        padding: 0,
 
         "::placeholder": {
           color: getPalette("text.disabled"),
@@ -56,6 +62,20 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
         border: "none",
       },
 
+      [`& .${inputAdornmentClasses.root}`]: {
+        marginLeft: 0,
+        // * 우측 아이콘 여백 보정
+        marginRight: "8px",
+
+        [`& .${iconButtonClasses.root}`]: {
+          padding: 0,
+
+          [`& .${svgIconClasses.root}`]: {
+            color: getPalette("icon.gray"),
+          },
+        },
+      },
+
       variants: [
         // * size
         {
@@ -63,16 +83,24 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
             size: "large",
           },
           style: ({ theme }: VariantStyleProps) => ({
-            borderRadius: getRadius("medium3"),
-
             ...getTypography("pc.label.large"),
+
+            borderRadius: getRadius("medium3"),
+            padding: "13.5px 16px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.large"),
             },
 
-            [`& .${outlinedInputClasses.input}`]: {
-              padding: "13.5px 16px",
+            [`& .${inputAdornmentClasses.root}`]: {
+              gap: "8px",
+
+              [`& .${iconButtonClasses.root}`]: {
+                [`& .${svgIconClasses.root}`]: {
+                  width: "24px",
+                  height: "24px",
+                },
+              },
             },
           }),
         },
@@ -81,16 +109,23 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
             size: "medium",
           },
           style: ({ theme }: VariantStyleProps) => ({
-            borderRadius: getRadius("medium2"),
-
             ...getTypography("pc.label.medium"),
+
+            borderRadius: getRadius("medium2"),
+            padding: "11px 16px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.medium"),
             },
 
-            [`& .${outlinedInputClasses.input}`]: {
-              padding: "11px 16px",
+            [`& .${inputAdornmentClasses.root}`]: {
+              gap: "6px",
+              [`& .${iconButtonClasses.root}`]: {
+                [`& .${svgIconClasses.root}`]: {
+                  width: "20px",
+                  height: "20px",
+                },
+              },
             },
           }),
         },
@@ -99,16 +134,23 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
             size: "small",
           },
           style: ({ theme }: VariantStyleProps) => ({
-            borderRadius: getRadius("medium1"),
-
             ...getTypography("pc.label.small"),
+
+            borderRadius: getRadius("medium1"),
+            padding: "8.5px 16px",
 
             [theme.breakpoints.down("medium")]: {
               ...getTypography("mobile.label.small"),
             },
 
-            [`& .${outlinedInputClasses.input}`]: {
-              padding: "8.5px 16px",
+            [`& .${inputAdornmentClasses.root}`]: {
+              gap: "4px",
+              [`& .${iconButtonClasses.root}`]: {
+                [`& .${svgIconClasses.root}`]: {
+                  width: "16px",
+                  height: "16px",
+                },
+              },
             },
           }),
         },

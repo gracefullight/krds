@@ -1,7 +1,16 @@
 import type { Meta } from "@storybook/react";
 
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { TextField } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import {
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  type OutlinedInputProps,
+  TextField,
+  type TextFieldProps,
+} from "@mui/material";
 
 const meta: Meta<typeof TextField> = {
   title: "KRDS/TextInput",
@@ -70,5 +79,32 @@ export const ExampleTextFieldWithHelperText = {
     placeholder: "내용을 입력하세요",
     size: "medium",
     variant: "outlined",
+  },
+};
+
+export const ExampleTextFieldWithIcons = {
+  args: {
+    disabled: false,
+    error: false,
+    placeholder: "내용을 입력하세요",
+    size: "medium",
+    variant: "outlined",
+  },
+  render: (args: OutlinedInputProps) => {
+    return (
+      <OutlinedInput
+        {...args}
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton aria-label="clear text">
+              <CancelIcon />
+            </IconButton>
+            <IconButton edge="end">
+              <VisibilityOutlinedIcon />
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    );
   },
 };
