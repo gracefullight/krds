@@ -57,16 +57,16 @@ export const MuiSelect: Components["MuiSelect"] = {
       },
 
       [`&.${outlinedInputClasses.root}`]: {
-        border: `1px solid ${getPalette("input.border")}`,
+        outline: `1px solid ${getPalette("input.border")}`,
 
         [`&.${selectClasses.focused}`]: {
-          borderColor: getPalette("input.border-active"),
-          borderWidth: "2px",
+          outlineColor: getPalette("input.border-active"),
+          outlineWidth: "2px",
         },
 
         [`&.${selectClasses.error}`]: {
-          borderColor: getPalette("input.border-error"),
-          borderWidth: "2px",
+          outlineColor: getPalette("input.border-error"),
+          outlineWidth: "2px",
         },
 
         [`& .${outlinedInputClasses.notchedOutline}`]: {

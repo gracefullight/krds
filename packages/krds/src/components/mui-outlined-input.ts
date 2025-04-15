@@ -22,6 +22,7 @@ export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
   styleOverrides: {
     root: {
       backgroundColor: getPalette("input.surface"),
+      border: "none",
       outline: `1px solid ${getPalette("input.border")}`,
 
       ":focus-within": {
