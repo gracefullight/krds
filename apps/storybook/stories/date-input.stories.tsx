@@ -22,7 +22,13 @@ const meta: Meta<typeof DatePicker> = {
 export default meta;
 
 export const ExampleDateInput = {
-  args: {},
+  args: {
+    slotProps: {
+      textField: {
+        size: "medium",
+      },
+    },
+  },
   render: (args: DatePickerProps) => {
     return (
       <LocalizationProvider dateAdapter={AdapterLuxon}>
