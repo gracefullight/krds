@@ -26,6 +26,7 @@ export const ExampleDateInput = {
     slotProps: {
       textField: {
         size: "medium",
+        error: true,
       },
     },
   },

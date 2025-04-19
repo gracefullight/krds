@@ -53,6 +53,12 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
         outlineWidth: "2px",
       },
 
+      [`&:has(.${pickersInputBaseClasses.root}.${pickersInputBaseClasses.error})`]:
+        {
+          outlineColor: getPalette("input.border-error"),
+          outlineWidth: "2px",
+        },
+
       [`& .${pickersInputBaseClasses.root}`]: {
         color: getPalette("text.basic"),
 
