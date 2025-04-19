@@ -53,6 +53,20 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
         outlineWidth: "2px",
       },
 
+      [`&.${pickersTextFieldClasses.disabled}`]: {
+        backgroundColor: getPalette("input.surface-disabled"),
+        outlineColor: getPalette("input.border-disabled"),
+        outlineWidth: "1px",
+
+        [`& .${pickersInputBaseClasses.root}`]: {
+          color: getPalette("text.disabled-on"),
+        },
+
+        [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root}`]: {
+          color: getPalette("icon.disabled-on"),
+        },
+      },
+
       [`&:has(.${pickersInputBaseClasses.root}.${pickersInputBaseClasses.error})`]:
         {
           outlineColor: getPalette("input.border-error"),
