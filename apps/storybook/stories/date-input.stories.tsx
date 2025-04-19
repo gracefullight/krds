@@ -16,17 +16,24 @@ const meta: Meta<typeof DatePicker> = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    disabled: {
+      control: {
+        type: "boolean",
+      },
+    },
+  },
 };
 
 export default meta;
 
 export const ExampleDateInput = {
   args: {
+    disabled: false,
     slotProps: {
       textField: {
         size: "medium",
-        error: true,
+        error: false,
       },
     },
   },
