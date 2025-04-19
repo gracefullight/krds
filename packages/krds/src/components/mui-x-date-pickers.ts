@@ -64,6 +64,10 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
           color: getPalette("text.information"),
         },
 
+        [`&.${formHelperTextClasses.error}`]: {
+          color: getPalette("text.danger"),
+        },
+
         [`& .${svgIconClasses.root}`]: {
           width: "16px",
           height: "16px",

@@ -43,6 +43,10 @@ export const MuiTextField: Components["MuiTextField"] = {
           color: getPalette("text.information"),
         },
 
+        [`&.${formHelperTextClasses.error}`]: {
+          color: getPalette("text.danger"),
+        },
+
         [`& .${svgIconClasses.root}`]: {
           width: "16px",
           height: "16px",
