@@ -1,6 +1,7 @@
 import type { DatePickerProps } from "@mui/x-date-pickers";
 import type { Meta } from "@storybook/react";
 
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -34,6 +35,31 @@ export const ExampleDateInput = {
       textField: {
         size: "medium",
         error: false,
+      },
+    },
+  },
+  render: (args: DatePickerProps) => {
+    return (
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker {...args} />
+      </LocalizationProvider>
+    );
+  },
+};
+
+export const ExampleDateInputWithHelperText = {
+  args: {
+    disabled: false,
+    slotProps: {
+      textField: {
+        size: "medium",
+        error: false,
+        helperText: (
+          <>
+            <CheckCircleIcon />
+            메시지를 입력해주세요
+          </>
+        ),
       },
     },
   },

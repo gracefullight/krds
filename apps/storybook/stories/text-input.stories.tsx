@@ -1,3 +1,4 @@
+import type { OutlinedInputProps } from "@mui/material";
 import type { Meta } from "@storybook/react";
 
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -7,9 +8,7 @@ import {
   IconButton,
   InputAdornment,
   OutlinedInput,
-  type OutlinedInputProps,
   TextField,
-  type TextFieldProps,
 } from "@mui/material";
 
 const meta: Meta<typeof TextField> = {
