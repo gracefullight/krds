@@ -20,16 +20,23 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "error",
+        "noUselessStringConcat": "error"
+      },
       "correctness": {
+        "noUnusedImports": "error",
         "noUnusedVariables": "error",
-        "noUnusedImports": "error"
+        "useHookAtTopLevel": "error"
       },
       "nursery": {
         "noEnum": "error",
         "noNestedTernary": "error"
       },
       "style": {
+        "noYodaExpression": "error",
         "useConsistentArrayType": "error",
+        "useCollapsedElseIf": "error",
         "useExportType": "error",
         "useFilenamingConvention": {
           "level": "error",
@@ -37,7 +44,8 @@
             "filenameCases": ["kebab-case"]
           }
         },
-        "useImportType": "error"
+        "useImportType": "error",
+        "useThrowNewError": "error"
       },
       "suspicious": {
         "noEmptyBlockStatements": "error",
