@@ -1,11 +1,6 @@
 import type { Components, Theme } from "@mui/material";
 
-import {
-  formHelperTextClasses,
-  iconButtonClasses,
-  inputAdornmentClasses,
-  svgIconClasses,
-} from "@mui/material";
+import { formHelperTextClasses, svgIconClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
 import { getTypography } from "#/design-tokens/typography";
 

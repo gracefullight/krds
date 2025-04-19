@@ -1,12 +1,12 @@
+import type { Components } from "@mui/material";
+
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
-  type Components,
   buttonBaseClasses,
   svgIconClasses,
   switchClasses,
 } from "@mui/material";
-
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 

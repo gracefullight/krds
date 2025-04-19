@@ -12,7 +12,6 @@ import {
   pickersInputBaseClasses,
   pickersOutlinedInputClasses,
   pickersSectionListClasses,
-  pickersTextFieldClasses,
 } from "@mui/x-date-pickers";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
