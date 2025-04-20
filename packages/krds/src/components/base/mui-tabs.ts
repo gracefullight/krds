@@ -112,7 +112,7 @@ export const MuiTabs: Components["MuiTabs"] = {
             },
 
             [`& .${tabClasses.root}.${tabClasses.selected}`]: {
-              backgroundColor: getPalette("action.secondary-active"),
+              backgroundColor: getPalette("action.secondary"),
               borderColor: getPalette("action.secondary-active"),
               color: getPalette("text.inverse-static"),
             },
