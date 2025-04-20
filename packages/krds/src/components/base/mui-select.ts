@@ -1,5 +1,5 @@
 import type { Components, Theme } from "@mui/material";
-import type { VariantStyleProps } from "#/components/component.types";
+import type { VariantStyleProps } from "#/components/base/component.types";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {

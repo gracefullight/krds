@@ -1,5 +1,5 @@
 import type { Components } from "@mui/material";
-import type { VariantStyleProps } from "#/components/component.types";
+import type { VariantStyleProps } from "#/components/base/component.types";
 
 import { tabClasses, tabsClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";

@@ -4,7 +4,7 @@ import type {
   PickersCalendarHeaderProps,
 } from "@mui/x-date-pickers";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
-import type { VariantStyleProps } from "#/components/component.types";
+import type { VariantStyleProps } from "#/components/base/component.types";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -28,7 +28,7 @@ import {
   usePickerActionsContext,
   yearCalendarClasses,
 } from "@mui/x-date-pickers";
-import * as S from "#/components/mui-x/date-picker.styles";
+import * as S from "#/components/base/mui-x/date-picker.styles";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";

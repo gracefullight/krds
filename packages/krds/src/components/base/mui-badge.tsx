@@ -1,5 +1,5 @@
 import type { Components, Theme } from "@mui/material";
-import type { VariantStyleProps } from "#/components/component.types";
+import type { VariantStyleProps } from "#/components/base/component.types";
 
 import { badgeClasses } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";

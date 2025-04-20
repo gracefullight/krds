@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { toMerged } from "es-toolkit/compat";
-import * as components from "#/components";
+import * as components from "#/components/base";
 import { BREAKPOINTS } from "#/design-tokens/breakpoints";
 import { getColor } from "#/design-tokens/colors";
 import { getTypography } from "#/design-tokens/typography";

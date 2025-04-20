@@ -1,5 +1,5 @@
 // ? declare type 포함
-import "#/components";
+import "#/components/base";
 
 export * from "#/constants/classes";
 
