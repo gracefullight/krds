@@ -1,6 +1,9 @@
 import { addons } from "@storybook/manager-api";
 import { create } from "@storybook/theming/create";
 
+// ! getPalette 사용시 storybook에서 manager.ts 인식 오류
+// * manager-bundle.js:318 [Storybook] One of your manager-entries failed:manager-bundle.js
+// * TypeError: Cannot read properties of undefined (reading 'recentlyCreatedOwnerStacks')
 const krdsTheme = create({
   base: "light",
 
