@@ -20,7 +20,8 @@ const krdsTheme = create({
   appBorderRadius: 8, // medium.3 값
 
   // 타이포그래피
-  fontBase: '"Pretendard GOV Variable", "Pretendard GOV", sans-serif',
+  fontBase:
+    '"Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
   fontCode: "monospace",
   textColor: "#1e2124",
   textInverseColor: "#ffffff",
