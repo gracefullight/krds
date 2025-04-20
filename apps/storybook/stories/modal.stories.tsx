@@ -10,10 +10,9 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Dialog> = {
-  title: "KRDS/Dialog",
+  title: "KRDS/Modal",
   component: Dialog,
   parameters: {
     design: {
@@ -36,7 +35,7 @@ const meta: Meta<typeof Dialog> = {
 
 export default meta;
 
-export const ExampleDialog = {
+export const ExampleModal = {
   args: {
     maxWidth: "medium",
     open: true,

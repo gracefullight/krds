@@ -336,7 +336,9 @@ export const MuiPickersOutlinedInput: Components["MuiPickersOutlinedInput"] = {
 export const MuiPickerPopper: Components["MuiPickerPopper"] = {
   styleOverrides: {
     paper: {
+      borderRadius: getRadius("xlarge2"),
       boxShadow: "none",
+      outline: `1px solid ${getPalette("border.secondary-light")}`,
     },
   },
 };
@@ -428,11 +430,10 @@ export const MuiDateCalendar: Components["MuiDateCalendar"] = {
   styleOverrides: {
     root: {
       backgroundColor: getPalette("surface.secondary-subtler"),
-      borderRadius: getRadius("xlarge2"),
       height: "auto",
       // * 6줄이 보이기 위한 처리
       minHeight: "400px",
-      outline: `1px solid ${getPalette("border.secondary-light")}`,
+
       paddingTop: "16px",
       width: "384px",
     },
@@ -497,6 +498,10 @@ export const MuiYearCalendar: Components["MuiYearCalendar"] = {
 export const MuiPickersLayout: Components["MuiPickersLayout"] = {
   styleOverrides: {
     root: {
+      [`& .${pickersLayoutClasses.toolbar}`]: {
+        display: "none",
+      },
+
       [`& .${pickersLayoutClasses.actionBar}`]: {
         backgroundColor: getPalette("surface.white"),
         borderTop: `1px solid ${getPalette("border.gray-light")}`,
