@@ -18,6 +18,7 @@ import {
   svgIconClasses,
 } from "@mui/material";
 import {
+  dateCalendarClasses,
   dayCalendarClasses,
   monthCalendarClasses,
   pickersDayClasses,
@@ -430,10 +431,11 @@ export const MuiDateCalendar: Components["MuiDateCalendar"] = {
   styleOverrides: {
     root: {
       backgroundColor: getPalette("surface.secondary-subtler"),
+      borderRadius: getRadius("xlarge2"),
       height: "auto",
       // * 6줄이 보이기 위한 처리
       minHeight: "400px",
-
+      outline: `1px solid ${getPalette("border.secondary-light")}`,
       paddingTop: "16px",
       width: "384px",
     },
@@ -494,7 +496,6 @@ export const MuiYearCalendar: Components["MuiYearCalendar"] = {
   },
 };
 
-// * action bar
 export const MuiPickersLayout: Components["MuiPickersLayout"] = {
   styleOverrides: {
     root: {
@@ -507,6 +508,15 @@ export const MuiPickersLayout: Components["MuiPickersLayout"] = {
         borderTop: `1px solid ${getPalette("border.gray-light")}`,
         padding: "15px 24px 16px 24px",
       },
+
+      // * 캘린더 단독으로 사용시 borderRadius 중복 제거
+      [`& .${pickersLayoutClasses.contentWrapper} .${dateCalendarClasses.root}`]:
+        {
+          borderRadius: "unset",
+          borderTopLeftRadius: getRadius("xlarge2"),
+          borderTopRightRadius: getRadius("xlarge2"),
+          outline: "none",
+        },
     },
   },
 };
