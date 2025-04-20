@@ -9,9 +9,12 @@ import {
   svgIconClasses,
 } from "@mui/material";
 import {
+  dayCalendarClasses,
+  pickersDayClasses,
   pickersInputBaseClasses,
   pickersOutlinedInputClasses,
   pickersSectionListClasses,
+  yearCalendarClasses,
 } from "@mui/x-date-pickers";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
@@ -28,9 +31,16 @@ declare module "@mui/x-date-pickers/PickersTextField" {
   }
 }
 
+export const MuiLocalizationProvider: Components["MuiLocalizationProvider"] = {
+  defaultProps: {
+    adapterLocale: "ko",
+  },
+};
+
 export const MuiDatePicker: Components["MuiDatePicker"] = {
   defaultProps: {
     format: "yyyy.MM.dd",
+    showDaysOutsideCurrentMonth: true,
     slotProps: {
       textField: {
         size: "medium",
@@ -198,5 +208,123 @@ export const MuiPickersOutlinedInput: Components["MuiPickersOutlinedInput"] = {
         opacity: 1,
       },
     },
+  },
+};
+
+// * calendar
+export const MuiPickerPopper: Components["MuiPickerPopper"] = {
+  styleOverrides: {
+    paper: {
+      backgroundColor: getPalette("surface.secondary-subtler"),
+      borderRadius: getRadius("xlarge2"),
+      boxShadow: "none",
+      outline: `1px solid ${getPalette("border.secondary-light")}`,
+    },
+  },
+};
+
+export const MuiPickersDay: Components["MuiPickersDay"] = {
+  styleOverrides: {
+    root: ({ theme }) => ({
+      ...getTypography("pc.label.medium"),
+      color: getPalette("text.basic"),
+      height: "44px",
+      width: "44px",
+      position: "relative",
+
+      [(theme as Theme).breakpoints.down("medium")]: {
+        ...getTypography("mobile.label.medium"),
+      },
+
+      [`&.${pickersDayClasses.selected}`]: {
+        backgroundColor: `${getPalette("action.secondary-active")} !important`,
+        color: getPalette("text.inverse-static"),
+      },
+
+      [`&.${pickersDayClasses.today}`]: {
+        [`&:not(.${pickersDayClasses.selected})`]: {
+          backgroundColor: getPalette("element.inverse"),
+          border: "none",
+        },
+
+        "&::after": {
+          borderRadius: "50%",
+          backgroundColor: getPalette("element.point"),
+          content: '""',
+          display: "block",
+          position: "absolute",
+          bottom: "6px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "4px",
+          height: "4px",
+        },
+      },
+
+      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
+        color: getPalette("text.disabled"),
+      },
+    }),
+  },
+};
+
+export const MuiDayCalendar: Components["MuiDayCalendar"] = {
+  styleOverrides: {
+    root: ({ theme }) => ({
+      padding: "0 16px",
+
+      [`& .${dayCalendarClasses.header}`]: {
+        [`& .${dayCalendarClasses.weekDayLabel}`]: {
+          ...getTypography("pc.label.small"),
+          color: getPalette("text.basic"),
+          width: "44px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            ...getTypography("mobile.label.small"),
+          },
+        },
+      },
+
+      [`& .${dayCalendarClasses.slideTransition}`]: {
+        minHeight: "376px",
+      },
+    }),
+  },
+};
+
+export const MuiDateCalendar: Components["MuiDateCalendar"] = {
+  styleOverrides: {
+    root: {
+      height: "auto",
+      minHeight: "448px",
+      width: "384px",
+    },
+  },
+};
+
+export const MuiYearCalendar: Components["MuiYearCalendar"] = {
+  styleOverrides: {
+    root: ({ theme }) => ({
+      width: "auto",
+      padding: "0 16px",
+
+      [`& .${yearCalendarClasses.button}`]: {
+        ...getTypography("pc.label.medium"),
+        color: getPalette("text.basic"),
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          ...getTypography("mobile.label.medium"),
+        },
+
+        [`&.${yearCalendarClasses.selected}`]: {
+          backgroundColor: `${getPalette("action.secondary-active")} !important`,
+          color: getPalette("text.inverse-static"),
+        },
+
+        [`&.${yearCalendarClasses.disabled}`]: {
+          color: getPalette("text.disabled"),
+        },
+      },
+    }),
   },
 };
