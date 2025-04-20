@@ -23,6 +23,11 @@ const meta: Meta<typeof DatePicker> = {
         type: "boolean",
       },
     },
+    showDaysOutsideCurrentMonth: {
+      control: {
+        type: "boolean",
+      },
+    },
   },
 };
 
@@ -31,6 +36,7 @@ export default meta;
 export const ExampleDateInput = {
   args: {
     disabled: false,
+    showDaysOutsideCurrentMonth: true,
     slotProps: {
       textField: {
         size: "medium",
@@ -40,7 +46,7 @@ export const ExampleDateInput = {
   },
   render: (args: DatePickerProps) => {
     return (
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="ko">
         <DatePicker {...args} />
       </LocalizationProvider>
     );

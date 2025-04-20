@@ -28,7 +28,7 @@ import {
   usePickerActionsContext,
   yearCalendarClasses,
 } from "@mui/x-date-pickers";
-import * as S from "#/components/base/mui-x/date-picker.styles";
+import * as S from "#/components/base/mui-x/date-pickers.styles";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
@@ -50,7 +50,7 @@ export const MuiLocalizationProvider: Components["MuiLocalizationProvider"] = {
   },
 };
 
-export function DatePickerHeader(props: PickersCalendarHeaderProps) {
+function DatePickerHeader(props: PickersCalendarHeaderProps) {
   const { currentMonth, onMonthChange, onViewChange } = props;
 
   const handleNextMonth = () =>
@@ -109,7 +109,7 @@ export function DatePickerHeader(props: PickersCalendarHeaderProps) {
   );
 }
 
-export function DatePickerActionBar(props: PickersActionBarProps) {
+function DatePickerActionBar(props: PickersActionBarProps) {
   const { actions, className } = props;
   const { setValueToToday, acceptValueChanges, cancelValueChanges } =
     usePickerActionsContext();
@@ -165,8 +165,6 @@ export const MuiDatePicker: Components["MuiDatePicker"] = {
     slots: {
       // * https://mui.com/x/react-date-pickers/custom-components/#component
       actionBar: DatePickerActionBar,
-      // * https://mui.com/x/react-date-pickers/custom-components/#calendar-header
-      calendarHeader: DatePickerHeader,
     },
     views: ["year", "month", "day"],
   },
@@ -338,10 +336,7 @@ export const MuiPickersOutlinedInput: Components["MuiPickersOutlinedInput"] = {
 export const MuiPickerPopper: Components["MuiPickerPopper"] = {
   styleOverrides: {
     paper: {
-      backgroundColor: getPalette("surface.secondary-subtler"),
-      borderRadius: getRadius("xlarge2"),
       boxShadow: "none",
-      outline: `1px solid ${getPalette("border.secondary-light")}`,
     },
   },
 };
@@ -423,11 +418,21 @@ export const MuiDayCalendar: Components["MuiDayCalendar"] = {
 };
 
 export const MuiDateCalendar: Components["MuiDateCalendar"] = {
+  defaultProps: {
+    showDaysOutsideCurrentMonth: true,
+    slots: {
+      // * https://mui.com/x/react-date-pickers/custom-components/#calendar-header
+      calendarHeader: DatePickerHeader,
+    },
+  },
   styleOverrides: {
     root: {
+      backgroundColor: getPalette("surface.secondary-subtler"),
+      borderRadius: getRadius("xlarge2"),
       height: "auto",
       // * 6줄이 보이기 위한 처리
       minHeight: "400px",
+      outline: `1px solid ${getPalette("border.secondary-light")}`,
       paddingTop: "16px",
       width: "384px",
     },

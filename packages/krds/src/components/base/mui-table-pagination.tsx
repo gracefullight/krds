@@ -2,9 +2,9 @@ import type { Components } from "@mui/material";
 import type { TablePaginationActionsProps } from "@mui/material/TablePagination/TablePaginationActions";
 import type { ChangeEvent } from "react";
 
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { getPalette } from "#/design-tokens/palettes";
+import * as S from "#/components/base/mui/table-pagination.styles";
 
 declare module "@mui/material/TablePagination" {}
 
@@ -39,8 +39,8 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   };
 
   return (
-    <Box sx={{ display: "flex", gap: "16px" }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+    <S.PaginationContainer>
+      <S.PaginationTextFieldContainer>
         <TextField
           size="small"
           value={pageInput}
@@ -52,13 +52,10 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
           }}
           error={!isValidPage}
         />
-        <Typography
-          variant="body-small"
-          sx={{ marginLeft: "9px", color: getPalette("text.subtle") }}
-        >
+        <S.TotalPageTypography variant="body-small">
           /{totalPages}
-        </Typography>
-      </Box>
+        </S.TotalPageTypography>
+      </S.PaginationTextFieldContainer>
       <Button
         variant="outlined"
         color="secondary"
@@ -68,7 +65,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
       >
         이동
       </Button>
-    </Box>
+    </S.PaginationContainer>
   );
 }
 
