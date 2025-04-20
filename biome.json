@@ -22,11 +22,17 @@
       "recommended": true,
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
-        "noUselessStringConcat": "error"
+        "noUselessStringConcat": "error",
+        "noUselessUndefinedInitialization": "error",
+        "useSimplifiedLogicExpression": "error"
       },
       "correctness": {
+        "noConstantMathMinMaxClamp": "error",
+        "noUnusedFunctionParameters": "error",
         "noUnusedImports": "error",
+        "noUnusedPrivateClassMembers": "error",
         "noUnusedVariables": "error",
+        "useArrayLiterals": "error",
         "useHookAtTopLevel": "error"
       },
       "nursery": {
@@ -34,9 +40,14 @@
         "noNestedTernary": "error"
       },
       "style": {
+        "noNegationElse": "error",
+        "noParameterProperties": "error",
         "noYodaExpression": "error",
-        "useConsistentArrayType": "error",
         "useCollapsedElseIf": "error",
+        "useConsistentArrayType": "error",
+        "useConsistentBuiltinInstantiation": "error",
+        "useDefaultSwitchClause": "error",
+        "useExplicitLengthCheck": "error",
         "useExportType": "error",
         "useFilenamingConvention": {
           "level": "error",
@@ -45,6 +56,7 @@
           }
         },
         "useImportType": "error",
+        "useNamingConvention": "error",
         "useThrowNewError": "error"
       },
       "suspicious": {
