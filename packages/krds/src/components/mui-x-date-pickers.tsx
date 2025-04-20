@@ -1,5 +1,8 @@
 import type { Components, Theme } from "@mui/material";
-import type { PickersCalendarHeaderProps } from "@mui/x-date-pickers/PickersCalendarHeader";
+import type {
+  PickersActionBarProps,
+  PickersCalendarHeaderProps,
+} from "@mui/x-date-pickers";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type { VariantStyleProps } from "#/components/component.types";
 
@@ -7,15 +10,11 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
-  Box,
   Button,
-  IconButton,
   Typography,
-  buttonClasses,
   formHelperTextClasses,
   iconButtonClasses,
   inputAdornmentClasses,
-  styled,
   svgIconClasses,
 } from "@mui/material";
 import {
@@ -26,8 +25,10 @@ import {
   pickersLayoutClasses,
   pickersOutlinedInputClasses,
   pickersSectionListClasses,
+  usePickerActionsContext,
   yearCalendarClasses,
 } from "@mui/x-date-pickers";
+import * as S from "#/components/mui-x/date-picker.styles";
 import { getPalette } from "#/design-tokens/palettes";
 import { getRadius } from "#/design-tokens/radius";
 import { getTypography } from "#/design-tokens/typography";
@@ -48,47 +49,6 @@ export const MuiLocalizationProvider: Components["MuiLocalizationProvider"] = {
     adapterLocale: "ko",
   },
 };
-
-const HeaderContainer = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: "8px 24px",
-  width: "100%",
-});
-
-const ButtonsContainer = styled(Box)({
-  display: "flex",
-  gap: "8px",
-});
-
-const MonthIconButton = styled(IconButton)({
-  border: `0.8px solid ${getPalette("border.gray-light")}`,
-  borderRadius: getRadius("max"),
-
-  [`& .${svgIconClasses.root}`]: {
-    color: getPalette("icon.gray"),
-    width: "19.2px",
-    height: "19.2px",
-  },
-});
-
-const SelectorButton = styled(Button)(({ theme }) => ({
-  ...getTypography("pc.heading.small"),
-  [theme.breakpoints.down("medium")]: {
-    ...getTypography("mobile.heading.small"),
-  },
-
-  color: getPalette("text.basic"),
-  minWidth: "auto",
-  textTransform: "none",
-
-  [`& .${buttonClasses.endIcon} .${svgIconClasses.root}`]: {
-    color: getPalette("icon.gray"),
-    width: "16px",
-    height: "16px",
-  },
-}));
 
 export function DatePickerHeader(props: PickersCalendarHeaderProps) {
   const { currentMonth, onMonthChange, onViewChange } = props;
@@ -115,13 +75,13 @@ export function DatePickerHeader(props: PickersCalendarHeaderProps) {
   };
 
   return (
-    <HeaderContainer>
-      <MonthIconButton aria-label="이전 달" onClick={handlePreviousMonth}>
+    <S.HeaderContainer>
+      <S.MonthIconButton aria-label="이전 달" onClick={handlePreviousMonth}>
         <ChevronLeftIcon />
-      </MonthIconButton>
+      </S.MonthIconButton>
 
-      <ButtonsContainer>
-        <SelectorButton
+      <S.HeaderButtonsContainer>
+        <S.SelectorButton
           onClick={handleYearClick}
           variant="text"
           endIcon={<ArrowDropDownIcon />}
@@ -129,9 +89,9 @@ export function DatePickerHeader(props: PickersCalendarHeaderProps) {
           <Typography variant="heading-small">
             {currentMonth.toFormat("yyyy")}년
           </Typography>
-        </SelectorButton>
+        </S.SelectorButton>
 
-        <SelectorButton
+        <S.SelectorButton
           onClick={handleMonthClick}
           variant="text"
           endIcon={<ArrowDropDownIcon />}
@@ -139,13 +99,54 @@ export function DatePickerHeader(props: PickersCalendarHeaderProps) {
           <Typography variant="heading-small">
             {currentMonth.toFormat("MM")}월
           </Typography>
-        </SelectorButton>
-      </ButtonsContainer>
+        </S.SelectorButton>
+      </S.HeaderButtonsContainer>
 
-      <MonthIconButton aria-label="다음 달" onClick={handleNextMonth}>
+      <S.MonthIconButton aria-label="다음 달" onClick={handleNextMonth}>
         <ChevronRightIcon />
-      </MonthIconButton>
-    </HeaderContainer>
+      </S.MonthIconButton>
+    </S.HeaderContainer>
+  );
+}
+
+export function DatePickerActionBar(props: PickersActionBarProps) {
+  const { actions, className } = props;
+  const { setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
+
+  if (actions == null || actions.length === 0) {
+    return null;
+  }
+
+  return (
+    <S.ActionBarContainer className={className}>
+      <Button onClick={() => setValueToToday()} variant="text" size="small">
+        오늘
+      </Button>
+
+      <S.ActionButtonsContainer>
+        {actions?.includes("cancel") && (
+          <S.ActionButton
+            onClick={() => cancelValueChanges()}
+            variant="outlined"
+            color="tertiary"
+            size="small"
+          >
+            취소
+          </S.ActionButton>
+        )}
+
+        {actions?.includes("accept") && (
+          <S.ActionButton
+            onClick={() => acceptValueChanges()}
+            variant="contained"
+            size="small"
+          >
+            선택
+          </S.ActionButton>
+        )}
+      </S.ActionButtonsContainer>
+    </S.ActionBarContainer>
   );
 }
 
@@ -155,13 +156,15 @@ export const MuiDatePicker: Components["MuiDatePicker"] = {
     showDaysOutsideCurrentMonth: true,
     slotProps: {
       actionBar: {
-        actions: ["cancel", "accept"],
+        actions: ["today", "cancel", "accept"],
       },
       textField: {
         size: "medium",
       },
     },
     slots: {
+      // * https://mui.com/x/react-date-pickers/custom-components/#component
+      actionBar: DatePickerActionBar,
       // * https://mui.com/x/react-date-pickers/custom-components/#calendar-header
       calendarHeader: DatePickerHeader,
     },
