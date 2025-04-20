@@ -1,17 +1,29 @@
 import type { Components, Theme } from "@mui/material";
+import type { PickersCalendarHeaderProps } from "@mui/x-date-pickers/PickersCalendarHeader";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type { VariantStyleProps } from "#/components/component.types";
 
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  buttonClasses,
   formHelperTextClasses,
   iconButtonClasses,
   inputAdornmentClasses,
+  styled,
   svgIconClasses,
 } from "@mui/material";
 import {
   dayCalendarClasses,
+  monthCalendarClasses,
   pickersDayClasses,
   pickersInputBaseClasses,
+  pickersLayoutClasses,
   pickersOutlinedInputClasses,
   pickersSectionListClasses,
   yearCalendarClasses,
@@ -37,15 +49,123 @@ export const MuiLocalizationProvider: Components["MuiLocalizationProvider"] = {
   },
 };
 
+const HeaderContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "8px 24px",
+  width: "100%",
+});
+
+const ButtonsContainer = styled(Box)({
+  display: "flex",
+  gap: "8px",
+});
+
+const MonthIconButton = styled(IconButton)({
+  border: `0.8px solid ${getPalette("border.gray-light")}`,
+  borderRadius: getRadius("max"),
+
+  [`& .${svgIconClasses.root}`]: {
+    color: getPalette("icon.gray"),
+    width: "19.2px",
+    height: "19.2px",
+  },
+});
+
+const SelectorButton = styled(Button)(({ theme }) => ({
+  ...getTypography("pc.heading.small"),
+  [theme.breakpoints.down("medium")]: {
+    ...getTypography("mobile.heading.small"),
+  },
+
+  color: getPalette("text.basic"),
+  minWidth: "auto",
+  textTransform: "none",
+
+  [`& .${buttonClasses.endIcon} .${svgIconClasses.root}`]: {
+    color: getPalette("icon.gray"),
+    width: "16px",
+    height: "16px",
+  },
+}));
+
+export function DatePickerHeader(props: PickersCalendarHeaderProps) {
+  const { currentMonth, onMonthChange, onViewChange } = props;
+
+  const handleNextMonth = () =>
+    onMonthChange(
+      currentMonth.plus({
+        months: 1,
+      }),
+    );
+  const handlePreviousMonth = () =>
+    onMonthChange(
+      currentMonth.minus({
+        months: 1,
+      }),
+    );
+
+  const handleYearClick = () => {
+    onViewChange?.("year");
+  };
+
+  const handleMonthClick = () => {
+    onViewChange?.("month");
+  };
+
+  return (
+    <HeaderContainer>
+      <MonthIconButton aria-label="이전 달" onClick={handlePreviousMonth}>
+        <ChevronLeftIcon />
+      </MonthIconButton>
+
+      <ButtonsContainer>
+        <SelectorButton
+          onClick={handleYearClick}
+          variant="text"
+          endIcon={<ArrowDropDownIcon />}
+        >
+          <Typography variant="heading-small">
+            {currentMonth.toFormat("yyyy")}년
+          </Typography>
+        </SelectorButton>
+
+        <SelectorButton
+          onClick={handleMonthClick}
+          variant="text"
+          endIcon={<ArrowDropDownIcon />}
+        >
+          <Typography variant="heading-small">
+            {currentMonth.toFormat("MM")}월
+          </Typography>
+        </SelectorButton>
+      </ButtonsContainer>
+
+      <MonthIconButton aria-label="다음 달" onClick={handleNextMonth}>
+        <ChevronRightIcon />
+      </MonthIconButton>
+    </HeaderContainer>
+  );
+}
+
 export const MuiDatePicker: Components["MuiDatePicker"] = {
   defaultProps: {
     format: "yyyy.MM.dd",
     showDaysOutsideCurrentMonth: true,
     slotProps: {
+      actionBar: {
+        actions: ["cancel", "accept"],
+      },
       textField: {
         size: "medium",
       },
     },
+    slots: {
+      // * https://mui.com/x/react-date-pickers/custom-components/#calendar-header
+      calendarHeader: DatePickerHeader,
+    },
+    views: ["year", "month", "day"],
   },
 };
 
@@ -274,6 +394,8 @@ export const MuiDayCalendar: Components["MuiDayCalendar"] = {
       padding: "0 16px",
 
       [`& .${dayCalendarClasses.header}`]: {
+        justifyContent: "space-between",
+
         [`& .${dayCalendarClasses.weekDayLabel}`]: {
           ...getTypography("pc.label.small"),
           color: getPalette("text.basic"),
@@ -286,7 +408,12 @@ export const MuiDayCalendar: Components["MuiDayCalendar"] = {
       },
 
       [`& .${dayCalendarClasses.slideTransition}`]: {
-        minHeight: "376px",
+        // * 6줄이 보이기 위한 처리
+        minHeight: "280px",
+
+        [`& .${dayCalendarClasses.weekContainer}`]: {
+          justifyContent: "space-between",
+        },
       },
     }),
   },
@@ -296,9 +423,38 @@ export const MuiDateCalendar: Components["MuiDateCalendar"] = {
   styleOverrides: {
     root: {
       height: "auto",
-      minHeight: "448px",
+      // * 6줄이 보이기 위한 처리
+      minHeight: "400px",
+      paddingTop: "16px",
       width: "384px",
     },
+  },
+};
+
+export const MuiMonthCalendar: Components["MuiMonthCalendar"] = {
+  styleOverrides: {
+    root: ({ theme }) => ({
+      width: "auto",
+      padding: "0 16px",
+
+      [`& .${monthCalendarClasses.button}`]: {
+        ...getTypography("pc.label.medium"),
+        color: getPalette("text.basic"),
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          ...getTypography("mobile.label.medium"),
+        },
+
+        [`&.${monthCalendarClasses.selected}`]: {
+          backgroundColor: `${getPalette("action.secondary-active")} !important`,
+          color: getPalette("text.inverse-static"),
+        },
+
+        [`&.${monthCalendarClasses.disabled}`]: {
+          color: getPalette("text.disabled"),
+        },
+      },
+    }),
   },
 };
 
@@ -326,5 +482,18 @@ export const MuiYearCalendar: Components["MuiYearCalendar"] = {
         },
       },
     }),
+  },
+};
+
+// * action bar
+export const MuiPickersLayout: Components["MuiPickersLayout"] = {
+  styleOverrides: {
+    root: {
+      [`& .${pickersLayoutClasses.actionBar}`]: {
+        backgroundColor: getPalette("surface.white"),
+        borderTop: `1px solid ${getPalette("border.gray-light")}`,
+        padding: "15px 24px 16px 24px",
+      },
+    },
   },
 };
