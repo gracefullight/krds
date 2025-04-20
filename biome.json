@@ -56,7 +56,6 @@
           }
         },
         "useImportType": "error",
-        "useNamingConvention": "error",
         "useThrowNewError": "error"
       },
       "suspicious": {
