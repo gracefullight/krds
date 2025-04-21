@@ -1,11 +1,14 @@
-# Korea Design System Theme for MUI
+# 대한민국 정부 디자인 시스템 테마 및 컴포넌트 for MUI
 
-🇰🇷 A custom MUI (Material UI) theme inspired by the [Korea Design System](https://www.krds.go.kr/) — optimized for consistent, accessible, and elegant UI across Korean digital products.
+[English](README.en.md)
 
-## Features
+🇰🇷 [대한민국 정부 디자인 시스템](https://www.krds.go.kr/)에서 영감을 받은 MUI(Material UI) 테마와 컴포넌트 — 정부 웹앱 디지털 서비스를 설계하고 구축하는 데 도움이 되는 원칙, 지침 및 코드를 제공합니다.
 
-- KRDS typography and spacing rules applied
-- Accessible and contrast-friendly color palette
-- Harmonized UI components styled with user-centered KRDS design guidelines
-- Fully compatible with MUI v7
-- Easily extendable and customizable
+## 주요 특징
+
+- KRDS 타이포그래피 및 간격 규칙 적용
+- 접근성 및 대비 친화적인 색상 팔레트
+- 사용자 중심의 KRDS 디자인 가이드라인을 준수한 UI 컴포넌트
+- MUI v7과 완벽 호환
+- 손쉽게 확장 및 커스터마이징 가능
+- 빠른 개발을 위한 사전 제작된 UI 컴포넌트
