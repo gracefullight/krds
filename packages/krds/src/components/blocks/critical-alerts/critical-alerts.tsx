@@ -50,7 +50,7 @@ export default function CriticalAlerts({
       </S.IconContainer>
 
       <S.ContentContainer>
-        <S.AlertTitle variant="heading-small">{content}</S.AlertTitle>
+        <S.AlertTitle>{content}</S.AlertTitle>
 
         {onClick && (
           <Button

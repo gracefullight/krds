@@ -67,9 +67,16 @@ export const ContentContainer: ComponentType<BoxProps> = styled(Box)({
   gap: "16px",
 });
 
-export const AlertTitle: ComponentType<TypographyProps> = styled(Typography)({
-  color: getPalette("text.bolder"),
-});
+export const AlertTitle: ComponentType<TypographyProps> = styled(Typography)(
+  ({ theme }) => ({
+    ...getTypography("pc.heading.small"),
+    color: getPalette("text.bolder"),
+
+    [theme.breakpoints.down("medium")]: {
+      ...getTypography("mobile.heading.small"),
+    },
+  }),
+);
 
 export const ButtonText: ComponentType<TypographyProps> = styled(Typography)(
   ({ theme }) => ({
