@@ -32,8 +32,19 @@ export default function MuiProvider({ children }: PropsWithChildren) {
 /// <reference types="@gracefullight/krds" />
 ```
 
+## 사용
+
+```tsx
+import { Button } from "@mui/material";
+import { CriticalAlerts } from "@gracefullight/krds/components";
+```
+
 ## TODO
 
+- [x] Mui 컴포넌트 추가, 조합 컴포넌트 추가: 0.9.0
+  - critical-alerts
+  - date-picker
+  - tooltip
 - [x] Mui 컴포넌트 추가: 0.8.0
   - stepper
   - switch
