@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { CircularProgress } from "@mui/material";
 
@@ -26,7 +26,9 @@ const meta: Meta<typeof CircularProgress> = {
 
 export default meta;
 
-export const ExampleSpinner = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleSpinner: Story = {
   args: {
     disableShrink: false,
     size: "medium",

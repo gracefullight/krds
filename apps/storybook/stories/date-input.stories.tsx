@@ -1,5 +1,5 @@
 import type { DatePickerProps } from "@mui/x-date-pickers";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -33,7 +33,9 @@ const meta: Meta<typeof DatePicker> = {
 
 export default meta;
 
-export const ExampleDateInput = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleDateInput: Story = {
   args: {
     disabled: false,
     showDaysOutsideCurrentMonth: true,
@@ -53,7 +55,7 @@ export const ExampleDateInput = {
   },
 };
 
-export const ExampleDateInputWithHelperText = {
+export const ExampleDateInputWithHelperText: Story = {
   args: {
     disabled: false,
     slotProps: {

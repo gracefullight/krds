@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -59,7 +59,9 @@ const meta: Meta<typeof Tooltip> = {
 
 export default meta;
 
-export const ExampleTooltip = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleTooltip: Story = {
   args: {
     arrow: true,
     open: true,

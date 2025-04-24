@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Tab, Tabs } from "@mui/material";
 import { fn } from "@storybook/test";
@@ -31,7 +31,9 @@ const meta: Meta<typeof Tabs> = {
 
 export default meta;
 
-export const ExampleTabs = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleTabs: Story = {
   args: {
     type: "primary",
     fill: "outlined",

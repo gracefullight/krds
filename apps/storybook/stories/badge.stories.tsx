@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Badge } from "@mui/material";
 
@@ -54,7 +54,9 @@ const meta: Meta<typeof Badge> = {
 
 export default meta;
 
-export const ExampleBadge = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleBadge: Story = {
   args: {
     badgeContent: "3",
     color: "primary",

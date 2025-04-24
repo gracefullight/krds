@@ -1,5 +1,5 @@
 import type { TableProps } from "@mui/material/Table";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import {
   Table,
@@ -26,7 +26,9 @@ const meta: Meta<typeof Table> = {
 
 export default meta;
 
-export const ExampleTable = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleTable: Story = {
   args: {
     sx: {
       minWidth: "500px",

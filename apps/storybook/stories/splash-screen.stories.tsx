@@ -25,9 +25,10 @@ const meta: Meta<typeof SplashScreen> = {
       },
     },
   },
-} satisfies Meta<typeof SplashScreen>;
+};
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const ExampleSplashScreen: Story = {};

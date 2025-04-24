@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Button } from "@mui/material";
 import { fn } from "@storybook/test";
@@ -37,7 +37,9 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
-export const ExampleButton = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleButton: Story = {
   args: {
     color: "primary",
     disabled: false,

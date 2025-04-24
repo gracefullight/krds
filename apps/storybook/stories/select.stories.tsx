@@ -1,13 +1,7 @@
+import type { SelectProps } from "@mui/material";
 import type { Meta } from "@storybook/react";
 
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  type SelectProps,
-} from "@mui/material";
-import { fn } from "@storybook/test";
+import { MenuItem, Select } from "@mui/material";
 
 const meta: Meta<typeof Select> = {
   title: "KRDS/Select",

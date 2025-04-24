@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Chip } from "@mui/material";
 import { fn } from "@storybook/test";
@@ -27,7 +27,9 @@ const meta: Meta<typeof Chip> = {
 
 export default meta;
 
-export const ExampleTag = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleTag: Story = {
   args: {
     clickable: false,
     label: "태그",
@@ -35,7 +37,7 @@ export const ExampleTag = {
   },
 };
 
-export const ExampleDeletableTag = {
+export const ExampleDeletableTag: Story = {
   args: {
     clickable: false,
     label: "태그",

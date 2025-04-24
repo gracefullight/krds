@@ -1,5 +1,5 @@
 import type { CheckboxProps } from "@mui/material";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Checkbox, FormControlLabel } from "@mui/material";
 
@@ -30,7 +30,9 @@ const meta: Meta<typeof Checkbox> = {
 
 export default meta;
 
-export const ExampleCheckbox = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleCheckbox: Story = {
   args: {
     disabled: false,
     indeterminate: false,

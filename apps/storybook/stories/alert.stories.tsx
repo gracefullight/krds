@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Alert, AlertTitle } from "@mui/material";
 
@@ -23,14 +23,16 @@ const meta: Meta<typeof Alert> = {
 
 export default meta;
 
-export const ExampleAlert = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleAlert: Story = {
   args: {
     severity: "success",
     children: "메세지 내용 최대 1줄",
   },
 };
 
-export const ExampleAlertWithTitle = {
+export const ExampleAlertWithTitle: Story = {
   args: {
     severity: "success",
     children: (

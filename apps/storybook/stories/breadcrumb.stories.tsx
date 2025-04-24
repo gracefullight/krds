@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import HomeIcon from "@mui/icons-material/Home";
 import { Breadcrumbs, Link } from "@mui/material";
@@ -19,7 +19,9 @@ const meta: Meta<typeof Breadcrumbs> = {
 
 export default meta;
 
-export const ExampleBreadcrumbs = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleBreadcrumbs: Story = {
   args: {
     children: [
       <Link key="home">
@@ -33,7 +35,7 @@ export const ExampleBreadcrumbs = {
   },
 };
 
-export const ExampleCollapsedBreadcrumbs = {
+export const ExampleCollapsedBreadcrumbs: Story = {
   args: {
     children: [
       <Link key="home">

@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { DialogTitle, IconButton, SwipeableDrawer } from "@mui/material";
@@ -27,7 +27,9 @@ const meta: Meta<typeof SwipeableDrawer> = {
 
 export default meta;
 
-export const ExampleBottomSheet = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleBottomSheet: Story = {
   args: {
     open: true,
     anchor: "bottom",

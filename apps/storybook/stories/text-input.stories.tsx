@@ -1,5 +1,5 @@
 import type { OutlinedInputProps } from "@mui/material";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -55,7 +55,9 @@ const meta: Meta<typeof TextField> = {
 
 export default meta;
 
-export const ExampleTextField = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleTextField: Story = {
   args: {
     disabled: false,
     error: false,
@@ -65,7 +67,7 @@ export const ExampleTextField = {
   },
 };
 
-export const ExampleTextFieldWithHelperText = {
+export const ExampleTextFieldWithHelperText: Story = {
   args: {
     disabled: false,
     error: false,
@@ -81,7 +83,7 @@ export const ExampleTextFieldWithHelperText = {
   },
 };
 
-export const ExampleTextFieldWithIcons = {
+export const ExampleTextFieldWithIcons: Story = {
   args: {
     disabled: false,
     error: false,

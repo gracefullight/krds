@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { LinearProgress } from "@mui/material";
 
@@ -38,7 +38,9 @@ const meta: Meta<typeof LinearProgress> = {
 
 export default meta;
 
-export const ExampleProgressBar = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleProgressBar: Story = {
   args: {
     color: "primary",
     size: "medium",

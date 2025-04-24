@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Pagination } from "@mui/material";
 
@@ -22,7 +22,9 @@ const meta: Meta<typeof Pagination> = {
 
 export default meta;
 
-export const ExamplePagination = {
+type Story = StoryObj<typeof meta>;
+
+export const ExamplePagination: Story = {
   args: {
     count: 10,
   },

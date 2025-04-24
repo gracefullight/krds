@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { FormControlLabel, Switch, type SwitchProps } from "@mui/material";
 
@@ -30,7 +30,9 @@ const meta: Meta<typeof Switch> = {
 
 export default meta;
 
-export const ExampleToggleSwitch = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleToggleSwitch: Story = {
   args: {
     disabled: false,
     size: "medium",

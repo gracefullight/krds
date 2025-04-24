@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -35,7 +35,9 @@ const meta: Meta<typeof Dialog> = {
 
 export default meta;
 
-export const ExampleModal = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleModal: Story = {
   args: {
     maxWidth: "medium",
     open: true,

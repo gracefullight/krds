@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import type { DateCalendarProps } from "node_modules/@mui/x-date-pickers";
 
 import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
@@ -24,7 +24,9 @@ const meta: Meta<typeof DateCalendar> = {
 
 export default meta;
 
-export const ExampleCalendar = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleCalendar: Story = {
   args: {
     showDaysOutsideCurrentMonth: true,
   },

@@ -1,5 +1,5 @@
 import type { RadioProps } from "@mui/material";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
@@ -27,7 +27,9 @@ const meta: Meta<typeof Radio> = {
 
 export default meta;
 
-export const ExampleRadioButton = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleRadioButton: Story = {
   args: {
     disabled: false,
     size: "medium",
@@ -39,7 +41,7 @@ export const ExampleRadioButton = {
   },
 };
 
-export const ExampleRadioGroup = {
+export const ExampleRadioGroup: Story = {
   args: {
     disabled: false,
     size: "medium",

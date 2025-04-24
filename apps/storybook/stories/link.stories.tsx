@@ -1,4 +1,4 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Link } from "@mui/material";
 
@@ -33,7 +33,9 @@ const meta: Meta<typeof Link> = {
 
 export default meta;
 
-export const ExampleLink = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleLink: Story = {
   args: {
     children: "링크",
     type: "default",

@@ -1,5 +1,5 @@
 import type { StepperProps } from "@mui/material";
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Step, StepLabel, Stepper, Typography } from "@mui/material";
 
@@ -23,7 +23,9 @@ const meta: Meta<typeof Stepper> = {
 
 export default meta;
 
-export const ExampleStepIndicator = {
+type Story = StoryObj<typeof meta>;
+
+export const ExampleStepIndicator: Story = {
   args: {
     activeStep: 1,
     sx: {
