@@ -15,20 +15,21 @@
 - mui >= 7
 - react >= 19
 
-## 설치 방법
+## 시작하기
 
-### 1) 패키지 설치
+### 1. 패키지 설치
 
 ```bash
 pnpm install @gracefullight/krds
 ```
 
-### 2) 테마 적용
+### 2. 테마 적용
 
 아래 예시처럼 ThemeProvider에 KRDS 테마를 적용하세요.
 
 ```ts
 import type { PropsWithChildren } from "react";
+
 import { createKrdsTheme } from "@gracefullight/krds";
 import { ThemeProvider } from "@mui/material/styles";
 

@@ -1,0 +1,85 @@
+import { Meta, Canvas, Markdown } from '@storybook/blocks';
+import { Box } from "@mui/material";
+import Particles from '../components/particles';
+
+<Meta title="Introduction" />
+
+export const ParticlesContainer = ({ children }) => (
+  <Box sx={{ 
+    position: 'relative', 
+    minHeight: '100vh', 
+    width: '100%', 
+    padding: '2rem'
+  }}>
+    <Box sx={{ 
+      position: 'absolute', 
+      top: 0, 
+      left: 0, 
+      width: '100%', 
+      height: '100%', 
+    }}>
+      <Particles 
+        particleCount={350}
+        particleColors={['#256ef4', '#228738', '#d63d4a', '#de3412', '#9e6a00', '#346fb2', '#0b78cb', '#61758f']} 
+        speed={0.15}
+      />
+    </Box>
+    <Box sx={{ 
+      position: 'relative', 
+      zIndex: 1, 
+      color: 'white' 
+    }}>
+      {children}
+    </Box>
+  </Box>
+);
+
+<ParticlesContainer>
+
+# Korea Design System for MUI
+
+🇰🇷 대한민국 정부 디자인 시스템에서 영감을 받은 MUI(Material UI) 테마와 컴포넌트 — 정부 웹앱 디지털 서비스를 설계하고 구축하는 데 도움이 되는 원칙, 지침 및 코드를 제공합니다.
+
+## 시작하기
+
+### 1. 패키지 설치
+
+```bash
+pnpm install @gracefullight/krds
+```
+
+### 2. 테마 적용
+
+아래 예시처럼 ThemeProvider에 KRDS 테마를 적용하세요.
+
+```ts
+import type { PropsWithChildren } from "react";
+
+import { createKrdsTheme } from "@gracefullight/krds";
+import { ThemeProvider } from "@mui/material/styles";
+
+const krdsTheme = createKrdsTheme();
+
+export default function MuiProvider({ children }: PropsWithChildren) {
+  return (
+    <ThemeProvider theme={krdsTheme}>{children}</ThemeProvider>
+  );
+}
+```
+
+> **참고:** 타입 지원이 필요하다면 아래를 추가하세요.
+
+```ts
+/// <reference types="@gracefullight/krds" />
+```
+
+## 사용 예시
+
+KRDS 테마가 적용된 MUI 컴포넌트와 KRDS 전용 컴포넌트를 함께 사용할 수 있습니다.
+
+```tsx
+import { Button } from "@mui/material";
+import { CriticalAlerts } from "@gracefullight/krds/components";
+```
+
+</ParticlesContainer>

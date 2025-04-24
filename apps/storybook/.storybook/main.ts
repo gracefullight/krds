@@ -20,7 +20,7 @@ const config: StorybookConfig = {
     {
       name: getAbsolutePath("@storybook/addon-essentials"),
       options: {
-        docs: false,
+        docs: true,
       },
     },
     getAbsolutePath("@storybook/addon-designs"),
