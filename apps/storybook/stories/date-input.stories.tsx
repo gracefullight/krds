@@ -16,7 +16,7 @@ const meta: Meta<typeof DatePicker> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disabled: {
       control: {

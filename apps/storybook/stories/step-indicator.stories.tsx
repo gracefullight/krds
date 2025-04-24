@@ -13,7 +13,7 @@ const meta: Meta<typeof Stepper> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     activeStep: {
       control: { type: "number", min: 0, max: 4 },

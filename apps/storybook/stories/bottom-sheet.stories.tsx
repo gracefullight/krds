@@ -13,7 +13,7 @@ const meta: Meta<typeof SwipeableDrawer> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     anchor: {
       options: ["bottom"],

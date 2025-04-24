@@ -13,7 +13,7 @@ const meta: Meta<typeof Button> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     color: {
       options: ["primary", "secondary", "tertiary"],

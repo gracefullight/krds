@@ -12,7 +12,7 @@ const meta: Meta<typeof SplashScreen> = {
     },
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     slogan: {
       control: {

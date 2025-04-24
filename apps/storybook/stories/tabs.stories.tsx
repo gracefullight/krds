@@ -13,7 +13,7 @@ const meta: Meta<typeof Tabs> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     fill: {
       options: ["outlined", "contained"],

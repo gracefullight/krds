@@ -13,7 +13,7 @@ const meta: Meta<typeof Select> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disabled: {
       control: { type: "boolean" },

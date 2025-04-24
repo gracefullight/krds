@@ -12,7 +12,7 @@ const meta: Meta<typeof Switch> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disabled: {
       control: {

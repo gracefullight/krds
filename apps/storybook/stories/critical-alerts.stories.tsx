@@ -22,7 +22,6 @@ const meta: Meta<typeof CriticalAlerts> = {
       control: { type: "radio" },
     },
   },
-  tags: ["autodocs"],
 };
 
 export default meta;

@@ -12,7 +12,7 @@ const meta: Meta<typeof Badge> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     badgeContent: {
       control: { type: "text" },

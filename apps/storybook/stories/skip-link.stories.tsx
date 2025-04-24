@@ -13,7 +13,7 @@ const meta: Meta<typeof SkipLink> = {
     },
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     text: {
       control: {

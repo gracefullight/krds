@@ -14,7 +14,7 @@ const meta: Meta<typeof DateCalendar> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     showDaysOutsideCurrentMonth: {
       control: { type: "boolean" },

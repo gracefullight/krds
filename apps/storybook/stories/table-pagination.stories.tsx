@@ -13,7 +13,7 @@ const meta: Meta<typeof TablePagination> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     count: {
       control: { type: "range", min: 1, max: 100 },

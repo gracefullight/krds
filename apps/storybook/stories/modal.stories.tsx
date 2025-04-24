@@ -21,7 +21,7 @@ const meta: Meta<typeof Dialog> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     maxWidth: {
       options: ["small", "medium", "large"],

@@ -13,7 +13,7 @@ const meta: Meta<typeof Chip> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     clickable: {
       control: { type: "boolean" },

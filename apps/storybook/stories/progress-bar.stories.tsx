@@ -12,7 +12,7 @@ const meta: Meta<typeof LinearProgress> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     color: {
       options: ["primary", "success", "error"],

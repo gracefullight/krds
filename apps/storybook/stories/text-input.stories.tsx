@@ -21,7 +21,7 @@ const meta: Meta<typeof TextField> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disabled: {
       control: {

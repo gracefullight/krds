@@ -12,7 +12,7 @@ const meta: Meta<typeof Alert> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     severity: {
       options: ["danger", "warning", "success", "info"],

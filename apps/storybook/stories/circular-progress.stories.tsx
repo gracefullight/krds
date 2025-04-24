@@ -12,7 +12,7 @@ const meta: Meta<typeof CircularProgress> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disableShrink: {
       control: { type: "boolean" },

@@ -12,7 +12,7 @@ const meta: Meta<typeof Link> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     type: {
       options: ["default", "subtle", "subtle-none"],

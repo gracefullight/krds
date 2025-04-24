@@ -13,7 +13,7 @@ const meta: Meta<typeof Checkbox> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {
     disabled: {
       control: { type: "boolean" },

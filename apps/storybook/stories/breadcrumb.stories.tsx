@@ -13,7 +13,7 @@ const meta: Meta<typeof Breadcrumbs> = {
     },
     layout: "centered",
   },
-  tags: ["autodocs"],
+
   argTypes: {},
 };
 
