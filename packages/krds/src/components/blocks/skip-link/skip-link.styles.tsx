@@ -2,6 +2,7 @@ import type { BoxProps } from "@mui/material";
 import type { ComponentType } from "react";
 
 import { Box, styled } from "@mui/material";
+import { getPalette } from "#/design-tokens/palettes";
 import { getTypography } from "#/design-tokens/typography";
 
 export const SkipLink: ComponentType<BoxProps> = styled(Box)(({ theme }) => ({
@@ -11,11 +12,13 @@ export const SkipLink: ComponentType<BoxProps> = styled(Box)(({ theme }) => ({
     ...getTypography("mobile.body.small"),
   },
 
-  width: "100%",
-  display: "flex",
   alignItems: "center",
-  justifyContent: "center",
+  backgroundColor: getPalette("surface.inverse"),
+  color: getPalette("text.bolder-inverse"),
   cursor: "pointer",
-  paddingTop: "4.5px",
+  display: "flex",
+  justifyContent: "center",
   paddingBottom: "4.5px",
+  paddingTop: "4.5px",
+  width: "100%",
 }));
