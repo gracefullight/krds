@@ -110,17 +110,22 @@ export function FlagKr() {
 
 export const MastheadContainer: ComponentType<BoxProps> = styled(Box)(
   ({ theme }) => ({
+    alignItems: "center",
     backgroundColor: getPalette("surface.secondary-subtler"),
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "center",
     gap: "8px",
+    justifyContent: "flex-start",
     paddingBottom: "4.5px",
     paddingTop: "4.5px",
 
     [theme.breakpoints.down("medium")]: {
       paddingLeft: "16px",
       paddingRight: "16px",
+    },
+
+    svg: {
+      width: "24px",
+      height: "24px",
     },
   }),
 );
