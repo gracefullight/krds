@@ -61,6 +61,12 @@ import { CriticalAlerts } from "@gracefullight/krds/components";
 
 ## 변경 이력
 
+- [x] 조합 컴포넌트 추가: 0.10.0
+  - chip
+  - chip-group
+  - masthead
+  - skip-link
+  - splash-screen
 - [x] Mui 컴포넌트 추가, 조합 컴포넌트 추가: 0.9.0
   - critical-alerts
   - date-picker
