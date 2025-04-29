@@ -121,7 +121,12 @@ function DatePickerActionBar(props: PickersActionBarProps) {
 
   return (
     <S.ActionBarContainer className={className}>
-      <Button onClick={() => setValueToToday()} variant="text" size="small">
+      <Button
+        onClick={() => setValueToToday()}
+        variant="text"
+        size="small"
+        data-testid="today-button"
+      >
         오늘
       </Button>
 

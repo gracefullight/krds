@@ -5,6 +5,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { expect, userEvent, within } from "@storybook/test";
+import { DateTime } from "luxon";
 
 const meta: Meta<typeof DatePicker> = {
   title: "KRDS/DateInput",
@@ -77,5 +79,42 @@ export const ExampleDateInputWithHelperText: Story = {
         <DatePicker {...args} />
       </LocalizationProvider>
     );
+  },
+};
+
+export const TestDateInputToday: Story = {
+  render: (args: DatePickerProps) => {
+    return (
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker {...args} />
+      </LocalizationProvider>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const today = DateTime.now();
+
+    await step("Open calendar", async () => {
+      const calendarButton = canvas.getByTestId("CalendarIcon");
+      await userEvent.click(calendarButton);
+    });
+
+    await step("Select today", async () => {
+      const body = within(document.body);
+
+      const todayButton = body.getByTestId("today-button");
+      await userEvent.click(todayButton);
+    });
+
+    await step("Check date input", async () => {
+      const sectionContents = canvas.getAllByRole("spinbutton");
+      const yearSection = sectionContents[0];
+      const monthSection = sectionContents[1];
+      const daySection = sectionContents[2];
+
+      await expect(yearSection).toHaveTextContent(today.toFormat("yyyy"));
+      await expect(monthSection).toHaveTextContent(today.toFormat("MM"));
+      await expect(daySection).toHaveTextContent(today.toFormat("dd"));
+    });
   },
 };
