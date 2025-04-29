@@ -143,6 +143,7 @@ export const MuiTabs: Components["MuiTabs"] = {
               },
 
               [`&.${tabClasses.selected}`]: {
+                backgroundColor: getPalette("action.secondary-active"),
                 borderBlockColor: getPalette("action.secondary-active"),
                 borderLeftColor: getPalette("action.secondary-active"),
                 borderRightColor: getPalette("action.secondary-active"),
@@ -158,6 +159,7 @@ export const MuiTabs: Components["MuiTabs"] = {
               paddingRight: "12px",
 
               [`&.${tabClasses.selected}`]: {
+                backgroundColor: getPalette("action.secondary-active"),
                 borderRadius: getRadius("medium2"),
               },
             },

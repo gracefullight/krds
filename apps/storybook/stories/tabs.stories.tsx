@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { type SyntheticEvent, useState } from "react";
 
 import { Tab, Tabs } from "@mui/material";
-import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Tabs> = {
   title: "KRDS/Tabs",
@@ -38,11 +38,20 @@ export const ExampleTabs: Story = {
     type: "primary",
     fill: "outlined",
     value: 0,
-    onChange: fn(),
-    children: [
-      <Tab key="tab1" label="Tab 1" />,
-      <Tab key="tab2" label="Tab 2" />,
-      <Tab key="tab3" label="Tab 3" />,
-    ],
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || 0);
+
+    const handleChange = (_: SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    };
+
+    return (
+      <Tabs {...args} value={value} onChange={handleChange}>
+        <Tab key="tab1" label="Tab 1" />,
+        <Tab key="tab2" label="Tab 2" />,
+        <Tab key="tab3" label="Tab 3" />,
+      </Tabs>
+    );
   },
 };
