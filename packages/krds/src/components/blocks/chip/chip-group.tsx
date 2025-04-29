@@ -3,9 +3,6 @@ import type { ChipGroupProps } from "#/components/blocks/chip/chip.types";
 import { useCallback } from "react";
 import * as S from "#/components/blocks/chip/chip.styles";
 
-/**
- * 칩 그룹 컴포넌트
- */
 export default function ChipGroup({
   children,
   value,
@@ -13,7 +10,7 @@ export default function ChipGroup({
   multiple = false,
   ...props
 }: ChipGroupProps) {
-  // Helper function to convert value to array
+  // * Helper function to convert value to array
   const getValueArray = useCallback(
     (currentValue: ChipGroupProps["value"]): string[] => {
       if (Array.isArray(currentValue)) return currentValue;
@@ -23,7 +20,6 @@ export default function ChipGroup({
     [],
   );
 
-  // Handle multiple selection
   const handleMultipleSelection = useCallback(
     (chipValue: string, currentValue: ChipGroupProps["value"]) => {
       const valueArray = getValueArray(currentValue);
@@ -34,7 +30,6 @@ export default function ChipGroup({
     [getValueArray],
   );
 
-  // Handle single selection
   const handleSingleSelection = useCallback(
     (chipValue: string, currentValue: ChipGroupProps["value"]) => {
       return chipValue === currentValue ? "" : chipValue;
