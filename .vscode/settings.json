@@ -8,5 +8,8 @@
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "[json,javascript,typescript,typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
