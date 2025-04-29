@@ -20,15 +20,15 @@
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",
-    "@turbo/gen": "^2.5.0",
+    "@turbo/gen": "^2.5.2",
     "@types/node": "^22",
     "devmoji": "^2.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
-    "sort-package-json": "^3.0.0",
-    "turbo": "^2.5.0",
+    "sort-package-json": "^3.1.0",
+    "turbo": "^2.5.2",
     "typescript": "^5",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.2"
   },
   "packageManager": "pnpm@10.9.0"
 }
