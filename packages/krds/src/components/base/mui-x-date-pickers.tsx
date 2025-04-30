@@ -7,6 +7,7 @@ import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
@@ -171,6 +172,7 @@ export const MuiDatePicker: Components["MuiDatePicker"] = {
     slots: {
       // * https://mui.com/x/react-date-pickers/custom-components/#component
       actionBar: DatePickerActionBar,
+      openPickerIcon: CalendarMonthOutlinedIcon,
     },
     views: ["year", "month", "day"],
   },

@@ -95,7 +95,7 @@ export const TestDateInputToday: Story = {
     const today = DateTime.now();
 
     await step("Open calendar", async () => {
-      const calendarButton = canvas.getByTestId("CalendarIcon");
+      const calendarButton = canvas.getByLabelText("Choose date");
       await userEvent.click(calendarButton);
     });
 
