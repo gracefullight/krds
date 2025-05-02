@@ -1,12 +1,10 @@
 import type {
-  ColorKey,
   ColorTheme,
   PaletteKey,
   PaletteValue,
 } from "#/design-tokens/token.types";
 
 import { get } from "es-toolkit/compat";
-import { getColor } from "#/design-tokens/colors";
 import TOKENS from "#/design-tokens/tokens";
 
 declare module "@mui/material/styles" {
@@ -40,10 +38,5 @@ export function getPalette<
   const palette = get(TOKENS, `mode-${t}`);
   const token = get(palette, `color.${key}`) as { readonly value: string };
 
-  const match = /^\{primitive\.color\.[^.]+\.(.+)\}$/.exec(token.value);
-  if (match) {
-    const extractedKey = match[1] as ColorKey;
-    return getColor(extractedKey) as PaletteValue<K, T>;
-  }
   return token.value as PaletteValue<K, T>;
 }

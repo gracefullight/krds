@@ -30,13 +30,6 @@ export type PaletteKey = {
   [K in keyof ModeColorTokens<"light">]: `${K & string}.${Extract<keyof ModeColorTokens<"light">[K], string>}`;
 }[keyof ModeColorTokens<"light">];
 
-export type ResolveReference<V> =
-  V extends `{primitive.color.${infer Th extends ColorTheme}.${infer K extends string}}`
-    ? K extends ColorKey
-      ? ColorValue<K, Th>
-      : V
-    : V;
-
 export type PaletteValue<
   K extends PaletteKey,
   T extends ColorTheme = "light",
@@ -44,7 +37,7 @@ export type PaletteValue<
   ? C extends keyof ModeColorTokens<T>
     ? P extends keyof ModeColorTokens<T>[C]
       ? ModeColorTokens<T>[C][P] extends { readonly value: infer V }
-        ? ResolveReference<V>
+        ? V
         : never
       : never
     : never
