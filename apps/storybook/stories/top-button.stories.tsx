@@ -15,8 +15,12 @@ const meta: Meta<typeof TopButton> = {
   },
 
   argTypes: {
-    showLabel: {
-      control: { type: "boolean" },
+    type: {
+      control: { type: "radio" },
+      options: ["basic", "label"],
+    },
+    onClick: {
+      action: "clicked",
     },
   },
 };
@@ -27,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ExampleTopButton: Story = {
   args: {
-    showLabel: false,
+    type: "basic",
     onClick: fn(),
   },
 };

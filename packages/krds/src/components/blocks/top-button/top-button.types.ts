@@ -1,12 +1,16 @@
 import type { FabProps } from "@mui/material";
 
-export interface TopButtonStyleProps {
-  /**
-   * Whether to show label
-   * @default false
-   */
-  showLabel?: boolean;
+type TopButtonType = "basic" | "label";
+
+export interface FabStyledProps extends FabProps {
+  // custom style props
+  $buttonType?: TopButtonType;
 }
 
-export type TopButtonProps = Pick<FabProps, "children" | "onClick"> &
-  TopButtonStyleProps;
+export interface TopButtonProps extends Pick<FabProps, "children" | "onClick"> {
+  /**
+   * Whether to show label
+   * @default "basic"
+   */
+  type?: TopButtonType;
+}

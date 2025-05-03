@@ -12,10 +12,7 @@ import { getPalette } from "#/design-tokens/palettes";
  *
  * A floating action button that scrolls the page back to the top when clicked
  */
-export default function TopButton({
-  showLabel = false,
-  onClick,
-}: TopButtonProps) {
+export default function TopButton({ type = "basic", onClick }: TopButtonProps) {
   const handleClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       if (onClick) {
@@ -34,16 +31,16 @@ export default function TopButton({
   return (
     <S.TopButtonBase
       disableRipple
-      showLabel={showLabel}
       aria-label="위로"
       onClick={handleClick}
       variant="extended"
+      $buttonType={type}
     >
       <Stack>
         <VerticalAlignTopIcon
           sx={{ color: getPalette("icon.gray"), width: "24px", height: "24px" }}
         />
-        {showLabel && <S.TopButtonLabel>위로</S.TopButtonLabel>}
+        {type === "label" && <S.TopButtonLabel>위로</S.TopButtonLabel>}
       </Stack>
     </S.TopButtonBase>
   );
