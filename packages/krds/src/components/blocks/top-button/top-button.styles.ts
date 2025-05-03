@@ -4,6 +4,7 @@ import type { TopButtonStyleProps } from "#/components/blocks/top-button/top-but
 
 import { Box, Fab, styled } from "@mui/material";
 import { getPalette } from "#/design-tokens/palettes";
+import { getRadius } from "#/design-tokens/radius";
 import { getShadow } from "#/design-tokens/shadow";
 import { getTypography } from "#/design-tokens/typography";
 
@@ -12,8 +13,10 @@ export const TopButtonBase: ComponentType<FabProps & TopButtonStyleProps> =
     shouldForwardProp: (prop) => prop !== "showLabel",
   })<TopButtonStyleProps>(({ showLabel = false }) => ({
     backgroundColor: getPalette("action.white"),
+    borderRadius: getRadius("medium3"),
     boxShadow: getShadow(2),
     color: getPalette("text.basic"),
+    outline: `1px solid ${getPalette("border.gray-light")}`,
     width: showLabel ? "64px" : "56px",
     height: showLabel ? "64px" : "56px",
 

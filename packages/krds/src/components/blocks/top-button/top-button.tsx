@@ -37,6 +37,7 @@ export default function TopButton({
       showLabel={showLabel}
       aria-label="위로"
       onClick={handleClick}
+      variant="extended"
     >
       <Stack>
         <VerticalAlignTopIcon
