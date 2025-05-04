@@ -18,11 +18,7 @@ const meta: Meta<typeof BottomNavigation> = {
       url: "https://www.figma.com/design/WtWFDtQ92hZo9E9fTPFFqt/KRDS_v1.0.0--Community-?node-id=4935-98966&t=sEGrXQaCkuomtOh3-4",
     },
   },
-  argTypes: {
-    showLabels: {
-      control: { type: "boolean" },
-    },
-  },
+  argTypes: {},
 };
 
 export default meta;
@@ -30,9 +26,6 @@ export default meta;
 type Story = StoryObj<typeof BottomNavigation>;
 
 export const ExampleTabBars: Story = {
-  args: {
-    showLabels: true,
-  },
   render: (args) => {
     const [value, setValue] = useState(0);
 
