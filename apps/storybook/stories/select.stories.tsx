@@ -43,20 +43,6 @@ export const ExampleSelect = {
     error: false,
     size: "medium",
     value: "",
-    children: [
-      <MenuItem key="0" value="">
-        선택해주세요.
-      </MenuItem>,
-      <MenuItem key="1" value="1">
-        옵션 1
-      </MenuItem>,
-      <MenuItem key="2" value="2">
-        옵션 2
-      </MenuItem>,
-      <MenuItem key="3" value="3">
-        옵션 3
-      </MenuItem>,
-    ],
   },
   render: (args: SelectProps) => {
     return (
@@ -71,7 +57,21 @@ export const ExampleSelect = {
           },
         }}
       >
-        {args.children}
+        <MenuItem key="0" value="">
+          선택해주세요.
+        </MenuItem>
+        ,
+        <MenuItem key="1" value="1">
+          옵션 1
+        </MenuItem>
+        ,
+        <MenuItem key="2" value="2">
+          옵션 2
+        </MenuItem>
+        ,
+        <MenuItem key="3" value="3">
+          옵션 3
+        </MenuItem>
       </Select>
     );
   },

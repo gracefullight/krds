@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import HomeIcon from "@mui/icons-material/Home";
-import { Breadcrumbs, Link } from "@mui/material";
+import { Breadcrumbs, type BreadcrumbsProps, Link } from "@mui/material";
 
 const meta: Meta<typeof Breadcrumbs> = {
   title: "KRDS/Breadcrumbs",
@@ -13,7 +13,6 @@ const meta: Meta<typeof Breadcrumbs> = {
     },
     layout: "centered",
   },
-
   argTypes: {},
 };
 
@@ -22,30 +21,30 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ExampleBreadcrumbs: Story = {
-  args: {
-    children: [
+  render: (args: BreadcrumbsProps) => (
+    <Breadcrumbs {...args}>
       <Link key="home">
         <HomeIcon />홈
-      </Link>,
-      <Link key="1depth">1Depth</Link>,
-      <Link key="2depth">2Depth</Link>,
-      <Link key="3depth">3Depth</Link>,
-      <Link key="4depth">4Depth</Link>,
-    ],
-  },
+      </Link>
+      ,<Link key="1depth">1Depth</Link>
+      <Link key="2depth">2Depth</Link>
+      <Link key="3depth">3Depth</Link>
+      <Link key="4depth">4Depth</Link>
+    </Breadcrumbs>
+  ),
 };
 
 export const ExampleCollapsedBreadcrumbs: Story = {
-  args: {
-    children: [
+  render: (args: BreadcrumbsProps) => (
+    <Breadcrumbs {...args}>
       <Link key="home">
         <HomeIcon />홈
-      </Link>,
-      <Link key="1depth">1Depth</Link>,
-      <Link key="2depth">2Depth</Link>,
-      <Link key="3depth">3Depth</Link>,
-      <Link key="4depth">4Depth</Link>,
-      <Link key="5depth">5Depth</Link>,
-    ],
-  },
+      </Link>
+      ,<Link key="1depth">1Depth</Link>
+      <Link key="2depth">2Depth</Link>
+      <Link key="3depth">3Depth</Link>
+      <Link key="4depth">4Depth</Link>
+      <Link key="5depth">5Depth</Link>
+    </Breadcrumbs>
+  ),
 };
