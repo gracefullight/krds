@@ -41,12 +41,7 @@ export const ExampleTabBars: Story = {
     };
 
     return (
-      <BottomNavigation
-        {...args}
-        value={value}
-        onChange={handleChange}
-        showLabels
-      >
+      <BottomNavigation {...args} value={value} onChange={handleChange}>
         <BottomNavigationAction label="홈" icon={<HomeIcon />} />
         <BottomNavigationAction label="마이" icon={<PersonIcon />} />
         <BottomNavigationAction
