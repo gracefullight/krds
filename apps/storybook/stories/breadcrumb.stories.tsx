@@ -26,7 +26,7 @@ export const ExampleBreadcrumbs: Story = {
       <Link key="home">
         <HomeIcon />홈
       </Link>
-      ,<Link key="1depth">1Depth</Link>
+      <Link key="1depth">1Depth</Link>
       <Link key="2depth">2Depth</Link>
       <Link key="3depth">3Depth</Link>
       <Link key="4depth">4Depth</Link>
@@ -40,7 +40,7 @@ export const ExampleCollapsedBreadcrumbs: Story = {
       <Link key="home">
         <HomeIcon />홈
       </Link>
-      ,<Link key="1depth">1Depth</Link>
+      <Link key="1depth">1Depth</Link>
       <Link key="2depth">2Depth</Link>
       <Link key="3depth">3Depth</Link>
       <Link key="4depth">4Depth</Link>
