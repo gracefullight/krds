@@ -61,6 +61,10 @@ import { CriticalAlerts } from "@gracefullight/krds/components";
 
 ## 변경 이력
 
+- Mui 컴포넌트 추가, 조합 컴포넌트 추가: 0.11.0
+  - divider
+  - info-box
+  - top-button
 - date input 아이콘 변경: 0.10.1
 - 조합 컴포넌트 추가: 0.10.0
   - chip
