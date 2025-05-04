@@ -2,6 +2,7 @@ export * from "#/components/base/mui-accordion";
 export * from "#/components/base/mui-alert";
 export * from "#/components/base/mui-alert-title";
 export * from "#/components/base/mui-badge";
+export * from "#/components/base/mui-bottom-navigation";
 export * from "#/components/base/mui-breadcrumbs";
 export * from "#/components/base/mui-button";
 export * from "#/components/base/mui-checkbox";
