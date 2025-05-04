@@ -11,6 +11,7 @@ export * from "#/components/base/mui-dialog";
 export * from "#/components/base/mui-dialog-content";
 export * from "#/components/base/mui-dialog-content-text";
 export * from "#/components/base/mui-dialog-title";
+export * from "#/components/base/mui-divider";
 export * from "#/components/base/mui-drawer";
 export * from "#/components/base/mui-form-control-label";
 export * from "#/components/base/mui-form-group";
