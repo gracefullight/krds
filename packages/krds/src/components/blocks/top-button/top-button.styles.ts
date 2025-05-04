@@ -9,7 +9,7 @@ import { getShadow } from "#/design-tokens/shadow";
 import { getTypography } from "#/design-tokens/typography";
 
 export const TopButtonBase: ComponentType<FabStyledProps> = styled(Fab, {
-  shouldForwardProp: (prop) => prop !== "type",
+  shouldForwardProp: (prop) => prop !== "$buttonType",
 })<FabStyledProps>(({ $buttonType }) => ({
   backgroundColor: getPalette("action.white"),
   borderRadius: getRadius("medium3"),
