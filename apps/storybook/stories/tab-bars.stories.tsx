@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type { SyntheticEvent } from "react";
 
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import HomeIcon from "@mui/icons-material/Home";
@@ -20,10 +21,6 @@ const meta: Meta<typeof BottomNavigation> = {
   argTypes: {
     showLabels: {
       control: { type: "boolean" },
-      defaultValue: true,
-    },
-    value: {
-      control: { type: "number" },
     },
   },
 };
@@ -33,11 +30,13 @@ export default meta;
 type Story = StoryObj<typeof BottomNavigation>;
 
 export const ExampleTabBars: Story = {
+  args: {
+    showLabels: true,
+  },
   render: (args) => {
-    // Using useState to control the selected tab
     const [value, setValue] = useState(0);
 
-    const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (_: SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
 
