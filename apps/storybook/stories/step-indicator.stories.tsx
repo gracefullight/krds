@@ -40,31 +40,26 @@ export const ExampleStepIndicator: Story = {
             1단계<Typography variant="body-small-bold">1단계 제목</Typography>
           </StepLabel>
         </Step>
-        ,
         <Step key="1">
           <StepLabel>
             2단계<Typography variant="body-small-bold">2단계 제목</Typography>
           </StepLabel>
         </Step>
-        ,
         <Step key="2">
           <StepLabel>
             3단계<Typography variant="body-small-bold">3단계 제목</Typography>
           </StepLabel>
         </Step>
-        ,
         <Step key="3">
           <StepLabel>
             4단계<Typography variant="body-small-bold">4단계 제목</Typography>
           </StepLabel>
         </Step>
-        ,
         <Step key="4">
           <StepLabel>
             5단계<Typography variant="body-small-bold">5단계 제목</Typography>
           </StepLabel>
         </Step>
-        ,
       </Stepper>
     );
   },
