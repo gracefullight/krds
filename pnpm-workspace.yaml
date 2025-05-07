@@ -1,5 +1,10 @@
 packages:
   - apps/*
   - packages/*
-ignoredBuiltDependencies:
-  - esbuild
+
+catalogs:
+  mui7:
+    "@mui/icons-material": "^7.0.2"
+    "@mui/material": "^7.0.2"
+    "@mui/material-nextjs": "^7.0.2"
+    "@mui/x-date-pickers": "^8.0.0"

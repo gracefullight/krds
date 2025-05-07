@@ -38,9 +38,9 @@
     "typescript": "*"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.0.2",
-    "@mui/x-date-pickers": "^8.0.0",
+    "@mui/icons-material": "catalog:mui7",
+    "@mui/material": "catalog:mui7",
+    "@mui/x-date-pickers": "catalog:mui7",
     "react": "^19",
     "react-dom": "^19"
   },
