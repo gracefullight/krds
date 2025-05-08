@@ -1,108 +1,58 @@
 # @gracefullight/krds
 
-**@gracefullight/krds**는 [Korea Design System](https://www.krds.go.kr/)의 공식 가이드라인을 기반으로 한 MUI(Material-UI) 테마 및 컴포넌트 모음입니다. 일관된 디자인, 접근성, 그리고 빠른 개발을 지원하며, React 프로젝트에서 손쉽게 대한민국 정부 디자인 시스템을 적용할 수 있습니다.
+The official MUI (Material UI) theme and component library for the Korea Design System, based on the official guidelines. It provides consistent design, accessibility support, and a fast development experience for React applications.
 
-## 주요 특징
+## Key Features
 
-- **KRDS 공식 디자인 반영**: 대한민국 정부 디자인 시스템을 그대로 제공합니다.
-- **MUI 호환**: MUI v7 이상과 React v19 이상에서 동작합니다.
-- **다양한 컴포넌트**: Alert, Button, Table 등 자주 쓰이는 UI 컴포넌트와 조합 컴포넌트 제공
-- **디자인 토큰/헬퍼**: 색상, 타이포그래피 등 디자인 토큰과 유틸리티 함수 포함
-- **간편한 테마 적용**: ThemeProvider로 전체 앱에 손쉽게 테마 적용 가능
+- **Official KRDS Design**: Implements the Korea Design System as-is.
+- **MUI Compatible**: Works with MUI v7+ and React v19+.
+- **Rich Component Library**: Includes common components like Alert, Button, Table, and composite components.
+- **Design Tokens & Utilities**: Provides color, typography tokens, and helper functions.
+- **Easy Theme Application**: Apply the theme to your entire app with MUI's ThemeProvider.
 
-## 최소 지원 버전
+## Minimum Requirements
 
-- mui >= 7
-- react >= 19
+- MUI >= 7
+- React >= 19
 
-## 시작하기
+## Getting Started
 
-### 1. 패키지 설치
+### 1. Install the Package
 
 ```bash
 pnpm install @gracefullight/krds
 ```
 
-### 2. 테마 적용
+### 2. Apply the Theme
 
-아래 예시처럼 ThemeProvider에 KRDS 테마를 적용하세요.
-
-```ts
+```tsx
 import type { PropsWithChildren } from "react";
 
 import { createKrdsTheme } from "@gracefullight/krds";
 import { ThemeProvider } from "@mui/material/styles";
 
-const krdsTheme = createKrdsTheme();
-
 export default function MuiProvider({ children }: PropsWithChildren) {
-  return (
-    <ThemeProvider theme={krdsTheme}>{children}</ThemeProvider>
-  );
+  const krdsTheme = createKrdsTheme();
+
+  return <ThemeProvider theme={krdsTheme}>{children}</ThemeProvider>;
 }
 ```
 
-> **참고:** 타입 지원이 필요하다면 아래를 추가하세요.
+> **Note:** If you need type definitions, add:
 
 ```ts
 /// <reference types="@gracefullight/krds" />
 ```
 
-## 사용 예시
-
-KRDS 테마가 적용된 MUI 컴포넌트와 KRDS 전용 컴포넌트를 함께 사용할 수 있습니다.
+## Usage Example
 
 ```tsx
 import { Button } from "@mui/material";
 import { CriticalAlerts } from "@gracefullight/krds/components";
 ```
 
-- 더 많은 컴포넌트와 사용법은 [공식 문서](https://www.krds.go.kr/) 또는 [Storybook](https://krds.gracefullight.dev)을 참고하세요.
+Refer to the [official documentation](https://www.krds.go.kr/) or [Storybook](https://krds.gracefullight.dev) for more components and usage.
 
-## 변경 이력
+## Changelog
 
-- Mui 컴포넌트 추가, 조합 컴포넌트 추가: 0.11.0
-  - divider
-  - info-box
-  - top-button
-- date input 아이콘 변경: 0.10.1
-- 조합 컴포넌트 추가: 0.10.0
-  - chip
-  - chip-group
-  - masthead
-  - skip-link
-  - splash-screen
-- Mui 컴포넌트 추가, 조합 컴포넌트 추가: 0.9.0
-  - critical-alerts
-  - date-picker
-  - tooltip
-- Mui 컴포넌트 추가: 0.8.0
-  - stepper
-  - switch
-  - table
-- Mui 컴포넌트 추가: 0.7.0
-  - menu
-  - pagination
-  - radio
-  - select
-- Mui 컴포넌트 추가: 0.6.0
-  - dialog
-  - drawer
-  - linear-progress
-- Mui 컴포넌트 추가: 0.5.0
-  - checkbox
-  - chip
-  - circular-progress
-- Mui 컴포넌트 추가: 0.4.0
-  - alert
-  - badge
-  - breadcrumbs
-- Mui 컴포넌트 추가: 0.3.0
-  - link
-  - tabs
-- Mui 테마 제공: 0.2.0
-  - theme
-  - button
-  - typography
-- 초기화 스타일 제공: 0.1.1
-- 디자인 토큰 헬퍼 제공: 0.1.0
+See [CHANGELOG.md](./CHANGELOG.md) for the detailed release history.

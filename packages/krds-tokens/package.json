@@ -2,6 +2,12 @@
   "name": "@gracefullight/krds-tokens",
   "version": "1.0.0",
   "description": "Design tokens for KRDS design system",
+  "homepage": "https://krds.gracefullight.dev",
+  "license": "MIT",
+  "author": {
+    "name": "gracefullight",
+    "email": "gracefullight.dev@gmail.com"
+  },
   "imports": {
     "#/*": "./dist/*"
   },
