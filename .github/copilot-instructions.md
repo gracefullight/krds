@@ -8,6 +8,7 @@ KRDS is a monorepo project using pnpm workspaces with the following structure:
   - `storybook/`: A storybook instance for component documentation
 - `packages/`: Contains shared libraries
   - `krds/`: Main package with component library
+  - `krds-tokens/`: Design tokens package with colors, typography, and other design system primitives
 
 ## Technology Stack
 
