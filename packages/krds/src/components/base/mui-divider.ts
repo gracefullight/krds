@@ -1,5 +1,6 @@
 import type { Components } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
+
+import { getPalette } from "@gracefullight/krds-tokens";
 
 declare module "@mui/material/Divider" {}
 

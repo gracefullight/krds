@@ -1,8 +1,7 @@
 import type { Components } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 
 // ? https://github.com/mui/material-ui/blob/master/packages/mui-icons-material/lib/OpenInNew.js#L13
 const openInNewIconBase64 =

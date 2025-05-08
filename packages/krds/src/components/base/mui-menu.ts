@@ -1,10 +1,12 @@
 import type { Components, Theme } from "@mui/material";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { menuClasses } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Menu" {}
 

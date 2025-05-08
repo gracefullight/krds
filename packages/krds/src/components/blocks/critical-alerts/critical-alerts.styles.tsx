@@ -1,10 +1,10 @@
 import type { BoxProps, TypographyProps } from "@mui/material";
 import type { ComponentType } from "react";
 
+import { getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
+import { getRadius } from "@gracefullight/krds-tokens";
 import { Box, Typography, styled, svgIconClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 export const AlertContainer: ComponentType<BoxProps> = styled(Box)(
   ({ theme }) => ({

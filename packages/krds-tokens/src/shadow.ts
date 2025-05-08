@@ -1,6 +1,6 @@
-import type { ColorTheme } from "#/design-tokens/token.types";
+import type { ColorTheme } from "#/token.types";
 
-import TOKENS from "#/design-tokens/tokens";
+import TOKENS from "#/tokens";
 
 // shadow level types
 type Level = 1 | 2 | 3;

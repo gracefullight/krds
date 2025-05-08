@@ -1,13 +1,15 @@
 import type { Components, Theme } from "@mui/material";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import InfoIcon from "@mui/icons-material/Info";
 import WarningIcon from "@mui/icons-material/Warning";
 import { alertClasses, alertTitleClasses, svgIconClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Alert" {
   interface AlertPropsColorOverrides {

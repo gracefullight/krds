@@ -6,6 +6,11 @@ import type {
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -31,9 +36,6 @@ import {
   yearCalendarClasses,
 } from "@mui/x-date-pickers";
 import * as S from "#/components/base/mui-x/date-pickers.styles";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/x-date-pickers/DatePicker" {
   interface FormControlPropsSizeOverrides {

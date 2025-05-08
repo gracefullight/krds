@@ -5,10 +5,12 @@ import type {
   InfoBoxType,
 } from "#/components/blocks/info-box/info-box.types";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { Box, Stack, Typography, styled } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 export const InfoBoxContainer: ComponentType<
   StackProps & { type: InfoBoxType }

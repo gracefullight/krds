@@ -1,4 +1,4 @@
-import type tokens from "#/design-tokens/tokens";
+import type tokens from "#/tokens";
 
 export type ColorTheme = "light" | "high-contrast";
 

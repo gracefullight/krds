@@ -1,8 +1,7 @@
 import type { Components } from "@mui/material";
 
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import { linearProgressClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
 
 declare module "@mui/material/LinearProgress" {
   interface LinearProgressProps {

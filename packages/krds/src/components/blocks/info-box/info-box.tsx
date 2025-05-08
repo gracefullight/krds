@@ -4,7 +4,7 @@ import type {
   InfoBoxProps,
 } from "#/components/blocks/info-box/info-box.types";
 
-import { Info as InfoIcon } from "@mui/icons-material";
+import InfoIcon from "@mui/icons-material/Info";
 import { Children, cloneElement, isValidElement } from "react";
 
 import { Divider } from "@mui/material";

@@ -1,7 +1,7 @@
 import type { Components } from "@mui/material";
 
+import { getPalette } from "@gracefullight/krds-tokens";
 import { radioClasses, svgIconClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
 
 declare module "@mui/material/Radio" {
   interface RadioPropsSizeOverrides {

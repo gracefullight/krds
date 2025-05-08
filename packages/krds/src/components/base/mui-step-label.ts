@@ -1,7 +1,7 @@
 import type { Components, Theme } from "@mui/material";
 
+import { getTypography } from "@gracefullight/krds-tokens";
 import { stepLabelClasses } from "@mui/material";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/StepLabel" {}
 

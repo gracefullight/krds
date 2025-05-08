@@ -1,0 +1,28 @@
+{
+  "name": "@gracefullight/krds-tokens",
+  "version": "1.0.0",
+  "description": "Design tokens for KRDS design system",
+  "imports": {
+    "#/*": "./dist/*"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "es-toolkit": "catalog:utils"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

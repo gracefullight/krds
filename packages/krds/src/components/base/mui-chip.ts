@@ -1,10 +1,12 @@
 import type { Components } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { chipClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Chip" {
   interface ChipPropsSizeOverrides {

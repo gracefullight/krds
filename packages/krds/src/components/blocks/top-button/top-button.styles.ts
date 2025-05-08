@@ -2,11 +2,13 @@ import type { BoxProps } from "@mui/material";
 import type { ComponentType } from "react";
 import type { FabStyledProps } from "#/components/blocks/top-button/top-button.types";
 
+import {
+  getPalette,
+  getRadius,
+  getShadow,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { Box, Fab, styled } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getShadow } from "#/design-tokens/shadow";
-import { getTypography } from "#/design-tokens/typography";
 
 export const TopButtonBase: ComponentType<FabStyledProps> = styled(Fab, {
   shouldForwardProp: (prop) => prop !== "$buttonType",

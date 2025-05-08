@@ -1,10 +1,12 @@
 import type { Components, Theme } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { badgeClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Badge" {
   interface BadgePropsColorOverrides {

@@ -3,13 +3,13 @@ import type {
   CriticalAlertsSeverity,
 } from "#/components/blocks/critical-alerts/critical-alerts.types";
 
+import { getPalette } from "@gracefullight/krds-tokens";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import EmergencyIcon from "@mui/icons-material/Emergency";
 import InfoIcon from "@mui/icons-material/Info";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Button } from "@mui/material";
 import * as S from "#/components/blocks/critical-alerts/critical-alerts.styles";
-import { getPalette } from "#/design-tokens/palettes";
 
 export default function CriticalAlerts({
   severity,

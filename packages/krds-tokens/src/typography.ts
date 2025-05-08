@@ -1,54 +1,5 @@
-import type { SxProps, Theme } from "@mui/material";
-import type { CSSProperties } from "react";
-
 import { get } from "es-toolkit/compat";
-import TOKENS from "#/design-tokens/tokens";
-
-declare module "@mui/material/styles" {
-  interface TypographyVariants {
-    "display-large": CSSProperties;
-    "display-medium": CSSProperties;
-    "display-small": CSSProperties;
-
-    "heading-xlarge": CSSProperties;
-    "heading-large": CSSProperties;
-    "heading-medium": CSSProperties;
-    "heading-small": CSSProperties;
-    "heading-xsmall": CSSProperties;
-    "heading-xxsmall": CSSProperties;
-
-    "body-large": CSSProperties;
-    "body-large-bold": CSSProperties;
-    "body-medium": CSSProperties;
-    "body-medium-bold": CSSProperties;
-    "body-small": CSSProperties;
-    "body-small-bold": CSSProperties;
-    "body-xsmall": CSSProperties;
-    "body-xsmall-bold": CSSProperties;
-  }
-
-  interface TypographyVariantsOptions {
-    "display-large"?: CSSProperties;
-    "display-medium"?: CSSProperties;
-    "display-small"?: CSSProperties;
-
-    "heading-xlarge"?: CSSProperties;
-    "heading-large"?: CSSProperties;
-    "heading-medium"?: CSSProperties;
-    "heading-small"?: CSSProperties;
-    "heading-xsmall"?: CSSProperties;
-    "heading-xxsmall"?: CSSProperties;
-
-    "body-large"?: CSSProperties;
-    "body-large-bold"?: CSSProperties;
-    "body-medium"?: CSSProperties;
-    "body-medium-bold"?: CSSProperties;
-    "body-small"?: CSSProperties;
-    "body-small-bold"?: CSSProperties;
-    "body-xsmall"?: CSSProperties;
-    "body-xsmall-bold"?: CSSProperties;
-  }
-}
+import TOKENS from "#/tokens";
 
 const TYPOGRAPHY = {
   pc: {
@@ -353,11 +304,18 @@ const TYPOGRAPHY = {
   },
 } as const;
 
+interface TypographyStyle {
+  fontSize: string;
+  fontWeight: number;
+  lineHeight: number;
+  letterSpacing: string;
+}
+
 type TypographyTokens = typeof TYPOGRAPHY;
 
 type ThreeLevelPaths<T> = T extends Record<
   string,
-  Record<string, Record<string, SxProps<Theme>>>
+  Record<string, Record<string, TypographyStyle>>
 >
   ? {
       [Platform in keyof T]: Platform extends string

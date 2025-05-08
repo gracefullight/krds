@@ -1,12 +1,11 @@
 import type { Components } from "@mui/material";
 
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import {
   bottomNavigationActionClasses,
   svgIconClasses,
   touchRippleClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/BottomNavigation" {}
 declare module "@mui/material/BottomNavigationAction" {}

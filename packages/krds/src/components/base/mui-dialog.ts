@@ -1,14 +1,13 @@
 import type { Components, Theme } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import {
   dialogActionsClasses,
   dialogClasses,
   dialogContentClasses,
 } from "@mui/material";
 import { pickersLayoutClasses } from "@mui/x-date-pickers";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
 
 declare module "@mui/material/Dialog" {}
 

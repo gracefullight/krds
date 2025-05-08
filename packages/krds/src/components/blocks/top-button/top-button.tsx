@@ -1,11 +1,11 @@
 import type { MouseEvent } from "react";
 import type { TopButtonProps } from "#/components/blocks/top-button/top-button.types";
 
+import { getPalette } from "@gracefullight/krds-tokens";
 import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
 import { Stack } from "@mui/material";
 import { useCallback } from "react";
 import * as S from "#/components/blocks/top-button/top-button.styles";
-import { getPalette } from "#/design-tokens/palettes";
 
 /**
  * TopButton component

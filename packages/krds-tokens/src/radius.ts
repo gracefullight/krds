@@ -1,5 +1,5 @@
 import { get } from "es-toolkit/compat";
-import TOKENS from "#/design-tokens/tokens";
+import TOKENS from "#/tokens";
 
 type SemanticRadiusTokens = typeof TOKENS.semantic.radius;
 

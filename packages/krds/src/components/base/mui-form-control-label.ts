@@ -1,5 +1,6 @@
 import type { Components, Theme } from "@mui/material";
 
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import {
   checkboxClasses,
   formControlLabelClasses,
@@ -7,8 +8,6 @@ import {
   switchClasses,
   typographyClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/FormControlLabel" {}
 

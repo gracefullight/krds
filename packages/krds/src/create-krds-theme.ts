@@ -1,9 +1,95 @@
+import type { CSSProperties } from "react";
+
+import {
+  BREAKPOINTS,
+  getColor,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { createTheme } from "@mui/material/styles";
 import { toMerged } from "es-toolkit";
 import * as components from "#/components/base";
-import { BREAKPOINTS } from "#/design-tokens/breakpoints";
-import { getColor } from "#/design-tokens/colors";
-import { getTypography } from "#/design-tokens/typography";
+
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xs: false;
+    sm: false;
+    md: false;
+    lg: false;
+    xl: false;
+
+    xsmall: true;
+    small: true;
+    medium: true;
+    large: true;
+    xlarge: true;
+    xxlarge: true;
+  }
+
+  interface ColorSchemeOverrides {
+    high: true;
+    dark: false;
+  }
+
+  interface Palette {
+    point: Palette["primary"];
+  }
+
+  interface PaletteOptions {
+    point?: PaletteOptions["primary"];
+  }
+
+  interface PaletteColor {
+    high?: string;
+  }
+
+  interface SimplePaletteColorOptions {
+    high?: string;
+  }
+
+  interface TypographyVariants {
+    "display-large": CSSProperties;
+    "display-medium": CSSProperties;
+    "display-small": CSSProperties;
+
+    "heading-xlarge": CSSProperties;
+    "heading-large": CSSProperties;
+    "heading-medium": CSSProperties;
+    "heading-small": CSSProperties;
+    "heading-xsmall": CSSProperties;
+    "heading-xxsmall": CSSProperties;
+
+    "body-large": CSSProperties;
+    "body-large-bold": CSSProperties;
+    "body-medium": CSSProperties;
+    "body-medium-bold": CSSProperties;
+    "body-small": CSSProperties;
+    "body-small-bold": CSSProperties;
+    "body-xsmall": CSSProperties;
+    "body-xsmall-bold": CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    "display-large"?: CSSProperties;
+    "display-medium"?: CSSProperties;
+    "display-small"?: CSSProperties;
+
+    "heading-xlarge"?: CSSProperties;
+    "heading-large"?: CSSProperties;
+    "heading-medium"?: CSSProperties;
+    "heading-small"?: CSSProperties;
+    "heading-xsmall"?: CSSProperties;
+    "heading-xxsmall"?: CSSProperties;
+
+    "body-large"?: CSSProperties;
+    "body-large-bold"?: CSSProperties;
+    "body-medium"?: CSSProperties;
+    "body-medium-bold"?: CSSProperties;
+    "body-small"?: CSSProperties;
+    "body-small-bold"?: CSSProperties;
+    "body-xsmall"?: CSSProperties;
+    "body-xsmall-bold"?: CSSProperties;
+  }
+}
 
 type ThemeOptions = Parameters<typeof createTheme>[0];
 

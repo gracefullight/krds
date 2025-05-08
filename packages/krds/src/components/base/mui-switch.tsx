@@ -1,5 +1,6 @@
 import type { Components } from "@mui/material";
 
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
@@ -7,8 +8,6 @@ import {
   svgIconClasses,
   switchClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
 
 declare module "@mui/material/Switch" {
   interface SwitchPropsSizeOverrides {

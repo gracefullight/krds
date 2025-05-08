@@ -3,6 +3,8 @@ packages:
   - packages/*
 
 catalogs:
+  utils:
+    "es-toolkit": "^1.37.2"
   mui7:
     "@mui/icons-material": "^7.0.2"
     "@mui/material": "^7.0.2"

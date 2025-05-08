@@ -1,11 +1,7 @@
-import type {
-  ColorKey,
-  ColorTheme,
-  ColorValue,
-} from "#/design-tokens/token.types";
+import type { ColorKey, ColorTheme, ColorValue } from "#/token.types";
 
 import { get } from "es-toolkit/compat";
-import TOKENS from "#/design-tokens/tokens";
+import TOKENS from "#/tokens";
 
 export function getColor<K extends ColorKey, T extends ColorTheme = "light">(
   key: K,

@@ -1,6 +1,9 @@
 import type { Components, Theme } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
+import { getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
+import { getRadius } from "@gracefullight/krds-tokens";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   outlinedInputClasses,
@@ -8,9 +11,6 @@ import {
   svgIconClasses,
 } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Select" {
   interface InputBasePropsSizeOverrides {

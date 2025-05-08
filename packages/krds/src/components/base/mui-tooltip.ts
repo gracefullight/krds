@@ -1,14 +1,16 @@
 import type { Components, Theme } from "@mui/material";
 
 import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
+import {
   iconButtonClasses,
   svgIconClasses,
   tooltipClasses,
   typographyClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Tooltip" {
   interface TooltipProps {

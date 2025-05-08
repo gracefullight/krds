@@ -1,5 +1,7 @@
-import { type Components, tableCellClasses } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
+import type { Components } from "@mui/material";
+
+import { getPalette } from "@gracefullight/krds-tokens";
+import { tableCellClasses } from "@mui/material";
 
 declare module "@mui/material/TableCell" {}
 

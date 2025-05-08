@@ -18,6 +18,10 @@ catalogs:
     '@mui/x-date-pickers':
       specifier: ^8.0.0
       version: 8.0.0
+  utils:
+    es-toolkit:
+      specifier: ^1.37.2
+      version: 1.37.2
 
 importers:
 
@@ -51,7 +55,7 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       es-toolkit:
-        specifier: ^1.37.2
+        specifier: catalog:utils
         version: 1.37.2
       husky:
         specifier: ^9.1.7
@@ -111,8 +115,8 @@ importers:
         specifier: ^33.2.4
         version: 33.2.4
       es-toolkit:
-        specifier: '*'
-        version: 1.36.0
+        specifier: catalog:utils
+        version: 1.37.2
       jotai:
         specifier: ^2.12.4
         version: 2.12.4(@types/react@19.1.1)(react@19.1.0)
@@ -250,6 +254,9 @@ importers:
 
   packages/krds:
     dependencies:
+      '@gracefullight/krds-tokens':
+        specifier: workspace:*
+        version: link:../krds-tokens
       '@mui/icons-material':
         specifier: catalog:mui7
         version: 7.0.2(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.1)(react@19.1.0)
@@ -260,7 +267,7 @@ importers:
         specifier: catalog:mui7
         version: 8.0.0(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react@19.1.0))(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mui/system@7.0.2(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(react@19.1.0))(@types/react@19.1.1)(luxon@3.6.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       es-toolkit:
-        specifier: ^1.37.2
+        specifier: catalog:utils
         version: 1.37.2
       react:
         specifier: ^19
@@ -280,6 +287,19 @@ importers:
         version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.7.1)
       typescript:
         specifier: '*'
+        version: 5.8.3
+
+  packages/krds-tokens:
+    dependencies:
+      es-toolkit:
+        specifier: catalog:utils
+        version: 1.37.2
+    devDependencies:
+      tsup:
+        specifier: ^8.4.0
+        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.7.1)
+      typescript:
+        specifier: ^5
         version: 5.8.3
 
 packages:
@@ -2360,9 +2380,6 @@ packages:
   es-set-tostringtag@2.1.0:
     resolution: {integrity: sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==}
     engines: {node: '>= 0.4'}
-
-  es-toolkit@1.36.0:
-    resolution: {integrity: sha512-5lpkRpDELuTSeAL//Rcg5urg+K/yOD1BobJSiNeCc89snMqgrhckmj8jdljqraDbpREiXTNW311RN518eVHBng==}
 
   es-toolkit@1.37.2:
     resolution: {integrity: sha512-ADDfk+pPFF0ofMpRAIc6on01p8heiuwuuJsYLzTP4UOjxVK9QsE2+0D1Q4J/zX2XBo6ac+27H5++YBIwmGAX/g==}
@@ -6664,8 +6681,6 @@ snapshots:
       get-intrinsic: 1.3.0
       has-tostringtag: 1.0.2
       hasown: 2.0.2
-
-  es-toolkit@1.36.0: {}
 
   es-toolkit@1.37.2: {}
 

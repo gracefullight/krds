@@ -1,9 +1,8 @@
 import type { BoxProps, TypographyProps } from "@mui/material";
 import type { ComponentType } from "react";
 
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import { Box, Typography, styled } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
 
 export function FlagKr() {
   return (

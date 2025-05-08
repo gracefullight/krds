@@ -1,8 +1,8 @@
 import type { BoxProps, TypographyProps } from "@mui/material";
 import type { ComponentType } from "react";
 
+import { getPalette } from "@gracefullight/krds-tokens";
 import { Box, Typography, styled } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
 
 export const PaginationContainer: ComponentType<BoxProps> = styled(Box)({
   display: "flex",

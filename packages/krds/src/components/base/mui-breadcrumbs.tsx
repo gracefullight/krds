@@ -1,5 +1,6 @@
 import type { Components, Theme } from "@mui/material";
 
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {
   breadcrumbsClasses,
@@ -7,8 +8,6 @@ import {
   linkClasses,
   svgIconClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Breadcrumbs" {}
 

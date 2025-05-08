@@ -29,7 +29,8 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "es-toolkit": "^1.37.2"
+    "@gracefullight/krds-tokens": "workspace:*",
+    "es-toolkit": "catalog:utils"
   },
   "devDependencies": {
     "@types/react": "^19",

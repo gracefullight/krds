@@ -1,8 +1,7 @@
 import type { Components, Theme } from "@mui/material";
 
+import { getRadius, getTypography } from "@gracefullight/krds-tokens";
 import { dialogTitleClasses, iconButtonClasses } from "@mui/material";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 declare module "@mui/material/Drawer" {}
 

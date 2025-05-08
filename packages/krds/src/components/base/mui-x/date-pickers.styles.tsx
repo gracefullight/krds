@@ -7,6 +7,11 @@ import type {
 import type { ComponentType } from "react";
 
 import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
+import {
   Box,
   Button,
   DialogActions,
@@ -15,9 +20,6 @@ import {
   styled,
   svgIconClasses,
 } from "@mui/material";
-import { getPalette } from "#/design-tokens/palettes";
-import { getRadius } from "#/design-tokens/radius";
-import { getTypography } from "#/design-tokens/typography";
 
 export const HeaderContainer: ComponentType<BoxProps> = styled(Box)({
   display: "flex",

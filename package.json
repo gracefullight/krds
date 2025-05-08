@@ -3,10 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "homepage": "https://github.com/gracefullight/krds",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "turbo run dev --parallel",
     "prepare": "husky",
@@ -24,7 +21,7 @@
     "@types/node": "^22",
     "axios": "^1.9.0",
     "devmoji": "^2.3.0",
-    "es-toolkit": "^1.37.2",
+    "es-toolkit": "catalog:utils",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "sort-package-json": "^3.2.0",

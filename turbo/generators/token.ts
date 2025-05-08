@@ -34,7 +34,7 @@ export default function tokenGenerator(plop: PlopTypes.NodePlopAPI): void {
         type: "input",
         name: "outputPath",
         message: "Output file path:",
-        default: "packages/krds/src/design-tokens/tokens.ts",
+        default: "packages/krds-tokens/src/tokens.ts",
       },
     ],
     actions: [

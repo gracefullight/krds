@@ -1,10 +1,9 @@
 import type { BoxProps, TypographyProps } from "@mui/material";
 import type { ComponentType } from "react";
 
+import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { getPalette } from "#/design-tokens/palettes";
-import { getTypography } from "#/design-tokens/typography";
 
 export const SplashContainer: ComponentType<BoxProps> = styled(Box)({
   background: getPalette("surface.secondary-subtler"),
