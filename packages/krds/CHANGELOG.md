@@ -1,49 +1,48 @@
 # Changelog
 
-All notable changes to this project will be documented in this file following [Conventional Commits](https://www.conventionalcommits.org).
-
-- Added MUI components and composite components: 0.11.0
+- 0.12.0: Separated design tokens into standalone krds-tokens package
+- 0.11.0: Added MUI components and composite components
   - divider
   - info-box
   - top-button
-- Changed date input icon: 0.10.1
-- Added composite components: 0.10.0
+- 0.10.1: Changed date input icon
+- 0.10.0: Added composite components
   - chip
   - chip-group
   - masthead
   - skip-link
   - splash-screen
-- Added MUI components and composite components: 0.9.0
+- 0.9.0: Added MUI components and composite components
   - critical-alerts
   - date-picker
   - tooltip
-- Added MUI components: 0.8.0
+- 0.8.0: Added MUI components
   - stepper
   - switch
   - table
-- Added MUI components: 0.7.0
+- 0.7.0: Added MUI components
   - menu
   - pagination
   - radio
   - select
-- Added MUI components: 0.6.0
+- 0.6.0: Added MUI components
   - dialog
   - drawer
   - linear-progress
-- Added MUI components: 0.5.0
+- 0.5.0: Added MUI components
   - checkbox
   - chip
   - circular-progress
-- Added MUI components: 0.4.0
+- 0.4.0: Added MUI components
   - alert
   - badge
   - breadcrumbs
-- Added MUI components: 0.3.0
+- 0.3.0: Added MUI components
   - link
   - tabs
-- Provided MUI theme: 0.2.0
+- 0.2.0: Provided MUI theme
   - theme
   - button
   - typography
-- Provided reset styles: 0.1.1
-- Provided design token helper: 0.1.0
+- 0.1.1: Provided reset styles
+- 0.1.0: Provided design token helper
