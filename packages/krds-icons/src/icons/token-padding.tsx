@@ -1,4 +1,3 @@
-// filepath: token-padding.tsx
 import type { IconProps } from "#/types";
 
 export function TokenPadding({

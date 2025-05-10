@@ -1,4 +1,3 @@
-// filepath: ellipsis-horizontal.tsx
 import type { IconProps } from "#/types";
 
 export function EllipsisHorizontal({

@@ -1,4 +1,3 @@
-// filepath: kakaotalk-channel.tsx
 import type { IconProps } from "#/types";
 
 export function KakaotalkChannel({

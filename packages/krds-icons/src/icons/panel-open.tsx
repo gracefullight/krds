@@ -1,4 +1,3 @@
-// filepath: panel-open.tsx
 import type { IconProps } from "#/types";
 
 export function PanelOpen({

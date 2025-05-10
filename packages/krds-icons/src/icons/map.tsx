@@ -1,4 +1,3 @@
-// filepath: map.tsx
 import type { IconProps } from "#/types";
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: icon

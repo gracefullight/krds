@@ -1,4 +1,3 @@
-// filepath: new-folder.tsx
 import type { IconProps } from "#/types";
 
 export function NewFolder({

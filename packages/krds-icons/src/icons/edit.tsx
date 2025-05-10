@@ -1,4 +1,3 @@
-// filepath: edit.tsx
 import type { IconProps } from "#/types";
 
 export function Edit({

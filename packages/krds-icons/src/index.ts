@@ -1,3 +1,4 @@
+// This file is auto-generated. Do not edit manually.
 export type { IconProps } from "#/types";
 
 // Export all icons
@@ -117,5 +118,3 @@ export { ViewAll } from "#/icons/view-all";
 export { Visibility } from "#/icons/visibility";
 export { VisibilityOff } from "#/icons/visibility-off";
 export { Youtube } from "#/icons/youtube";
-
-// This file is auto-generated. Do not edit manually.

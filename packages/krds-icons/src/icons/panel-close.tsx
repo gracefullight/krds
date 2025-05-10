@@ -1,4 +1,3 @@
-// filepath: panel-close.tsx
 import type { IconProps } from "#/types";
 
 export function PanelClose({

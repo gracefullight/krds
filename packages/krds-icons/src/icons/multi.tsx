@@ -1,4 +1,3 @@
-// filepath: multi.tsx
 import type { IconProps } from "#/types";
 
 export function Multi({

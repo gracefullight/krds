@@ -1,4 +1,3 @@
-// filepath: btn-shortcut.tsx
 import type { IconProps } from "#/types";
 
 export function BtnShortcut({

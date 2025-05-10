@@ -1,4 +1,3 @@
-// filepath: expand-less.tsx
 import type { IconProps } from "#/types";
 
 export function ExpandLess({

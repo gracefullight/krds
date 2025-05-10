@@ -1,4 +1,3 @@
-// filepath: btn-more.tsx
 import type { IconProps } from "#/types";
 
 export function BtnMore({

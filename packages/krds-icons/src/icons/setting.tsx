@@ -1,4 +1,3 @@
-// filepath: setting.tsx
 import type { IconProps } from "#/types";
 
 export function Setting({

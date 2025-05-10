@@ -1,4 +1,3 @@
-// filepath: close.tsx
 import type { IconProps } from "#/types";
 
 export function Close({

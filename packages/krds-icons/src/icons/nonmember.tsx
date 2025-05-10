@@ -1,4 +1,3 @@
-// filepath: nonmember.tsx
 import type { IconProps } from "#/types";
 
 export function Nonmember({

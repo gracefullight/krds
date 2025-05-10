@@ -1,4 +1,3 @@
-// filepath: system-warning.tsx
 import type { IconProps } from "#/types";
 
 export function SystemWarning({

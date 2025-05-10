@@ -1,4 +1,3 @@
-// filepath: figma-open.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaOpen({

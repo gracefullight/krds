@@ -1,4 +1,3 @@
-// filepath: component.tsx
 import type { IconProps } from "#/types";
 
 export function Component({

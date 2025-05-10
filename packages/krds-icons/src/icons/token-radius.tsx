@@ -1,4 +1,3 @@
-// filepath: token-radius.tsx
 import type { IconProps } from "#/types";
 
 export function TokenRadius({

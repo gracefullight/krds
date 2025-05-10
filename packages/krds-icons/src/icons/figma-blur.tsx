@@ -1,4 +1,3 @@
-// filepath: figma-blur.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaBlur({

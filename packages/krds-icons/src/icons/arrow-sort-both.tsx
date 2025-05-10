@@ -1,4 +1,3 @@
-// filepath: arrow-sort-both.tsx
 import type { IconProps } from "#/types";
 
 export function ArrowSortBoth({

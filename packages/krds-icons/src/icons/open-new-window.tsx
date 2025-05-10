@@ -1,4 +1,3 @@
-// filepath: open-new-window.tsx
 import type { IconProps } from "#/types";
 
 export function OpenNewWindow({

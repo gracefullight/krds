@@ -1,4 +1,3 @@
-// filepath: search.tsx
 import type { IconProps } from "#/types";
 
 export function Search({

@@ -1,4 +1,3 @@
-// filepath: token-typo-box.tsx
 import type { IconProps } from "#/types";
 
 export function TokenTypoBox({

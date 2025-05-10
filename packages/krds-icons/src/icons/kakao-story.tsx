@@ -1,4 +1,3 @@
-// filepath: kakao-story.tsx
 import type { IconProps } from "#/types";
 
 export function KakaoStory({

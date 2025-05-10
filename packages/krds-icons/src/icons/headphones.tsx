@@ -1,4 +1,3 @@
-// filepath: headphones.tsx
 import type { IconProps } from "#/types";
 
 export function Headphones({

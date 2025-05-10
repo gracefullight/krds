@@ -1,4 +1,3 @@
-// filepath: globe.tsx
 import type { IconProps } from "#/types";
 
 export function Globe({

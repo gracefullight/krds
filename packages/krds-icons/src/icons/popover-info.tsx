@@ -1,4 +1,3 @@
-// filepath: popover-info.tsx
 import type { IconProps } from "#/types";
 
 export function PopoverInfo({

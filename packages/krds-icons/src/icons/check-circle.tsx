@@ -1,4 +1,3 @@
-// filepath: check-circle.tsx
 import type { IconProps } from "#/types";
 
 export function CheckCircle({

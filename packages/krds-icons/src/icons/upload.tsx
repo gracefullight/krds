@@ -1,4 +1,3 @@
-// filepath: upload.tsx
 import type { IconProps } from "#/types";
 
 export function Upload({

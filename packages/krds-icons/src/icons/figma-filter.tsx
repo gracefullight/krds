@@ -1,4 +1,3 @@
-// filepath: figma-filter.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaFilter({

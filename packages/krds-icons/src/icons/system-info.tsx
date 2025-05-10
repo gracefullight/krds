@@ -1,4 +1,3 @@
-// filepath: system-info.tsx
 import type { IconProps } from "#/types";
 
 export function SystemInfo({

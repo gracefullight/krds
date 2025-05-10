@@ -1,4 +1,3 @@
-// filepath: ellipsis-vertical.tsx
 import type { IconProps } from "#/types";
 
 export function EllipsisVertical({

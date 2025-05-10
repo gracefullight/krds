@@ -1,4 +1,3 @@
-// filepath: token-gap.tsx
 import type { IconProps } from "#/types";
 
 export function TokenGap({

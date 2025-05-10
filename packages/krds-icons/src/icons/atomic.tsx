@@ -1,4 +1,3 @@
-// filepath: atomic.tsx
 import type { IconProps } from "#/types";
 
 export function Atomic({

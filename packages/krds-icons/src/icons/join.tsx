@@ -1,4 +1,3 @@
-// filepath: join.tsx
 import type { IconProps } from "#/types";
 
 export function Join({

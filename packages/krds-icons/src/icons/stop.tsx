@@ -1,4 +1,3 @@
-// filepath: stop.tsx
 import type { IconProps } from "#/types";
 
 export function Stop({

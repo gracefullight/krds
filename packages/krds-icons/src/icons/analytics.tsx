@@ -1,4 +1,3 @@
-// filepath: analytics.tsx
 import type { IconProps } from "#/types";
 
 export function Analytics({

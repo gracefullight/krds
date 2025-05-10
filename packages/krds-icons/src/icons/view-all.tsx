@@ -1,4 +1,3 @@
-// filepath: view-all.tsx
 import type { IconProps } from "#/types";
 
 export function ViewAll({

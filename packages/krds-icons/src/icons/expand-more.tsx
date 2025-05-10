@@ -1,4 +1,3 @@
-// filepath: expand-more.tsx
 import type { IconProps } from "#/types";
 
 export function ExpandMore({

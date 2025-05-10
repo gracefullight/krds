@@ -1,4 +1,3 @@
-// filepath: emergency.tsx
 import type { IconProps } from "#/types";
 
 export function Emergency({

@@ -1,4 +1,3 @@
-// filepath: top.tsx
 import type { IconProps } from "#/types";
 
 export function Top({

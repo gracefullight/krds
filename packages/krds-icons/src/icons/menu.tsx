@@ -1,4 +1,3 @@
-// filepath: menu.tsx
 import type { IconProps } from "#/types";
 
 export function Menu({

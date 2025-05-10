@@ -1,4 +1,3 @@
-// filepath: face-smile.tsx
 import type { IconProps } from "#/types";
 
 export function FaceSmile({

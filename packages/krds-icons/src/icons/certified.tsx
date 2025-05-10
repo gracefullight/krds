@@ -1,4 +1,3 @@
-// filepath: certified.tsx
 import type { IconProps } from "#/types";
 
 export function Certified({

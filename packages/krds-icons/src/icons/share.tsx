@@ -1,4 +1,3 @@
-// filepath: share.tsx
 import type { IconProps } from "#/types";
 
 export function Share({

@@ -1,4 +1,3 @@
-// filepath: system-success.tsx
 import type { IconProps } from "#/types";
 
 export function SystemSuccess({

@@ -1,4 +1,3 @@
-// filepath: document-fill.tsx
 import type { IconProps } from "#/types";
 
 export function DocumentFill({

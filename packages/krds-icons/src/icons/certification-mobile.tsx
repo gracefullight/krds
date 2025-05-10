@@ -1,4 +1,3 @@
-// filepath: certification-mobile.tsx
 import type { IconProps } from "#/types";
 
 export function CertificationMobile({

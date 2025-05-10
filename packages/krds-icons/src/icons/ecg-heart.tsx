@@ -1,4 +1,3 @@
-// filepath: ecg-heart.tsx
 import type { IconProps } from "#/types";
 
 export function EcgHeart({

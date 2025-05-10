@@ -1,4 +1,3 @@
-// filepath: copy.tsx
 import type { IconProps } from "#/types";
 
 export function Copy({

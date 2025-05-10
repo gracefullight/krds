@@ -1,4 +1,3 @@
-// filepath: visibility-off.tsx
 import type { IconProps } from "#/types";
 
 export function VisibilityOff({

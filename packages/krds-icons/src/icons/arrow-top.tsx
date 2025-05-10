@@ -1,4 +1,3 @@
-// filepath: arrow-top.tsx
 import type { IconProps } from "#/types";
 
 export function ArrowTop({

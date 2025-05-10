@@ -1,4 +1,3 @@
-// filepath: location-away.tsx
 import type { IconProps } from "#/types";
 
 export function LocationAway({

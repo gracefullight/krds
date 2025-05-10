@@ -1,4 +1,3 @@
-// filepath: guide-check.tsx
 import type { IconProps } from "#/types";
 
 export function GuideCheck({

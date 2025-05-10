@@ -1,4 +1,3 @@
-// filepath: figma-library.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaLibrary({

@@ -1,4 +1,3 @@
-// filepath: bookmarks.tsx
 import type { IconProps } from "#/types";
 
 export function Bookmarks({

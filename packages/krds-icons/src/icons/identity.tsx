@@ -1,4 +1,3 @@
-// filepath: identity.tsx
 import type { IconProps } from "#/types";
 
 export function Identity({

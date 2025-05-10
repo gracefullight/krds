@@ -1,4 +1,3 @@
-// filepath: face-sad.tsx
 import type { IconProps } from "#/types";
 
 export function FaceSad({

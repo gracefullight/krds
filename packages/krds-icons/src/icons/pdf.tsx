@@ -1,4 +1,3 @@
-// filepath: pdf.tsx
 import type { IconProps } from "#/types";
 
 export function Pdf({

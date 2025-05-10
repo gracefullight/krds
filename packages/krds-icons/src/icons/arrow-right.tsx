@@ -1,4 +1,3 @@
-// filepath: arrow-right.tsx
 import type { IconProps } from "#/types";
 
 export function ArrowRight({

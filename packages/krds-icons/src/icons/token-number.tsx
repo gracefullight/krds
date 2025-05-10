@@ -1,4 +1,3 @@
-// filepath: token-number.tsx
 import type { IconProps } from "#/types";
 
 export function TokenNumber({

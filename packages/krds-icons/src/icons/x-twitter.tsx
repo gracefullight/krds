@@ -1,4 +1,3 @@
-// filepath: x-twitter.tsx
 import type { IconProps } from "#/types";
 
 export function XTwitter({

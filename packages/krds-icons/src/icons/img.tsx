@@ -1,4 +1,3 @@
-// filepath: img.tsx
 import type { IconProps } from "#/types";
 
 export function Img({

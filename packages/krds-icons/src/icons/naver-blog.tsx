@@ -1,4 +1,3 @@
-// filepath: naver-blog.tsx
 import type { IconProps } from "#/types";
 
 export function NaverBlog({

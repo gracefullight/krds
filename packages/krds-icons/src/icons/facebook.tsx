@@ -1,4 +1,3 @@
-// filepath: facebook.tsx
 import type { IconProps } from "#/types";
 
 export function Facebook({

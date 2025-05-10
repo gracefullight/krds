@@ -1,4 +1,3 @@
-// filepath: trophy.tsx
 import type { IconProps } from "#/types";
 
 export function Trophy({

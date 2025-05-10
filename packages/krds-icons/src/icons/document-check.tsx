@@ -1,4 +1,3 @@
-// filepath: document-check.tsx
 import type { IconProps } from "#/types";
 
 export function DocumentCheck({

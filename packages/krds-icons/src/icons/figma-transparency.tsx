@@ -1,4 +1,3 @@
-// filepath: figma-transparency.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaTransparency({

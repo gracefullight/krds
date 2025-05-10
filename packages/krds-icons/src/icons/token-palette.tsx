@@ -1,4 +1,3 @@
-// filepath: token-palette.tsx
 import type { IconProps } from "#/types";
 
 export function TokenPalette({

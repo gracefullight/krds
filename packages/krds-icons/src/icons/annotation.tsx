@@ -1,4 +1,3 @@
-// filepath: annotation.tsx
 import type { IconProps } from "#/types";
 
 export function Annotation({

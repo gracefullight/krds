@@ -1,4 +1,3 @@
-// filepath: curser.tsx
 import type { IconProps } from "#/types";
 
 export function Curser({

@@ -1,4 +1,3 @@
-// filepath: delete.tsx
 import type { IconProps } from "#/types";
 
 export function Delete({

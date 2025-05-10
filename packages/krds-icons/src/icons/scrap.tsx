@@ -1,4 +1,3 @@
-// filepath: scrap.tsx
 import type { IconProps } from "#/types";
 
 export function Scrap({

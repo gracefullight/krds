@@ -1,4 +1,3 @@
-// filepath: filter.tsx
 import type { IconProps } from "#/types";
 
 export function Filter({

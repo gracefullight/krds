@@ -1,4 +1,3 @@
-// filepath: figma-spread.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaSpread({

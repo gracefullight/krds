@@ -1,4 +1,3 @@
-// filepath: logout.tsx
 import type { IconProps } from "#/types";
 
 export function Logout({

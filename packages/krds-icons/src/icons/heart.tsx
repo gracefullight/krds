@@ -1,4 +1,3 @@
-// filepath: heart.tsx
 import type { IconProps } from "#/types";
 
 export function Heart({

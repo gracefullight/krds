@@ -1,4 +1,3 @@
-// filepath: figma-mode.tsx
 import type { IconProps } from "#/types";
 
 export function FigmaMode({

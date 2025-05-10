@@ -1,4 +1,3 @@
-// filepath: time.tsx
 import type { IconProps } from "#/types";
 
 export function Time({

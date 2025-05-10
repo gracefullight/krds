@@ -1,4 +1,3 @@
-// filepath: government.tsx
 import type { IconProps } from "#/types";
 
 export function Government({

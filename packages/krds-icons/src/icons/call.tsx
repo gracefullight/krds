@@ -1,4 +1,3 @@
-// filepath: call.tsx
 import type { IconProps } from "#/types";
 
 export function Call({

@@ -1,4 +1,3 @@
-// filepath: attach.tsx
 import type { IconProps } from "#/types";
 
 export function Attach({

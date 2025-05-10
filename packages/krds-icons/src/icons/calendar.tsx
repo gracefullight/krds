@@ -1,4 +1,3 @@
-// filepath: calendar.tsx
 import type { IconProps } from "#/types";
 
 export function Calendar({

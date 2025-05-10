@@ -1,4 +1,3 @@
-// filepath: system-danger.tsx
 import type { IconProps } from "#/types";
 
 export function SystemDanger({

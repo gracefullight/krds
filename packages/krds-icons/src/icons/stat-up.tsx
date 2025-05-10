@@ -1,4 +1,3 @@
-// filepath: stat-up.tsx
 import type { IconProps } from "#/types";
 
 export function StatUp({

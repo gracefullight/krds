@@ -1,4 +1,3 @@
-// filepath: visibility.tsx
 import type { IconProps } from "#/types";
 
 export function Visibility({

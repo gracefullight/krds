@@ -1,4 +1,3 @@
-// filepath: login-id-password.tsx
 import type { IconProps } from "#/types";
 
 export function LoginIdPassword({
