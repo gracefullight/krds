@@ -160,8 +160,8 @@ import type { IconProps } from "#/types";
 
 export function ${componentName}({ 
   size = 24, 
-  color = "currentColor", 
-  title,
+  color = "currentColor",
+  title = "${componentName}",
   ...props 
 }: IconProps) {
   return (
@@ -171,10 +171,6 @@ export function ${componentName}({
       height={size}
       viewBox="${viewBox}"
       fill="none"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
       <title>{title}</title>

@@ -4,7 +4,7 @@ import type { IconProps } from "#/types";
 export function Copy({
   size = 24,
   color = "currentColor",
-  title,
+  title = "Copy",
   ...props
 }: IconProps) {
   return (
@@ -14,10 +14,6 @@ export function Copy({
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
       <title>{title}</title>

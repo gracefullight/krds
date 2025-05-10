@@ -4,7 +4,7 @@ import type { IconProps } from "#/types";
 export function Calendar({
   size = 24,
   color = "currentColor",
-  title,
+  title = "Calendar",
   ...props
 }: IconProps) {
   return (
@@ -14,10 +14,6 @@ export function Calendar({
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
       <title>{title}</title>
