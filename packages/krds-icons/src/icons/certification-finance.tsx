@@ -1,10 +1,10 @@
-// filepath: certification-finanace.tsx
+// filepath: certification-finance.tsx
 import type { IconProps } from "#/types";
 
-export function CertificationFinanace({
+export function CertificationFinance({
   size = 24,
   color = "currentColor",
-  title = "CertificationFinanace",
+  title = "CertificationFinance",
   ...props
 }: IconProps) {
   return (

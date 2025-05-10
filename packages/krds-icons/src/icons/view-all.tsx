@@ -1,10 +1,10 @@
-// filepath: veiw-all.tsx
+// filepath: view-all.tsx
 import type { IconProps } from "#/types";
 
-export function VeiwAll({
+export function ViewAll({
   size = 24,
   color = "currentColor",
-  title = "VeiwAll",
+  title = "ViewAll",
   ...props
 }: IconProps) {
   return (

@@ -1,10 +1,10 @@
-// filepath: veiw-mode.tsx
+// filepath: view-mode.tsx
 import type { IconProps } from "#/types";
 
-export function VeiwMode({
+export function ViewMode({
   size = 24,
   color = "currentColor",
-  title = "VeiwMode",
+  title = "ViewMode",
   ...props
 }: IconProps) {
   return (
