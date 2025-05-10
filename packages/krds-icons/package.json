@@ -1,0 +1,30 @@
+{
+  "name": "@gracefullight/krds-icons",
+  "version": "0.1.0",
+  "description": "Icon components for KRDS design system",
+  "sideEffects": false,
+  "imports": {
+    "#/*": "./dist/*"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsup": "^8.4.0",
+    "typescript": "^5"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  }
+}
