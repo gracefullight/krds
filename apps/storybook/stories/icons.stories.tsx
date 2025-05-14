@@ -23,7 +23,7 @@ const meta = {
     size: {
       control: {
         type: "radio",
-        options: [16, 24, 32, 48],
+        options: [12, 16, 20, 24, 32, 40],
       },
     },
   },
