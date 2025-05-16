@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "homepage": "https://github.com/gracefullight/krds",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo run dev --parallel",
     "prepare": "husky",
@@ -13,7 +16,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.29.3",
+    "@changesets/cli": "^2.29.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
@@ -23,8 +26,8 @@
     "devmoji": "^2.3.0",
     "es-toolkit": "catalog:utils",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
-    "sort-package-json": "^3.2.0",
+    "lint-staged": "^16.0.0",
+    "sort-package-json": "^3.2.1",
     "turbo": "^2.5.3",
     "typescript": "^5",
     "vitest": "^3.1.3"
