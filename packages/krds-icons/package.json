@@ -20,7 +20,7 @@
     "@types/react": "^19",
     "react": "^19",
     "react-dom": "^19",
-    "tsup": "^8.4.0",
+    "tsup": "^8.5.0",
     "typescript": "^5"
   },
   "peerDependencies": {

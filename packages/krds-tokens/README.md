@@ -26,49 +26,11 @@ import { getTypography, getColor, getPalette, getRadius, getShadow, BREAKPOINTS 
 const headingStyle = getTypography("pc.heading.large");
 
 // Get a color value
-const primaryColor = getColor("mode-light.color.primary.50");
+const textBasic = getPalette("text.basic");
 
 // Access raw token object (if needed)
-import TOKENS from "@gracefullight/krds-tokens/dist/tokens";
+import { TOKENS } from "@gracefullight/krds-tokens";
 ```
-
-## API
-
-### getTypography(key: string)
-
-Retrieve a typography style object by its path. Returns an object with:
-- `fontSize`: string
-- `fontWeight`: number
-- `lineHeight`: number
-- `letterSpacing`: string
-
-```ts
-getTypography("mobile.display.small");
-```
-
-### getColor(key: string)
-
-Retrieve a color value from the token set.
-
-```ts
-getColor("mode-high-contrast.color.text.primary");
-```
-
-### getPalette(name: string)
-
-Get a predefined color palette.
-
-### getRadius(key: string)
-
-Get border-radius value.
-
-### getShadow(key: string)
-
-Get box-shadow definition.
-
-### BREAKPOINTS
-
-Exported breakpoint map for responsive design.
 
 ## Scripts
 

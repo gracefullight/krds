@@ -1,5 +1,6 @@
 # Changelog
 
+- 0.13.0: Added krds-icons into components
 - 0.12.0: Separated design tokens into standalone krds-tokens package
 - 0.11.0: Added MUI components and composite components
   - divider

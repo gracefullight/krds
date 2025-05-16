@@ -1,6 +1,6 @@
 {
   "name": "@gracefullight/krds",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "homepage": "https://krds.gracefullight.dev",
   "license": "MIT",
   "author": {
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tsup": "^8.4.0",
+    "tsup": "^8.5.0",
     "typescript": "*"
   },
   "peerDependencies": {
