@@ -2,6 +2,8 @@
   "name": "@gracefullight/krds-icons",
   "version": "0.1.0",
   "description": "Icon components for KRDS design system",
+  "homepage": "https://krds.gracefullight.dev",
+  "license": "MIT",
   "sideEffects": false,
   "imports": {
     "#/*": "./dist/*"
