@@ -7,21 +7,22 @@ import type {} from "@mui/x-date-pickers/themeAugmentation";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
 import {
+  ArrowDropDown,
+  ArrowLeft,
+  ArrowRight,
+  Calendar,
+} from "@gracefullight/krds-icons";
+import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
   Button,
   Typography,
   formHelperTextClasses,
   iconButtonClasses,
   inputAdornmentClasses,
-  svgIconClasses,
 } from "@mui/material";
 import {
   dateCalendarClasses,
@@ -81,14 +82,14 @@ function DatePickerHeader(props: PickersCalendarHeaderProps) {
   return (
     <S.HeaderContainer>
       <S.MonthIconButton aria-label="이전 달" onClick={handlePreviousMonth}>
-        <ChevronLeftIcon />
+        <ArrowLeft size={19.2} />
       </S.MonthIconButton>
 
       <S.HeaderButtonsContainer>
         <S.SelectorButton
           onClick={handleYearClick}
           variant="text"
-          endIcon={<ArrowDropDownIcon />}
+          endIcon={<ArrowDropDown size={16} />}
         >
           <Typography variant="heading-small">
             {currentMonth.toFormat("yyyy")}년
@@ -98,7 +99,7 @@ function DatePickerHeader(props: PickersCalendarHeaderProps) {
         <S.SelectorButton
           onClick={handleMonthClick}
           variant="text"
-          endIcon={<ArrowDropDownIcon />}
+          endIcon={<ArrowDropDown size={16} />}
         >
           <Typography variant="heading-small">
             {currentMonth.toFormat("MM")}월
@@ -107,7 +108,7 @@ function DatePickerHeader(props: PickersCalendarHeaderProps) {
       </S.HeaderButtonsContainer>
 
       <S.MonthIconButton aria-label="다음 달" onClick={handleNextMonth}>
-        <ChevronRightIcon />
+        <ArrowRight size={19.2} />
       </S.MonthIconButton>
     </S.HeaderContainer>
   );
@@ -174,7 +175,7 @@ export const MuiDatePicker: Components["MuiDatePicker"] = {
     slots: {
       // * https://mui.com/x/react-date-pickers/custom-components/#component
       actionBar: DatePickerActionBar,
-      openPickerIcon: CalendarMonthOutlinedIcon,
+      openPickerIcon: () => <Calendar />,
     },
     views: ["year", "month", "day"],
   },
@@ -208,11 +209,15 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
           color: getPalette("text.danger"),
         },
 
-        [`& .${svgIconClasses.root}`]: {
+        "& svg": {
           width: "16px",
           height: "16px",
           marginRight: "4px",
           marginTop: "-1px",
+        },
+
+        [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root}`]: {
+          color: getPalette("icon.gray"),
         },
       },
 
@@ -232,7 +237,7 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
                 ...getTypography("mobile.label.small"),
               },
 
-              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} .${svgIconClasses.root}`]:
+              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {
                   width: "16px",
                   height: "16px",
@@ -255,7 +260,7 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
                 ...getTypography("mobile.label.medium"),
               },
 
-              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} .${svgIconClasses.root}`]:
+              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {
                   width: "20px",
                   height: "20px",
@@ -278,7 +283,7 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
                 ...getTypography("mobile.label.large"),
               },
 
-              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} .${svgIconClasses.root}`]:
+              [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {
                   width: "24px",
                   height: "24px",

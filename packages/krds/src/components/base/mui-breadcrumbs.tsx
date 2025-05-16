@@ -1,7 +1,7 @@
 import type { Components, Theme } from "@mui/material";
 
+import { ArrowRight } from "@gracefullight/krds-icons";
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {
   breadcrumbsClasses,
   buttonBaseClasses,
@@ -14,12 +14,12 @@ declare module "@mui/material/Breadcrumbs" {}
 export const MuiBreadcrumbs: Components["MuiBreadcrumbs"] = {
   defaultProps: {
     maxItems: 5,
-    separator: <NavigateNextIcon />,
+    separator: <ArrowRight size={16} />,
   },
 
   styleOverrides: {
     root: ({ theme }) => ({
-      [`& .${breadcrumbsClasses.li} .${svgIconClasses.root}`]: {
+      [`& .${breadcrumbsClasses.li} svg`]: {
         color: getPalette("icon.gray"),
         height: "16px",
         marginRight: "4px",
@@ -45,11 +45,10 @@ export const MuiBreadcrumbs: Components["MuiBreadcrumbs"] = {
       },
 
       [`& .${breadcrumbsClasses.separator}`]: {
-        marginLeft: "4px",
-        marginRight: "4px",
+        color: getPalette("icon.gray"),
+        margin: "3px 4px 0 4px",
 
-        [`& .${svgIconClasses.root}`]: {
-          color: getPalette("icon.gray"),
+        "& svg": {
           height: "16px",
           width: "16px",
         },
@@ -58,7 +57,7 @@ export const MuiBreadcrumbs: Components["MuiBreadcrumbs"] = {
       [`& li:not(.${breadcrumbsClasses.li}) .${buttonBaseClasses.root}`]: {
         backgroundColor: getPalette("action.secondary"),
         color: getPalette("icon.gray"),
-        margin: 0,
+        margin: "3px 0 0 0",
 
         [`& .${svgIconClasses.root}`]: {
           height: "16px",

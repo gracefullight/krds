@@ -1,24 +1,19 @@
 import type { Components, Theme } from "@mui/material";
 
+import { ArrowLeft, ArrowRight } from "@gracefullight/krds-icons";
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import {
-  Typography,
-  paginationItemClasses,
-  svgIconClasses,
-} from "@mui/material";
+import { Typography, paginationItemClasses } from "@mui/material";
 
 declare module "@mui/material/PaginationItem" {}
 
 function PreviousButton() {
   return (
     <>
-      <KeyboardArrowLeftIcon />
+      <ArrowLeft size={20} />
       <Typography variant="body-medium">이전</Typography>
     </>
   );
@@ -28,7 +23,7 @@ function NextButton() {
   return (
     <>
       <Typography variant="body-medium">다음</Typography>
-      <KeyboardArrowRightIcon />
+      <ArrowRight size={20} />
     </>
   );
 }
@@ -54,7 +49,7 @@ export const MuiPaginationItem: Components["MuiPaginationItem"] = {
         ...getTypography("mobile.body.medium"),
       },
 
-      [`&. ${svgIconClasses.root}`]: {
+      "& svg": {
         color: getPalette("icon.gray"),
       },
 
@@ -81,11 +76,15 @@ export const MuiPaginationItem: Components["MuiPaginationItem"] = {
       [`&.${paginationItemClasses.disabled}`]: {
         color: getPalette("text.disabled"),
 
-        [`&. ${svgIconClasses.root}`]: {
+        "& svg": {
           color: getPalette("icon.disabled"),
           height: "20px",
           width: "20px",
         },
+      },
+
+      [`&.${paginationItemClasses.ellipsis}`]: {
+        userSelect: "none",
       },
     }),
   },

@@ -7,12 +7,12 @@ declare module "@mui/material/StepLabel" {}
 
 export const MuiStepLabel: Components["MuiStepLabel"] = {
   defaultProps: {},
+
   styleOverrides: {
     root: ({ theme }) => ({
-      ...getTypography("pc.body.xsmall"),
-
       alignItems: "flex-start",
 
+      ...getTypography("pc.body.xsmall"),
       [(theme as Theme).breakpoints.down("medium")]: {
         ...getTypography("mobile.body.xsmall"),
       },

@@ -1,9 +1,7 @@
 import type { OutlinedInputProps } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { Delete, SystemSuccess, Visibility } from "@gracefullight/krds-icons";
 import {
   IconButton,
   InputAdornment,
@@ -73,7 +71,7 @@ export const ExampleTextFieldWithHelperText: Story = {
     error: false,
     helperText: (
       <>
-        <CheckCircleIcon />
+        <SystemSuccess size={16} />
         메시지를 입력해주세요
       </>
     ),
@@ -98,10 +96,10 @@ export const ExampleTextFieldWithIcons: Story = {
         endAdornment={
           <InputAdornment position="end">
             <IconButton aria-label="clear text">
-              <CancelIcon />
+              <Delete />
             </IconButton>
             <IconButton edge="end">
-              <VisibilityOutlinedIcon />
+              <Visibility />
             </IconButton>
           </InputAdornment>
         }

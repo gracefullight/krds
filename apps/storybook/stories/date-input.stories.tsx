@@ -1,7 +1,7 @@
 import type { DatePickerProps } from "@mui/x-date-pickers";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { SystemSuccess } from "@gracefullight/krds-icons";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -66,7 +66,7 @@ export const ExampleDateInputWithHelperText: Story = {
         error: false,
         helperText: (
           <>
-            <CheckCircleIcon />
+            <SystemSuccess size={16} />
             메시지를 입력해주세요
           </>
         ),

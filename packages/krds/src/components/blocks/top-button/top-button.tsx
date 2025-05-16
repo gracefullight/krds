@@ -1,11 +1,9 @@
-import type { MouseEvent } from "react";
-import type { TopButtonProps } from "#/components/blocks/top-button/top-button.types";
-
-import { getPalette } from "@gracefullight/krds-tokens";
-import VerticalAlignTopIcon from "@mui/icons-material/VerticalAlignTop";
+import { Top } from "@gracefullight/krds-icons";
 import { Stack } from "@mui/material";
+import type { MouseEvent } from "react";
 import { useCallback } from "react";
 import * as S from "#/components/blocks/top-button/top-button.styles";
+import type { TopButtonProps } from "#/components/blocks/top-button/top-button.types";
 
 /**
  * TopButton component
@@ -37,9 +35,7 @@ export default function TopButton({ type = "basic", onClick }: TopButtonProps) {
       $buttonType={type}
     >
       <Stack>
-        <VerticalAlignTopIcon
-          sx={{ color: getPalette("icon.gray"), width: "24px", height: "24px" }}
-        />
+        <Top size={24} />
         {type === "label" && <S.TopButtonLabel>위로</S.TopButtonLabel>}
       </Stack>
     </S.TopButtonBase>

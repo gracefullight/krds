@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import HomeIcon from "@mui/icons-material/Home";
+import { Home } from "@gracefullight/krds-icons";
 import { Breadcrumbs, type BreadcrumbsProps, Link } from "@mui/material";
 
 const meta: Meta<typeof Breadcrumbs> = {
@@ -24,7 +24,7 @@ export const ExampleBreadcrumbs: Story = {
   render: (args: BreadcrumbsProps) => (
     <Breadcrumbs {...args}>
       <Link key="home">
-        <HomeIcon />홈
+        <Home size={16} />홈
       </Link>
       <Link key="1depth">1Depth</Link>
       <Link key="2depth">2Depth</Link>
@@ -38,7 +38,7 @@ export const ExampleCollapsedBreadcrumbs: Story = {
   render: (args: BreadcrumbsProps) => (
     <Breadcrumbs {...args}>
       <Link key="home">
-        <HomeIcon />홈
+        <Home size={16} />홈
       </Link>
       <Link key="1depth">1Depth</Link>
       <Link key="2depth">2Depth</Link>

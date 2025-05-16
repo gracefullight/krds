@@ -4,7 +4,7 @@ import type { ComponentType } from "react";
 import { getTypography } from "@gracefullight/krds-tokens";
 import { getPalette } from "@gracefullight/krds-tokens";
 import { getRadius } from "@gracefullight/krds-tokens";
-import { Box, Typography, styled, svgIconClasses } from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
 
 export const AlertContainer: ComponentType<BoxProps> = styled(Box)(
   ({ theme }) => ({
@@ -35,7 +35,7 @@ export const IconContainer: ComponentType<BoxProps> = styled(Box)(
     marginRight: "16px",
     color: getPalette("text.inverse-static"),
 
-    [`& .${svgIconClasses.root}`]: {
+    "& svg": {
       width: "24px",
       height: "24px",
     },
@@ -43,7 +43,7 @@ export const IconContainer: ComponentType<BoxProps> = styled(Box)(
     [theme.breakpoints.down("medium")]: {
       padding: "8px",
 
-      [`& .${svgIconClasses.root}`]: {
+      "& svg": {
         width: "20px",
         height: "20px",
       },

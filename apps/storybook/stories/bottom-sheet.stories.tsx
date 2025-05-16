@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@gracefullight/krds-icons";
 import { DialogTitle, IconButton, SwipeableDrawer } from "@mui/material";
 
 const meta: Meta<typeof SwipeableDrawer> = {
@@ -38,7 +38,7 @@ export const ExampleBottomSheet: Story = {
         <DialogTitle>
           타이틀
           <IconButton aria-label="close">
-            <CloseIcon />
+            <Close size={24} />
           </IconButton>
         </DialogTitle>
         내용

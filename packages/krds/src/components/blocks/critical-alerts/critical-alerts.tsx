@@ -3,9 +3,8 @@ import type {
   CriticalAlertsSeverity,
 } from "#/components/blocks/critical-alerts/critical-alerts.types";
 
+import { ArrowRight, Emergency } from "@gracefullight/krds-icons";
 import { getPalette } from "@gracefullight/krds-tokens";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import EmergencyIcon from "@mui/icons-material/Emergency";
 import InfoIcon from "@mui/icons-material/Info";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Button } from "@mui/material";
@@ -21,7 +20,7 @@ export default function CriticalAlerts({
     switch (severity) {
       case "emergency":
         return {
-          icon: <EmergencyIcon />,
+          icon: <Emergency size={24} />,
           label: "긴급",
           backgroundColor: getPalette("element.danger"),
         };
@@ -57,7 +56,7 @@ export default function CriticalAlerts({
             onClick={onClick}
             aria-label={`${label} 상세 내용 보기`}
             variant="text"
-            endIcon={<ChevronRightIcon sx={{ width: 20, height: 20 }} />}
+            endIcon={<ArrowRight size={20} />}
           >
             <S.ButtonText>자세히보기</S.ButtonText>
           </Button>

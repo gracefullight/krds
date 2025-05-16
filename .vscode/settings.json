@@ -9,9 +9,6 @@
   "[json,javascript,typescript,typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
       "text": "Use conventional commit format: type(scope): description. Types: feat, fix, docs, style, refactor, perf, test, chore. Make the first line < 72 chars. Include issue refs if applicable. Example: 'feat(auth): add OAuth2 integration for user login'"

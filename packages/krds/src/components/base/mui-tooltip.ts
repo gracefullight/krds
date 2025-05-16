@@ -7,7 +7,6 @@ import {
 } from "@gracefullight/krds-tokens";
 import {
   iconButtonClasses,
-  svgIconClasses,
   tooltipClasses,
   typographyClasses,
 } from "@mui/material";
@@ -39,10 +38,9 @@ export const MuiTooltip: Components["MuiTooltip"] = {
   styleOverrides: {
     popper: ({ theme }) => ({
       [`& .${tooltipClasses.tooltip}`]: {
-        ...getTypography("pc.body.small"),
-
         display: "flex",
 
+        ...getTypography("pc.body.small"),
         [(theme as Theme).breakpoints.down("medium")]: {
           ...getTypography("mobile.body.small"),
         },
@@ -56,7 +54,7 @@ export const MuiTooltip: Components["MuiTooltip"] = {
           alignSelf: "flex-start",
           padding: "3px 0 0 0",
 
-          [`& .${svgIconClasses.root}`]: {
+          "& svg": {
             width: "16px",
             height: "16px",
           },
@@ -77,7 +75,7 @@ export const MuiTooltip: Components["MuiTooltip"] = {
                 color: getPalette("surface.inverse"),
               },
 
-              [`& .${iconButtonClasses.root} .${svgIconClasses.root}`]: {
+              [`& .${iconButtonClasses.root} svg`]: {
                 color: getPalette("icon.inverse"),
               },
             },
@@ -101,7 +99,7 @@ export const MuiTooltip: Components["MuiTooltip"] = {
                 },
               },
 
-              [`& .${iconButtonClasses.root} .${svgIconClasses.root}`]: {
+              [`& .${iconButtonClasses.root} svg`]: {
                 color: getPalette("icon.gray"),
               },
             },

@@ -7,6 +7,7 @@ declare module "@mui/material/TableCell" {}
 
 export const MuiTableCell: Components["MuiTableCell"] = {
   defaultProps: {},
+
   styleOverrides: {
     root: {
       [`&.${tableCellClasses.head}`]: {

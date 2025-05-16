@@ -78,6 +78,7 @@ export const MuiTablePagination: Components["MuiTablePagination"] = {
     },
     ActionsComponent: TablePaginationActions,
   },
+
   styleOverrides: {
     root: {
       borderBottom: "none",

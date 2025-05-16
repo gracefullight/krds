@@ -7,6 +7,7 @@ declare module "@mui/material/TableBody" {}
 
 export const MuiTableBody: Components["MuiTableBody"] = {
   defaultProps: {},
+
   styleOverrides: {
     root: ({ theme }) => ({
       [`& .${tableRowClasses.root}`]: {

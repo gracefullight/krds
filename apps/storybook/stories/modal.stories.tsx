@@ -1,6 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@gracefullight/krds-icons";
 import {
   Button,
   Dialog,
@@ -10,6 +8,7 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Dialog> = {
   title: "KRDS/Modal",
@@ -46,7 +45,7 @@ export const ExampleModal: Story = {
         <DialogTitle>
           타이틀
           <IconButton aria-label="close">
-            <CloseIcon />
+            <Close size={24} />
           </IconButton>
         </DialogTitle>
         <DialogContent>

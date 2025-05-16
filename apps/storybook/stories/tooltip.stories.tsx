@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@gracefullight/krds-icons";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip, Typography } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Tooltip> = {
   title: "KRDS/Tooltip",
@@ -73,7 +72,7 @@ export const ExampleTooltip: Story = {
           아이콘 버튼에 제공되는 툴팁아이콘
         </Typography>
         <IconButton>
-          <CloseIcon />
+          <Close />
         </IconButton>
       </>
     ),
@@ -98,7 +97,7 @@ export const ExampleRichTooltip = {
           주의합니다.
         </Typography>
         <IconButton>
-          <CloseIcon />
+          <Close />
         </IconButton>
       </>
     ),

@@ -4,10 +4,9 @@ import type {
   InfoBoxProps,
 } from "#/components/blocks/info-box/info-box.types";
 
-import InfoIcon from "@mui/icons-material/Info";
-import { Children, cloneElement, isValidElement } from "react";
-
+import { SystemInfo } from "@gracefullight/krds-icons";
 import { Divider } from "@mui/material";
+import { Children, cloneElement, isValidElement } from "react";
 import * as S from "#/components/blocks/info-box/info-box.styles";
 
 /**
@@ -43,7 +42,7 @@ export default function InfoBox({
     <S.InfoBoxContainer type={type}>
       {isDefault && title ? (
         <S.InfoBoxHeader type={type}>
-          <InfoIcon sx={{ width: 20, height: 20 }} />
+          <SystemInfo size={20} />
           <S.InfoBoxTitleTypography type={type}>
             {title}
           </S.InfoBoxTitleTypography>
@@ -51,7 +50,7 @@ export default function InfoBox({
       ) : (
         // For slim mode, show icon with content but no title
         <S.InfoBoxHeader type={type}>
-          <InfoIcon sx={{ width: 20, height: 20 }} />
+          <SystemInfo size={20} />
           <S.InfoBoxContentTypography size={size}>
             {content}
           </S.InfoBoxContentTypography>

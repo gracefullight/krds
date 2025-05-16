@@ -1,7 +1,7 @@
 import type { Components, Theme } from "@mui/material";
 
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
-import { iconButtonClasses, svgIconClasses } from "@mui/material";
+import { iconButtonClasses } from "@mui/material";
 
 declare module "@mui/material/DialogTitle" {}
 
@@ -17,15 +17,15 @@ export const MuiDialogTitle: Components["MuiDialogTitle"] = {
 
       // * close icon 위치 조정
       [`& .${iconButtonClasses.root}`]: {
+        color: getPalette("icon.gray"),
         padding: 0,
         position: "absolute",
         top: 0,
         right: 0,
 
-        [`& .${svgIconClasses.root}`]: {
+        "& svg": {
           width: "24px",
           height: "24px",
-          color: getPalette("icon.gray"),
         },
       },
 

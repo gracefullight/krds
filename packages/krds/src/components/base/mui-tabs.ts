@@ -21,6 +21,7 @@ export const MuiTabs: Components["MuiTabs"] = {
     type: "primary",
     fill: "outlined",
   },
+
   styleOverrides: {
     root: {
       [`& .${tabsClasses.indicator}`]: {

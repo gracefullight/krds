@@ -1,15 +1,13 @@
 import type { Components, Theme } from "@mui/material";
 import type { VariantStyleProps } from "#/components/base/component.types";
 
-import { getTypography } from "@gracefullight/krds-tokens";
-import { getPalette } from "@gracefullight/krds-tokens";
-import { getRadius } from "@gracefullight/krds-tokens";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { ArrowDown } from "@gracefullight/krds-icons";
 import {
-  outlinedInputClasses,
-  selectClasses,
-  svgIconClasses,
-} from "@mui/material";
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
+import { outlinedInputClasses, selectClasses } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
 
 declare module "@mui/material/Select" {
@@ -30,14 +28,14 @@ export const MuiSelect: Components["MuiSelect"] = {
         },
       },
     },
-    IconComponent: KeyboardArrowDownIcon,
+    IconComponent: ArrowDown,
   },
 
   styleOverrides: {
     root: {
       padding: 0,
 
-      [`& .${svgIconClasses.root}`]: {
+      "& svg": {
         color: getPalette("icon.gray"),
         right: "16px",
       },
@@ -51,7 +49,7 @@ export const MuiSelect: Components["MuiSelect"] = {
           WebkitTextFillColor: getPalette("text.disabled-on"),
         },
 
-        [`& .${svgIconClasses.root}`]: {
+        "& svg": {
           color: getPalette("icon.gray"),
         },
       },
@@ -93,7 +91,7 @@ export const MuiSelect: Components["MuiSelect"] = {
               },
             },
 
-            [`& .${svgIconClasses.root}`]: {
+            "& svg": {
               width: "24px",
               height: "24px",
               top: "calc(50% - 12px)",
@@ -116,7 +114,7 @@ export const MuiSelect: Components["MuiSelect"] = {
               },
             },
 
-            [`& .${svgIconClasses.root}`]: {
+            "& svg": {
               width: "20px",
               height: "20px",
               top: "calc(50% - 10px)",
@@ -139,7 +137,7 @@ export const MuiSelect: Components["MuiSelect"] = {
               },
             },
 
-            [`& .${svgIconClasses.root}`]: {
+            "& svg": {
               width: "16px",
               height: "16px",
               top: "calc(50% - 8px)",

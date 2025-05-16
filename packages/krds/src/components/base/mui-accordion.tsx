@@ -7,6 +7,7 @@ import {
   getTypography,
 } from "@gracefullight/krds-tokens";
 import { accordionClasses, accordionSummaryClasses } from "@mui/material";
+import { krdsAccordionClasses } from "#/constants/classes";
 
 declare module "@mui/material/Accordion" {}
 
@@ -33,7 +34,7 @@ export const MuiAccordion: Components["MuiAccordion"] = {
         backgroundColor: getPalette("action.secondary-pressed"),
       },
 
-      "&.size-medium": {
+      [`&.${krdsAccordionClasses.sizeMedium}`]: {
         [`& .${accordionSummaryClasses.root}`]: {
           minHeight: "unset",
           paddingInline: "16px",
@@ -61,7 +62,7 @@ export const MuiAccordion: Components["MuiAccordion"] = {
         },
       },
 
-      "&.size-large": {
+      [`&.${krdsAccordionClasses.sizeLarge}`]: {
         [`& .${accordionSummaryClasses.root}`]: {
           minHeight: "unset",
           paddingInline: "24px",

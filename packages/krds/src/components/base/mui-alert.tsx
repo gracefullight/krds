@@ -1,14 +1,16 @@
 import type { Components, Theme } from "@mui/material";
 
 import {
+  SystemDanger,
+  SystemInfo,
+  SystemSuccess,
+  SystemWarning,
+} from "@gracefullight/krds-icons";
+import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import InfoIcon from "@mui/icons-material/Info";
-import WarningIcon from "@mui/icons-material/Warning";
 import { alertClasses, alertTitleClasses, svgIconClasses } from "@mui/material";
 
 declare module "@mui/material/Alert" {
@@ -22,10 +24,10 @@ declare module "@mui/material/Alert" {
 export const MuiAlert: Components["MuiAlert"] = {
   defaultProps: {
     iconMapping: {
-      danger: <CancelIcon />,
-      warning: <WarningIcon />,
-      success: <CheckCircleIcon />,
-      info: <InfoIcon />,
+      danger: <SystemDanger size={24} />,
+      warning: <SystemWarning size={24} />,
+      success: <SystemSuccess size={24} />,
+      info: <SystemInfo size={24} />,
     },
   },
   styleOverrides: {

@@ -28,6 +28,10 @@ export const TopButtonBase: ComponentType<FabStyledProps> = styled(Fab, {
   "&:active": {
     backgroundColor: getPalette("action.secondary-pressed"),
   },
+
+  "& svg": {
+    color: getPalette("icon.gray"),
+  },
 }));
 
 export const TopButtonLabel: ComponentType<BoxProps> = styled(Box)(

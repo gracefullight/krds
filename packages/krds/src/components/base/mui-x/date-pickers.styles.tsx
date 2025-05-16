@@ -18,7 +18,6 @@ import {
   IconButton,
   buttonClasses,
   styled,
-  svgIconClasses,
 } from "@mui/material";
 
 export const HeaderContainer: ComponentType<BoxProps> = styled(Box)({
@@ -45,7 +44,7 @@ export const SelectorButton: ComponentType<ButtonProps> = styled(Button)(
     minWidth: "auto",
     textTransform: "none",
 
-    [`& .${buttonClasses.endIcon} .${svgIconClasses.root}`]: {
+    [`& .${buttonClasses.endIcon} svg`]: {
       color: getPalette("icon.gray"),
       width: "16px",
       height: "16px",
@@ -59,7 +58,7 @@ export const MonthIconButton: ComponentType<IconButtonProps> = styled(
   border: `0.8px solid ${getPalette("border.gray-light")}`,
   borderRadius: getRadius("max"),
 
-  [`& .${svgIconClasses.root}`]: {
+  "& svg": {
     color: getPalette("icon.gray"),
     width: "19.2px",
     height: "19.2px",

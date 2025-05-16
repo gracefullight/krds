@@ -50,7 +50,7 @@ export default function iconGenerator(plop: PlopTypes.NodePlopAPI): void {
         const rawSvg = readFileSync(path.join(svgDir, fileName), "utf-8");
         const cleaned = cleanSvgContent(rawSvg);
         const viewBox = extractViewBox(cleaned);
-        const inner = extractInnerContent(cleaned);
+        const inner = extractInnerContent(cleaned, componentName);
 
         actions.push({
           type: "add",
@@ -109,7 +109,64 @@ function extractViewBox(cleanedSvg: string): string {
   return viewBoxMatch ? viewBoxMatch[1] : "0 0 24 24";
 }
 
-function extractInnerContent(cleanedSvg: string): string {
+function extractInnerContent(cleanedSvg: string, iconName?: string): string {
   const match = cleanedSvg.match(/<svg[^>]*>(.*)<\/svg>/);
-  return match ? match[1].trim() : "";
+  if (!match) return "";
+
+  // Get the inner content
+  let innerContent = match[1].trim();
+
+  // Icons that should use dynamic color instead of hardcoded fill
+  const iconsToUseDynamicFill = [
+    "arrow-down",
+    "arrow-drop-down",
+    "arrow-drop-up",
+    "arrow-left",
+    "arrow-right",
+    "arrow-top",
+    "calendar",
+    "close",
+    "emergency",
+    "home",
+    "top",
+    "visibility",
+  ];
+  // System icons with different patterns
+  const systemIcons = {
+    "system-info": "rect", // system-info uses rect for background
+    "system-warning": "path-first", // system-warning uses first path for background
+  };
+
+  // Replace hardcoded fill colors with the color parameter for specific icons
+  if (iconName) {
+    const iconNameLower = kebabCase(iconName).toLowerCase();
+
+    if (iconsToUseDynamicFill.includes(iconNameLower)) {
+      // For regular icons, replace path fill values
+      innerContent = innerContent.replace(
+        /fill="(#[0-9A-Fa-f]{3,8})"/g,
+        "fill={color}",
+      );
+    } else if (Object.keys(systemIcons).includes(iconNameLower)) {
+      // Handle system icons based on their specific pattern
+      const iconType = systemIcons[iconNameLower as keyof typeof systemIcons];
+
+      if (iconType === "rect") {
+        // For system icons with rect background, replace the rect fill
+        innerContent = innerContent.replace(
+          /(<rect[^>]*fill=)"([^"]+)"/g,
+          "$1{color}",
+        );
+      } else if (iconType === "path-first") {
+        // For system icons that use the first path as background
+        // Find the first path and replace its fill
+        innerContent = innerContent.replace(
+          /(<path[^>]*?fill=)"([^"]+)"/,
+          "$1{color}",
+        );
+      }
+    }
+  }
+
+  return innerContent;
 }

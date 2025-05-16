@@ -1,6 +1,10 @@
 import type { Components, Theme } from "@mui/material";
 
-import { getRadius, getTypography } from "@gracefullight/krds-tokens";
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import { dialogTitleClasses, iconButtonClasses } from "@mui/material";
 
 declare module "@mui/material/Drawer" {}
@@ -12,10 +16,9 @@ export const MuiDrawer: Components["MuiDrawer"] = {
 
   styleOverrides: {
     paper: ({ theme }) => ({
-      ...getTypography("pc.body.medium"),
-
       baxShadow: "none",
 
+      ...getTypography("pc.body.medium"),
       [(theme as Theme).breakpoints.down("medium")]: {
         ...getTypography("mobile.body.medium"),
       },
@@ -28,6 +31,7 @@ export const MuiDrawer: Components["MuiDrawer"] = {
         },
 
         [`& .${iconButtonClasses.root}`]: {
+          color: getPalette("icon.gray"),
           top: "4px",
         },
       },

@@ -6,6 +6,7 @@ export const MuiStepper: Components["MuiStepper"] = {
   defaultProps: {
     alternativeLabel: true,
   },
+
   styleOverrides: {
     root: {},
   },
