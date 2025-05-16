@@ -257,6 +257,9 @@ importers:
 
   packages/krds:
     dependencies:
+      '@gracefullight/krds-icons':
+        specifier: workspace:*
+        version: link:../krds-icons
       '@gracefullight/krds-tokens':
         specifier: workspace:*
         version: link:../krds-tokens

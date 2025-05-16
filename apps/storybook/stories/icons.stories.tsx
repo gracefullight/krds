@@ -22,9 +22,9 @@ const meta = {
   argTypes: {
     size: {
       control: {
-        type: "radio",
-        options: [12, 16, 20, 24, 32, 40],
+        type: "select",
       },
+      options: [12, 16, 20, 24, 32, 40],
     },
   },
 } satisfies Meta;

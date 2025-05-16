@@ -29,6 +29,7 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
+    "@gracefullight/krds-icons": "workspace:*",
     "@gracefullight/krds-tokens": "workspace:*",
     "es-toolkit": "catalog:utils"
   },
