@@ -1,5 +1,4 @@
-import type { Components } from "@mui/material";
-import type { VariantStyleProps } from "#/components/base/component.types";
+import type { Components, Theme } from "@mui/material";
 
 import {
   getPalette,
@@ -51,61 +50,61 @@ export const MuiChip: Components["MuiChip"] = {
       [`& .${chipClasses.label}`]: {
         padding: 0,
       },
-
-      variants: [
-        // * size
-        {
-          props: { size: "small" },
-          style: ({ theme }: VariantStyleProps) => ({
-            ...getTypography("pc.label.xsmall"),
-
-            [theme.breakpoints.down("medium")]: {
-              ...getTypography("mobile.label.xsmall"),
-            },
-
-            padding: "2px 8px",
-          }),
-        },
-        {
-          props: { size: "medium" },
-          style: ({ theme }: VariantStyleProps) => ({
-            ...getTypography("pc.label.small"),
-
-            [theme.breakpoints.down("medium")]: {
-              ...getTypography("mobile.label.small"),
-            },
-
-            padding: "4.5px 10px",
-          }),
-        },
-        {
-          props: { size: "large" },
-          style: ({ theme }: VariantStyleProps) => ({
-            ...getTypography("pc.label.medium"),
-
-            [theme.breakpoints.down("medium")]: {
-              ...getTypography("mobile.label.medium"),
-            },
-
-            padding: "7px 12px",
-          }),
-        },
-        // * clickable
-        {
-          props: { clickable: true },
-          style: {
-            ":hover": {
-              outline: "none",
-              backgroundColor: getPalette("action.secondary-hover"),
-            },
-
-            ":active": {
-              outline: "none",
-              backgroundColor: getPalette("action.secondary-pressed"),
-            },
-          },
-        },
-      ],
     },
   },
+
+  variants: [
+    // * size
+    {
+      props: { size: "small" },
+      style: ({ theme }) => ({
+        ...getTypography("pc.label.xsmall"),
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          ...getTypography("mobile.label.xsmall"),
+        },
+
+        padding: "2px 8px",
+      }),
+    },
+    {
+      props: { size: "medium" },
+      style: ({ theme }) => ({
+        ...getTypography("pc.label.small"),
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          ...getTypography("mobile.label.small"),
+        },
+
+        padding: "4.5px 10px",
+      }),
+    },
+    {
+      props: { size: "large" },
+      style: ({ theme }) => ({
+        ...getTypography("pc.label.medium"),
+
+        [(theme as Theme).breakpoints.down("medium")]: {
+          ...getTypography("mobile.label.medium"),
+        },
+
+        padding: "7px 12px",
+      }),
+    },
+    // * clickable
+    {
+      props: { clickable: true },
+      style: {
+        ":hover": {
+          outline: "none",
+          backgroundColor: getPalette("action.secondary-hover"),
+        },
+
+        ":active": {
+          outline: "none",
+          backgroundColor: getPalette("action.secondary-pressed"),
+        },
+      },
+    },
+  ],
 };

@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "prepare": "husky",
     "publish-packages": "turbo run build --filter=./packages/* && changeset version && changeset publish",

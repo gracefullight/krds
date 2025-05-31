@@ -4,7 +4,6 @@ import type {
   PickersCalendarHeaderProps,
 } from "@mui/x-date-pickers";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
-import type { VariantStyleProps } from "#/components/base/component.types";
 
 import {
   ArrowDropDown,
@@ -226,14 +225,14 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
           props: {
             size: "small",
           },
-          style: ({ theme }: VariantStyleProps) => ({
+          style: ({ theme }) => ({
             [`& .${pickersInputBaseClasses.root}`]: {
               borderRadius: getRadius("medium1"),
               paddingBottom: "8.5px",
               paddingTop: "8.5px",
               ...getTypography("pc.label.small"),
 
-              [theme.breakpoints.down("medium")]: {
+              [(theme as Theme).breakpoints.down("medium")]: {
                 ...getTypography("mobile.label.small"),
               },
 
@@ -249,14 +248,14 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
           props: {
             size: "medium",
           },
-          style: ({ theme }: VariantStyleProps) => ({
+          style: ({ theme }) => ({
             [`& .${pickersInputBaseClasses.root}`]: {
               borderRadius: getRadius("medium2"),
               paddingBottom: "11px",
               paddingTop: "11px",
               ...getTypography("pc.label.medium"),
 
-              [theme.breakpoints.down("medium")]: {
+              [(theme as Theme).breakpoints.down("medium")]: {
                 ...getTypography("mobile.label.medium"),
               },
 
@@ -272,14 +271,14 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
           props: {
             size: "large",
           },
-          style: ({ theme }: VariantStyleProps) => ({
+          style: ({ theme }) => ({
             [`& .${pickersInputBaseClasses.root}`]: {
               borderRadius: getRadius("medium3"),
               paddingBottom: "13.5px",
               paddingTop: "13.5px",
               ...getTypography("pc.label.large"),
 
-              [theme.breakpoints.down("medium")]: {
+              [(theme as Theme).breakpoints.down("medium")]: {
                 ...getTypography("mobile.label.large"),
               },
 

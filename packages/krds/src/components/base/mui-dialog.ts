@@ -1,5 +1,4 @@
 import type { Components, Theme } from "@mui/material";
-import type { VariantStyleProps } from "#/components/base/component.types";
 
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import {
@@ -18,82 +17,7 @@ export const MuiDialog: Components["MuiDialog"] = {
   },
 
   styleOverrides: {
-    root: {
-      variants: [
-        {
-          props: { maxWidth: "xsmall" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "400px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-        {
-          props: { maxWidth: "small" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "400px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-        {
-          props: { maxWidth: "medium" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "560px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-        {
-          props: { maxWidth: "large" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "760px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-        {
-          props: { maxWidth: "xlarge" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "760px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-        {
-          props: { maxWidth: "xxlarge" },
-          style: ({ theme }: VariantStyleProps) => ({
-            [`& .${dialogClasses.paper}`]: {
-              maxWidth: "760px",
-
-              [theme.breakpoints.down("medium")]: {
-                maxWidth: "320px",
-              },
-            },
-          }),
-        },
-      ],
-    },
+    root: {},
 
     paper: ({ theme }) => ({
       borderRadius: getRadius("xlarge2"),
@@ -122,17 +46,85 @@ export const MuiDialog: Components["MuiDialog"] = {
           paddingRight: "4px",
         },
       },
-
-      variants: [
-        {
-          props: { maxWidth: "small" },
-          style: {
-            [`& .${dialogActionsClasses.root}`]: {
-              paddingBottom: 0,
-            },
-          },
-        },
-      ],
     }),
   },
+
+  variants: [
+    {
+      props: { maxWidth: "xsmall" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "400px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+      }),
+    },
+    {
+      props: { maxWidth: "small" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "400px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+
+        [`& .${dialogActionsClasses.root}`]: {
+          paddingBottom: 0,
+        },
+      }),
+    },
+    {
+      props: { maxWidth: "medium" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "560px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+      }),
+    },
+    {
+      props: { maxWidth: "large" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "760px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+      }),
+    },
+    {
+      props: { maxWidth: "xlarge" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "760px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+      }),
+    },
+    {
+      props: { maxWidth: "xxlarge" },
+      style: ({ theme }) => ({
+        [`& .${dialogClasses.paper}`]: {
+          maxWidth: "760px",
+
+          [(theme as Theme).breakpoints.down("medium")]: {
+            maxWidth: "320px",
+          },
+        },
+      }),
+    },
+  ],
 };
