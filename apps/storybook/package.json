@@ -36,11 +36,11 @@
     "@types/luxon": "^3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitest/browser": "^3.1.4",
-    "@vitest/coverage-v8": "^3.1.4",
+    "@vitest/browser": "catalog:tests",
+    "@vitest/coverage-v8": "catalog:tests",
     "playwright": "^1.52.0",
     "storybook": "^8.6.14",
     "typescript": "*",
-    "vitest": "*"
+    "vitest": "catalog:tests"
   }
 }

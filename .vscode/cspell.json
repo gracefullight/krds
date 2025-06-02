@@ -12,6 +12,7 @@
     "Swipeable",
     "tsup",
     "turbopack",
+    "vitest",
     "xlarge",
     "xsmall",
     "xxlarge",
