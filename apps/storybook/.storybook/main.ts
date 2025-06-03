@@ -2,6 +2,8 @@ import type { StorybookConfig } from "@storybook/react-vite";
 
 import { dirname, join } from "node:path";
 
+const html = String.raw;
+
 /**
  * This function is used to resolve the absolute path of a package.
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
@@ -28,13 +30,22 @@ const config: StorybookConfig = {
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/experimental-addon-test"),
   ],
+
   core: {
     disableTelemetry: true,
   },
+
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
+
+  managerHead: (head) => html`
+    ${head}
+    <link rel="shortcut icon" href="./16.png" />
+    <link rel="icon" type="image/png" href="./192.png" sizes="192x192" />
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "dce5a0118b9e45d2b719a6096b4e3743"}'></script>
+  `,
 
   typescript: {
     reactDocgen: "react-docgen-typescript",
