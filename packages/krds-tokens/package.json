@@ -22,7 +22,7 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "es-toolkit": "catalog:utils"
+    "es-toolkit": "^1.38.0"
   },
   "devDependencies": {
     "tsup": "^8.5.0",
