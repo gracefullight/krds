@@ -31,7 +31,7 @@
   "dependencies": {
     "@gracefullight/krds-icons": "workspace:*",
     "@gracefullight/krds-tokens": "workspace:*",
-    "es-toolkit": "catalog:utils"
+    "es-toolkit": "^1.38.0"
   },
   "devDependencies": {
     "@types/react": "^19",
@@ -40,9 +40,9 @@
     "typescript": "*"
   },
   "peerDependencies": {
-    "@mui/icons-material": "catalog:mui7",
-    "@mui/material": "catalog:mui7",
-    "@mui/x-date-pickers": "catalog:mui7",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
+    "@mui/x-date-pickers": "^8.5.0",
     "react": "^19",
     "react-dom": "^19"
   },

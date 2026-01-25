@@ -25,13 +25,13 @@
     "@types/node": "^22",
     "axios": "^1.9.0",
     "devmoji": "^2.3.0",
-    "es-toolkit": "catalog:utils",
+    "es-toolkit": "^1.38.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "sort-package-json": "^3.2.1",
     "turbo": "^2.5.4",
     "typescript": "^5",
-    "vitest": "catalog:tests"
+    "vitest": "^3.2.0"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "bun@1.2.2"
 }

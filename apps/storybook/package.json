@@ -11,9 +11,9 @@
     "@emotion/styled": "^11.14.0",
     "@gracefullight/krds": "workspace:*",
     "@gracefullight/krds-icons": "workspace:*",
-    "@mui/icons-material": "catalog:mui7",
-    "@mui/material": "catalog:mui7",
-    "@mui/x-date-pickers": "catalog:mui7",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
+    "@mui/x-date-pickers": "^8.5.0",
     "luxon": "^3.6.1",
     "ogl": "^1.0.11",
     "react": "^19.1.0",
@@ -35,11 +35,11 @@
     "@types/luxon": "^3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitest/browser": "catalog:tests",
-    "@vitest/coverage-v8": "catalog:tests",
+    "@vitest/browser": "^3.2.0",
+    "@vitest/coverage-v8": "^3.2.0",
     "playwright": "^1.52.0",
     "storybook": "^8.6.14",
     "typescript": "*",
-    "vitest": "catalog:tests"
+    "vitest": "^3.2.0"
   }
 }

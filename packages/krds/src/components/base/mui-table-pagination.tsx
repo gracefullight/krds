@@ -1,5 +1,5 @@
 import type { Components } from "@mui/material";
-import type { TablePaginationActionsProps } from "@mui/material/TablePagination/TablePaginationActions";
+import type { TablePaginationActionsProps } from "@mui/material/TablePaginationActions";
 import type { ChangeEvent } from "react";
 
 import { Button, TextField } from "@mui/material";
