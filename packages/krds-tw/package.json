@@ -1,0 +1,52 @@
+{
+  "name": "@gracefullight/krds-tw",
+  "version": "0.1.0",
+  "description": "Tailwind CSS v4 design system for KRDS",
+  "homepage": "https://krds.gracefullight.dev",
+  "license": "MIT",
+  "author": {
+    "name": "gracefullight",
+    "email": "gracefullight.dev@gmail.com"
+  },
+  "imports": {
+    "#/*": "./dist/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
+    },
+    "./theme.css": "./dist/krds-theme.css"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@gracefullight/krds-icons": "workspace:*",
+    "@gracefullight/krds-tokens": "workspace:*",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsup": "^8.5.0",
+    "typescript": "*"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwindcss": "^4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
