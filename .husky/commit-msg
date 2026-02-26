@@ -1,1 +1,1 @@
-pnpm commitlint --edit $1 --config commitlint.config.ts
+bun commitlint --edit $1 --config commitlint.config.ts
