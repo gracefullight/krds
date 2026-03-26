@@ -64,7 +64,7 @@
         "useErrorMessage": "error"
       }
     },
-    "ignore": [".vscode", "dist"]
+    "ignore": [".vscode", "dist", ".agents", ".claude"]
   },
   "javascript": {
     "formatter": {
