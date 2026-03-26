@@ -3,6 +3,6 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     passWithNoTests: true,
-    workspace: ["apps/*", "packages/*"],
+    projects: ["apps/*", "packages/*"],
   },
 });

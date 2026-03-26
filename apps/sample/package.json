@@ -33,7 +33,7 @@
     "@types/node": "*",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "19.1.0-rc.2",
+    "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "^6"
   }
 }
