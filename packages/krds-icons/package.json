@@ -11,9 +11,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
@@ -23,7 +21,7 @@
     "react": "^19",
     "react-dom": "^19",
     "tsup": "^8.5.0",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "peerDependencies": {
     "react": "^19",

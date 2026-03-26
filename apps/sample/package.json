@@ -24,7 +24,7 @@
     "es-toolkit": "^1.38.0",
     "jotai": "^2.12.5",
     "jotai-devtools": "^0.13.0",
-    "next": "^15.3.3",
+    "next": "^16",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0"
@@ -34,6 +34,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
-    "typescript": "*"
+    "typescript": "^6"
   }
 }

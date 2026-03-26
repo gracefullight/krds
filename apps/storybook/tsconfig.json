@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "strict": true,
     "target": "ESNext"
   }

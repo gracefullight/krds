@@ -14,9 +14,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
@@ -26,7 +24,7 @@
   },
   "devDependencies": {
     "tsup": "^8.5.0",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "publishConfig": {
     "access": "public"

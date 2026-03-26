@@ -3,10 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "homepage": "https://github.com/gracefullight/krds",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -30,7 +27,7 @@
     "lint-staged": "^16.1.0",
     "sort-package-json": "^3.2.1",
     "turbo": "^2.5.4",
-    "typescript": "^5",
+    "typescript": "^6",
     "vitest": "^3.2.0"
   },
   "packageManager": "bun@1.2.2"

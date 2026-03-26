@@ -37,7 +37,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tsup": "^8.5.0",
-    "typescript": "*"
+    "typescript": "^6"
   },
   "peerDependencies": {
     "@mui/icons-material": "^7.1.0",
