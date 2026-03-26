@@ -8,6 +8,11 @@ tarballs/
 packages/**/*.tgz
 .errors/
 
+# environment
+.env
+.env.*
+!.env.example
+
 # dependencies
 node_modules
 package-lock.json
@@ -37,3 +42,7 @@ test/traces
 
 # Storybook
 *storybook.log
+storybook-static
+
+# oh-my-claudecode
+.omc/
