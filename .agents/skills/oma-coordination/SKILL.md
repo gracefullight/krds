@@ -38,13 +38,13 @@ PM Agent analyzes requirements, selects tech stack, creates task breakdown with 
 Spawn agents via CLI:
 
 1. Use spawn-agent.sh for each task
-2. CLI selection follows agent_cli_mapping in user-preferences.yaml
+2. CLI selection follows agent_cli_mapping in oma-config.yaml
 3. Spawn all same-priority tasks in parallel using background processes
 
 ```bash
 # Example: spawn backend and frontend in parallel
-oh-my-ag agent:spawn backend "task description" session-id -w ./backend &
-oh-my-ag agent:spawn frontend "task description" session-id -w ./frontend &
+oma agent:spawn backend "task description" session-id -w ./backend &
+oma agent:spawn frontend "task description" session-id -w ./frontend &
 wait
 ```
 

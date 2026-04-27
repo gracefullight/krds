@@ -4,7 +4,7 @@ description: Ultrawork - high-quality 5-phase development workflow with 11 revie
 
 # MANDATORY RULES — VIOLATION IS FORBIDDEN
 
-- **Response language follows `language` setting in `.agents/config/user-preferences.yaml` if configured.**
+- **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip steps.** Execute from Step 0 in order. Explicitly report completion of each step to the user before proceeding to the next.
 - **You MUST use MCP tools throughout the entire workflow.** This is NOT optional.
   - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code exploration.
@@ -20,7 +20,7 @@ description: Ultrawork - high-quality 5-phase development workflow with 11 revie
 ## Vendor Detection
 
 Before starting, determine your runtime environment by following `.agents/skills/_shared/core/vendor-detection.md`.
-The detected vendor determines how agents are spawned in Phase 2 (IMPL), Phase 3 (VERIFY), Phase 4 (REFINE), and Phase 5 (SHIP).
+The detected runtime vendor and each agent's target vendor determine how agents are spawned in Phase 2 (IMPL), Phase 3 (VERIFY), Phase 4 (REFINE), and Phase 5 (SHIP).
 
 ---
 
@@ -50,7 +50,7 @@ Activate PM Agent to execute Steps 1-4:
 4. Execute Plan Review - Completeness (Step 2).
 5. Execute Meta Review (Step 3).
 6. Execute Over-Engineering Review (Step 4).
-7. Save plan to `.agents/plan.json`.
+7. Save plan to `.agents/results/plan-{sessionId}.json`.
 8. Create `task-board.md` in memory path for dashboard compatibility.
 9. Use memory write tool to record plan completion.
 
@@ -82,19 +82,29 @@ Activate PM Agent to execute Steps 1-4:
 // turbo
 Spawn Implementation Agents (Backend/Frontend/Mobile) in parallel.
 
-#### If Claude Code
+#### Per-Agent Dispatch
+Resolve the target vendor for each agent from `.agents/oma-config.yaml`.
+Use native subagents only when `target_vendor === current_runtime_vendor` and that runtime supports the vendor's role-subagent path.
+Otherwise use `oma agent:spawn` for that agent.
+
+#### If Claude Code and target vendor is Claude
 Use the Agent tool to spawn subagents:
 - `Agent(subagent_type="backend-engineer", prompt="Implement backend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules.", run_in_background=true)`
 - `Agent(subagent_type="frontend-engineer", prompt="Implement frontend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules.", run_in_background=true)`
 - Multiple Agent tool calls in the same message = true parallel execution
 
-#### If Codex CLI
-Request parallel subagent execution with the specific implementation tasks per plan.
+#### If Codex CLI and target vendor is Codex
+Spawn native Codex custom agents using `.codex/agents/{agent}.toml` when available.
+Pass each agent its task description, API contracts, and relevant context.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn`.
 
-#### If Gemini CLI or Antigravity or CLI Fallback
+#### If Gemini CLI and target vendor is Gemini
+Use native Gemini subagents when available, otherwise fall back to `oma agent:spawn`.
+
+#### If target vendor differs from current runtime, or native dispatch is unavailable
 ```bash
-oh-my-ag agent:spawn backend "Implement backend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id -w ./backend &
-oh-my-ag agent:spawn frontend "Implement frontend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id -w ./frontend &
+oma agent:spawn backend "Implement backend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id -w ./backend &
+oma agent:spawn frontend "Implement frontend tasks per plan. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id -w ./frontend &
 wait
 ```
 
@@ -104,9 +114,9 @@ wait
 
 **Wait for all implementation agents to complete before proceeding.**
 
-1. Use memory read tool to poll `progress-{agent}.md` files
+1. Use memory read tool to poll `progress-{agent}[-{sessionId}].md` files
 2. Use MCP code analysis tools to verify implementation alignment
-3. Check for `result-{agent}.md` files to confirm completion
+3. Check for `result-{agent}[-{sessionId}].md` files to confirm completion
 4. Use memory edit tool to record monitoring results in `session-ultrawork.md`
 
 **Continue polling until all agents report completion or failure.**
@@ -145,11 +155,12 @@ Use the Agent tool to spawn subagent:
 - `Agent(subagent_type="qa-reviewer", prompt="Execute Phase 3 Verification. Step 6: Alignment Review. Step 7: Security/Bug Review (npm audit, OWASP). Step 8: Improvement/Regression Review. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules.", run_in_background=true)`
 
 #### If Codex CLI
-Request parallel subagent execution with the QA verification tasks.
+Spawn native Codex custom agents using `.codex/agents/{agent}.toml` when available for QA verification.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn`.
 
 #### If Gemini CLI or Antigravity or CLI Fallback
 ```bash
-oh-my-ag agent:spawn qa-agent "Execute Phase 3 Verification. Step 6: Alignment Review. Step 7: Security/Bug Review (npm audit, OWASP). Step 8: Improvement/Regression Review. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
+oma agent:spawn qa-agent "Execute Phase 3 Verification. Step 6: Alignment Review. Step 7: Security/Bug Review (npm audit, OWASP). Step 8: Improvement/Regression Review. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
 ```
 
 ---
@@ -158,8 +169,8 @@ oh-my-ag agent:spawn qa-agent "Execute Phase 3 Verification. Step 6: Alignment R
 
 **Wait for QA Agent to complete verification before proceeding.**
 
-1. Use memory read tool to poll `progress-qa-agent.md`
-2. Check for `result-qa-agent.md` to confirm completion
+1. Use memory read tool to poll `progress-qa-agent[-{sessionId}].md`
+2. Check for `result-qa-agent[-{sessionId}].md` to confirm completion
 3. Use memory edit tool to record QA results in `session-ultrawork.md`
 
 **Continue polling until QA Agent reports completion.**
@@ -189,9 +200,15 @@ If baseline was measured at Step 5.2:
 
 **On gate pass**: Use memory edit tool to record phase completion in `session-ultrawork.md`
 
-**Gate failure (1st time)** → Return to Step 5, fix implementation issues, and repeat VERIFY phase.
+**Gate failure (1st time)** → Before re-spawning for the next VERIFY cycle, check the session cost cap:
 
-**Gate failure (2nd time on same issue)** → Activate **Exploration Loop**:
+> **Review Loop termination conditions (OR — whichever fires first wins)**
+> 1. Gate failure count has reached the configured maximum iterations (default: 5 total VERIFY + REFINE cycles). Do not start another cycle.
+> 2. Session cost cap exceeded: call `checkCap(sessionId, loadQuotaCap())` from `cli/io/session-cost.ts`. If `exceeded === true`, print `formatPromptMessage(result)` to the user and stop the loop immediately — save all current step results before stopping, then report to the user that the loop was terminated early due to quota.
+>
+> If neither condition is met, return to Step 5 and continue.
+
+**Gate failure (2nd time on same issue, and termination conditions not yet met)** → Activate **Exploration Loop**:
 1. Load `exploration-loop.md` (conditional, per `context-loading.md`)
 2. Generate 2-3 alternative hypotheses using Exploration Decision template (`reasoning-templates.md` #6)
 3. Experiment each approach sequentially (git stash per attempt)
@@ -213,11 +230,12 @@ Use the Agent tool to spawn subagent:
 - `Agent(subagent_type="debug-investigator", prompt="Execute Phase 4 Refine. Step 9: Split large files. Step 10: Integration check. Step 11: Side Effect analysis (find_referencing_symbols). Step 12: Consistency review. Step 13: Cleanup dead code. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules.", run_in_background=true)`
 
 #### If Codex CLI
-Request parallel subagent execution with the refinement tasks.
+Spawn native Codex custom agents using `.codex/agents/{agent}.toml` when available for refinement tasks.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn`.
 
 #### If Gemini CLI or Antigravity or CLI Fallback
 ```bash
-oh-my-ag agent:spawn debug-agent "Execute Phase 4 Refine. Step 9: Split large files. Step 10: Integration check. Step 11: Side Effect analysis (find_referencing_symbols). Step 12: Consistency review. Step 13: Cleanup dead code. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
+oma agent:spawn debug-agent "Execute Phase 4 Refine. Step 9: Split large files. Step 10: Integration check. Step 11: Side Effect analysis (find_referencing_symbols). Step 12: Consistency review. Step 13: Cleanup dead code. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
 ```
 
 ---
@@ -226,8 +244,8 @@ oh-my-ag agent:spawn debug-agent "Execute Phase 4 Refine. Step 9: Split large fi
 
 **Wait for Debug Agent to complete refinement before proceeding.**
 
-1. Use memory read tool to poll `progress-debug-agent.md`
-2. Check for `result-debug-agent.md` to confirm completion
+1. Use memory read tool to poll `progress-debug-agent[-{sessionId}].md`
+2. Check for `result-debug-agent[-{sessionId}].md` to confirm completion
 3. Use memory edit tool to record refinement results in `session-ultrawork.md`
 
 **Continue polling until Debug Agent reports completion.**
@@ -264,7 +282,13 @@ If baseline was measured at Step 5.2:
 
 **On gate pass**: Use memory edit tool to record phase completion in `session-ultrawork.md`
 
-**Gate failure → Re-spawn Debug Agent with specific issues and repeat until GATE passes.**
+**Gate failure → Before re-spawning the Debug Agent, apply the same termination check:**
+
+> **Review Loop termination conditions (OR — whichever fires first wins)**
+> 1. Total REFINE failure count has reached the configured maximum iterations (default: 5 cycles across all phases). Do not start another cycle.
+> 2. Session cost cap exceeded: call `checkCap(sessionId, loadQuotaCap())` from `cli/io/session-cost.ts`. If `exceeded === true`, print `formatPromptMessage(result)` to the user and stop — save current step results before stopping, then report early termination due to quota.
+>
+> If neither condition is met, re-spawn the Debug Agent with specific issues and repeat until GATE passes.
 
 **Skip conditions**: Simple tasks < 50 lines
 
@@ -281,11 +305,12 @@ Use the Agent tool to spawn subagent:
 - `Agent(subagent_type="qa-reviewer", prompt="Execute Phase 5 Ship. Step 14: Quality Review (lint/coverage). Step 15: UX Flow Verification. Step 16: Related Issues Review. Step 17: Deployment Readiness. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules.", run_in_background=true)`
 
 #### If Codex CLI
-Request parallel subagent execution with the final QA and deployment readiness tasks.
+Spawn native Codex custom agents using `.codex/agents/{agent}.toml` when available for final QA and deployment readiness tasks.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn`.
 
 #### If Gemini CLI or Antigravity or CLI Fallback
 ```bash
-oh-my-ag agent:spawn qa-agent "Execute Phase 5 Ship. Step 14: Quality Review (lint/coverage). Step 15: UX Flow Verification. Step 16: Related Issues Review. Step 17: Deployment Readiness. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
+oma agent:spawn qa-agent "Execute Phase 5 Ship. Step 14: Quality Review (lint/coverage). Step 15: UX Flow Verification. Step 16: Related Issues Review. Step 17: Deployment Readiness. IMPORTANT: Follow .agents/skills/_shared/core/context-loading.md rules." session-id
 ```
 
 ---
@@ -294,8 +319,8 @@ oh-my-ag agent:spawn qa-agent "Execute Phase 5 Ship. Step 14: Quality Review (li
 
 **Wait for QA Agent to complete final review before proceeding.**
 
-1. Use memory read tool to poll `progress-qa-agent.md`
-2. Check for `result-qa-agent.md` to confirm completion
+1. Use memory read tool to poll `progress-qa-agent[-{sessionId}].md`
+2. Check for `result-qa-agent[-{sessionId}].md` to confirm completion
 3. Use memory edit tool to record final QA results in `session-ultrawork.md`
 
 **Continue polling until QA Agent reports completion.**
@@ -327,7 +352,7 @@ If Quality Score was measured during this session:
    - Review impl agent self-check results: any bugs caught by QA that self-check missed? → `good_catch`
 6. Append EA events to `session-metrics.md`
 7. If rolling 3-session EA >= 30: Flag in final report
-   → "QA tuning suggested. Run `oh-my-ag retro` to review."
+   → "QA tuning suggested. Run `oma retro` to review."
 
 ### SHIP_GATE
 - [ ] Quality checks pass

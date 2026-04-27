@@ -54,6 +54,9 @@ Router (HTTP) → Service (Business Logic) → Repository (Data Access) → Mode
 8. **Explicit ORM loading strategy**: do not rely on default relation loading when query shape matters
 9. **Explicit transaction boundaries**: group one business operation into one request/service-scoped unit of work
 10. **Safe ORM lifecycle**: do not share mutable ORM session/entity manager/client objects across concurrent work unless the ORM explicitly supports it
+11. **Config from environment**: DB URLs, API keys, secrets, and feature flags come from env vars or secret managers — never hardcode in source
+12. **Stateless services**: no in-memory session or user state between requests — use external stores (DB, Redis, cache) for shared state
+13. **Backing services as resources**: DB, queue, cache, mail are swappable attached resources connected via config — Repository layer must not assume a specific instance
 
 ## Stack Detection (Priority Order)
 
@@ -63,10 +66,10 @@ Router (HTTP) → Service (Business Logic) → Repository (Data Access) → Mode
 
 ## Stack-Specific Reference
 
-- Tech stack & libraries: `stack/tech-stack.md`
+- **Stack manifest (SSOT)**: `stack/stack.yaml` — structured declaration (`language`, `framework`, `orm`) and `verify:` contract consumed by `oma verify backend`. Schema: `variants/stack.schema.json`.
+- Tech stack narrative: `stack/tech-stack.md` — human-readable reference only; `stack.yaml` wins on conflict.
 - Code snippets (copy-paste ready): `stack/snippets.md`
 - API template: `stack/api-template.*`
-- Stack config: `stack/stack.yaml`
 
 ## How to Execute
 
@@ -77,7 +80,7 @@ Before submitting, run `resources/checklist.md`.
 
 ## Execution Protocol (CLI Mode)
 
-Vendor-specific execution protocols are injected automatically by `oh-my-ag agent:spawn`.
+Vendor-specific execution protocols are injected automatically by `oma agent:spawn`.
 Source files live under `../_shared/runtime/execution-protocols/{vendor}.md`.
 
 ## References

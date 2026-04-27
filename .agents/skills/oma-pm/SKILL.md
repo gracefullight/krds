@@ -28,7 +28,7 @@ description: Product manager that decomposes requirements into actionable tasks 
 Follow `resources/execution-protocol.md` step by step.
 See `resources/examples.md` for input/output examples.
 Use `resources/iso-planning.md` when the user needs standards-based planning, risk framing, or governance-oriented recommendations.
-Save plan to `.agents/plan.json` and `.agents/results/current-plan.md`.
+Save plan to `.agents/results/plan-{sessionId}.json` and `.agents/results/current-plan.md`.
 
 ## Common Pitfalls
 - Too Granular: "Implement user auth API" is one task, not five
@@ -38,7 +38,7 @@ Save plan to `.agents/plan.json` and `.agents/results/current-plan.md`.
 
 ## Execution Protocol (CLI Mode)
 
-Vendor-specific execution protocols are injected automatically by `oh-my-ag agent:spawn`.
+Vendor-specific execution protocols are injected automatically by `oma agent:spawn`.
 Source files live under `../_shared/runtime/execution-protocols/{vendor}.md`.
 
 ## References

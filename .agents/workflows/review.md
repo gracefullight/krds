@@ -4,7 +4,7 @@ description: Full QA review pipeline — security audit (OWASP Top 10), performa
 
 # MANDATORY RULES — VIOLATION IS FORBIDDEN
 
-- **Response language follows `language` setting in `.agents/config/user-preferences.yaml` if configured.**
+- **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip steps.** Execute from Step 1 in order.
 - **You MUST use MCP tools throughout the workflow.**
   - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code analysis and review.
@@ -107,7 +107,7 @@ Request parallel subagent execution with the review scope and standards.
 
 ### If Gemini CLI or Antigravity or CLI Fallback
 ```bash
-oh-my-ag agent:spawn qa-agent "Review files for security, performance, accessibility, and code quality. Follow .agents/skills/oma-qa/SKILL.md standards. Report as CRITICAL/HIGH/MEDIUM/LOW with file:line and remediation." session-id
+oma agent:spawn qa-agent "Review files for security, performance, accessibility, and code quality. Follow .agents/skills/oma-qa/SKILL.md standards. Report as CRITICAL/HIGH/MEDIUM/LOW with file:line and remediation." session-id
 ```
 
 ---
@@ -129,8 +129,8 @@ When user wants fixes too, execute review then fix then re-review loop:
 
 ### If Gemini CLI or Antigravity or CLI Fallback
      ```bash
-     oh-my-ag agent:spawn backend "Fix issues: [issues]" session-id -w ./backend &
-     oh-my-ag agent:spawn frontend "Fix issues: [issues]" session-id -w ./frontend &
+     oma agent:spawn backend "Fix issues: [issues]" session-id -w ./backend &
+     oma agent:spawn frontend "Fix issues: [issues]" session-id -w ./frontend &
      wait
      ```
 

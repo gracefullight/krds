@@ -4,13 +4,13 @@ description: Create, manage, and track execution plans as first-class repository
 
 # MANDATORY RULES — VIOLATION IS FORBIDDEN
 
-- **Response language follows `language` setting in `.agents/config/user-preferences.yaml` if configured.**
+- **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip steps.** Execute from Step 0 in order. Explicitly report completion of each step before proceeding.
 - **You MUST use MCP tools throughout the entire workflow.** This is NOT optional.
 
 ---
 
-> **Vendor note:** This workflow executes inline (no subagent spawning). All vendors use their native file and code analysis tools. Execution handoff in Step 5 delegates to `/orchestrate` or `/coordinate`, which handle their own vendor detection.
+> **Vendor note:** This workflow executes inline (no subagent spawning). All vendors use their native file and code analysis tools. Execution handoff in Step 5 delegates to `/orchestrate` or `/work`, which handle their own vendor detection.
 
 ---
 
@@ -122,10 +122,10 @@ Present the plan:
 
 ## Step 5: Execute
 
-Hand off to orchestrator or coordinate workflow:
+Hand off to orchestrator or work workflow:
 
 - **Automated**: Pass plan to `/orchestrate` — orchestrator reads the exec-plan and executes tasks
-- **Manual**: Pass to `/coordinate` — oma-coordination follows the plan step by step
+- **Manual**: Pass to `/work` — oma-coordination follows the plan step by step
 
 During execution, update the plan:
 - Mark task status: ⬜ → 🔄 → ✅ or ❌

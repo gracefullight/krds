@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "name": "keyword-detector",
+            "type": "command",
+            "command": "bun .cursor/hooks/keyword-detector.ts",
+            "timeout": 5
+          },
+          {
+            "name": "skill-injector",
+            "type": "command",
+            "command": "bun .cursor/hooks/skill-injector.ts",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "hooks": [
+          {
+            "name": "keyword-detector",
+            "type": "command",
+            "command": "bun .cursor/hooks/keyword-detector.ts",
+            "timeout": 5
+          },
+          {
+            "name": "skill-injector",
+            "type": "command",
+            "command": "bun .cursor/hooks/skill-injector.ts",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,6 +1,7 @@
 ---
 name: exec-plan
-description: Execution plan generation and management — Plan lifecycle as repository artifact
+description: Create, manage, and track execution plans as first-class repository
+  artifacts in docs/exec-plans/
 disable-model-invocation: true
 ---
 

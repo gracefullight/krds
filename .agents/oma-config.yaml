@@ -1,0 +1,5 @@
+# Migrated by oma migration 008 — model_preset single-file config
+language: ko
+date_format: ISO
+timezone: Asia/Seoul
+model_preset: gemini-only

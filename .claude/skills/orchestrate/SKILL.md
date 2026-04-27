@@ -1,6 +1,8 @@
 ---
 name: orchestrate
-description: Automated CLI-based parallel agent execution — spawn subagents via Gemini CLI, coordinate through MCP Memory, monitor progress, and run verification
+description: Automated CLI-based parallel agent execution — spawn subagents via
+  Gemini CLI, coordinate through MCP Memory, monitor progress, and run
+  verification
 disable-model-invocation: true
 ---
 

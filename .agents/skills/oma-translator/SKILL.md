@@ -27,9 +27,9 @@ description: Context-aware translation that preserves tone, style, and natural w
 3. Translate meaning, not words
 4. Preserve emotional connotations — translate the feeling, not just the dictionary meaning (e.g., "alarming" carries urgency/concern, not merely "surprising")
 5. Match register consistently throughout a single piece
-6. Split/restructure sentences for target language naturalness
+6. Split, merge, or restructure sentences for target language naturalness
 7. Flag ambiguous source text rather than guessing
-8. Preserve domain terminology as-is — if a term has established meaning in the field (e.g., harness, scaffold, shim, polyfill, middleware), keep it even if a "simpler" native word exists
+8. Preserve domain terminology — if a term has established meaning in the field (e.g., harness, scaffold, shim, polyfill, middleware), keep it even if a "simpler" native word exists
 9. Never produce literal word-for-word translations
 10. Never mix registers within a single piece (formal + casual)
 11. Never replace domain-specific terms with generic equivalents (e.g., "harness" → "framework", "shim" → "wrapper")
@@ -37,6 +37,7 @@ description: Context-aware translation that preserves tone, style, and natural w
 13. Never change the meaning to "sound better"
 14. Never skip verification stage for batches > 10 strings
 15. Never modify source file structure (keys, nesting, comments)
+16. Never preserve source-language formatting artifacts that are unnatural in the target language. For CJK targets (Korean, Japanese, Chinese), em dashes (—), title case in headings, and trailing "-ing" participle clauses must be restructured — even when the source uses them. See `resources/anti-ai-patterns.md` rules 13–16.
 
 ## Context Inference
 
@@ -58,7 +59,7 @@ Read the source text and identify:
 - **Intent**: Inform, persuade, instruct, entertain
 - **Domain terms**: Words that need consistent translation (check existing translations first)
 - **Cultural references**: Idioms, metaphors, humor that won't transfer directly
-- **Sentence rhythm**: Short/punchy vs. long/flowing
+- **Sentence rhythm**: Short/punchy vs. long/flowing — note parallel structures, intentional repetition, and emphasis patterns
 - **Comprehension challenges**: Terms or references target readers may struggle with — domain jargon lacking standard translations, cultural references (pop culture, history, social norms), implicit knowledge the author assumes, wordplay or puns, named concepts (e.g., "Dunning-Kruger effect"). For each, note: the original term, why it may confuse, and a concise plain-language explanation for a potential translator's note
 - **Figurative language mapping**: For each metaphor, simile, idiom, or figurative expression, classify the handling approach:
   - **Interpret**: Discard source image entirely, express the intended meaning directly in natural target language
@@ -93,12 +94,23 @@ Rebuild from meaning, following target language norms:
 - English bullet points may merge into flowing paragraphs in some languages
 
 **Omission of the obvious**:
-- Korean/Japanese allow subject omission when contextually clear
-- Don't force subjects that feel unnatural
+- Many languages (Korean, Japanese, Chinese, etc.) allow subject or pronoun omission when contextually clear
+- Don't force subjects or pronouns that feel unnatural in the target language
 
-### Stage 4: Verify
+### Stage 4: Verification Gate (blocking — do not emit output until every item is confirmed)
 
-Check against rubric (see `resources/translation-rubric.md`):
+This stage is mandatory. Skipping any item is a bug, not a shortcut. Before producing the final translation, run the mechanical checks first, then the rubric.
+
+**A. Mechanical checks (run before rubric, must all pass):**
+
+- **CJK em dash scan**: For Korean, Japanese, or Chinese targets, search the draft output for `—`. Every occurrence must be replaced with a comma, colon, parenthesis, or restructured sentence. Zero em dashes in the emitted output.
+- **Placeholder integrity**: Every `{name}`, `{{count}}`, `%s`, `<tag>`, and `` `code` `` from the source appears unchanged in the target.
+- **Structure parity**: Headings, list bullets, table rows, code blocks, and links match the source count and nesting.
+- **Register consistency**: One sentence-ending style throughout (don't mix `-ㅂ니다` with `-다`, formal with casual).
+
+If any mechanical check fails, revise and re-run. Do not proceed to the rubric until all pass.
+
+**B. Translation rubric (see `resources/translation-rubric.md`):**
 1. Does it read like it was originally written in the target language?
 2. Are domain terms consistent with existing translations in the project?
 3. Is the register consistent throughout?
@@ -106,15 +118,15 @@ Check against rubric (see `resources/translation-rubric.md`):
 5. Are cultural references adapted appropriately?
 6. Are emotional connotations preserved (not flattened into neutral descriptions)?
 
-Check against anti-AI patterns (see `resources/anti-ai-patterns.md`):
+**C. Anti-AI patterns (see `resources/anti-ai-patterns.md`):**
 7. No AI vocabulary clustering or inflated significance
 8. No promotional tone upgrade beyond the source
 9. No synonym cycling — consistent terminology
 10. No source-language word order leaking through
-11. No unnecessary bold, em dashes, or formatting artifacts
+11. No unnecessary bold or formatting artifacts (em dashes already covered in mechanical check A)
 12. No Europeanized patterns (unnecessary connectives, passive voice, noun pile-up, over-nominalization, forced pronouns, cleft calques)
 
-Check figurative language handling:
+**D. Figurative language handling:**
 13. Were all metaphors/idioms handled per the classify decision (interpret/substitute/retain)?
 14. Do figurative expressions read naturally in the target language, not as literal calques?
 
@@ -157,6 +169,7 @@ Re-read the translation against the source with fresh eyes. Produce a diagnostic
 - **Europeanized language**: Scan for unnecessary connectives, passive voice, noun pile-up, over-nominalization, forced pronouns (see `resources/anti-ai-patterns.md`)
 - **Figurative language fidelity**: Cross-check metaphor mapping from Stage 1 — were all handled per the classify decision? Any literal calques that sound unnatural?
 - **Emotional fidelity**: Were subjective/emotional word choices flattened into neutral descriptions?
+- **Tone drift**: Does the register stay consistent from start to finish, or does it shift mid-document (e.g., formal intro drifting into casual explanation)?
 - **Expression & flow**: Flag sentences that still read like "translation-ese" — stiff phrasing, unnatural word order, awkward transitions
 - **Translator's notes quality**: Too many? Too few? Accurate and concise?
 
@@ -228,6 +241,9 @@ Why:
 | Register conflict in source | Follow project's existing register, note the inconsistency |
 | Placeholder in middle of sentence | Restructure around it; never break placeholder syntax |
 | Translation too long for UI | Provide a shorter alternative with note |
+| Multiple valid translations for a term | Pick the one most consistent with project's existing translations; note alternatives |
+| Target language requires gendered forms | Follow source text intent; prefer gender-neutral forms when available in target language |
+| Tone shifts across a long document | Re-read end-to-end after translating; normalize register to the dominant tone |
 
 ## How to Execute
 
@@ -236,7 +252,7 @@ Before submitting, verify against `resources/translation-rubric.md` and `resourc
 
 ## Execution Protocol (CLI Mode)
 
-Vendor-specific execution protocols are injected automatically by `oh-my-ag agent:spawn`.
+Vendor-specific execution protocols are injected automatically by `oma agent:spawn`.
 Source files live under `../_shared/runtime/execution-protocols/{vendor}.md`.
 
 ## References
