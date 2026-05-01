@@ -1,6 +1,7 @@
 ---
 name: tools
-description: Show available skills, agents, and their status
+description: Manage MCP tools with natural language commands — list, enable,
+  disable tools and tool groups
 disable-model-invocation: true
 ---
 

@@ -46,3 +46,6 @@ storybook-static
 
 # oh-my-claudecode
 .omc/
+
+# oh-my-agent
+.agents/.backup-pre-*/

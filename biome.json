@@ -64,7 +64,18 @@
         "useErrorMessage": "error"
       }
     },
-    "ignore": [".vscode", "dist", ".agents", ".claude"]
+    "ignore": [
+      ".vscode",
+      "dist",
+      ".agents",
+      ".claude",
+      ".codex",
+      ".cursor",
+      ".gemini",
+      ".qwen",
+      ".serena",
+      ".github/skills"
+    ]
   },
   "javascript": {
     "formatter": {

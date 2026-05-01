@@ -5,21 +5,132 @@ description: Automated multi-agent orchestrator that spawns CLI subagents in par
 
 # Orchestrator - Automated Multi-Agent Coordinator
 
-## When to use
+## Scheduling
+
+### Goal
+Automatically orchestrate multi-agent execution with task decomposition, native/fallback dispatch, memory coordination, progress monitoring, verification, QA cross-review, retry, and result collection.
+
+### Intent signature
+- User asks to orchestrate, run in parallel, automate multi-agent execution, or coordinate full-stack work end to end.
+- Task requires multiple specialist agents and a persistent review/remediation loop.
+
+### When to use
 - Complex feature requires multiple specialized agents working in parallel
 - User wants automated execution without manually spawning agents
 - Full-stack implementation spanning backend, frontend, mobile, and QA
 - User says "run it automatically", "run in parallel", or similar automation requests
 
-## When NOT to use
+### When NOT to use
 - Simple single-domain task -> use the specific agent directly
 - User wants step-by-step manual control -> use oma-coordination
 - Quick bug fixes or minor changes
 
-## Important
-This skill orchestrates CLI subagents via `oh-my-ag agent:spawn`. The CLI vendor (gemini, claude, codex, qwen) is resolved from configuration. Vendor-specific execution protocols are injected automatically. Each subagent runs as an independent process.
+### Expected inputs
+- Complex feature or workflow request
+- Project config, model/vendor routing, agent types, task constraints, and workspace/session needs
+- Acceptance criteria and verification expectations
 
-## Configuration
+### Expected outputs
+- Orchestrator session state, task board, progress files, result files, and final summary
+- Specialist agent outputs after mechanical checks, automated verify, and QA cross-review
+- Review history and retry/remediation status when loops fail
+
+### Dependencies
+- `.agents/oma-config.yaml`, `.codex/agents/*.toml`, `.gemini/agents/*.md`, or fallback `oh-my-ag agent:spawn`
+- Memory provider config, subagent prompt template, scripts, task templates, verify script, and session metrics
+
+### Control-flow features
+- Branches by vendor/native dispatch availability, priority tiers, agent completion/failure, verification status, QA verdict, retry limits, and clarification debt
+- Spawns processes/agents and reads/writes memory/result files
+- Blocks termination until persistent workflows complete
+
+## Structural Flow
+
+### Entry
+1. Resolve agent vendor routing and runtime dispatch path.
+2. Decompose request into priority-tiered tasks.
+3. Create session memory and task board.
+
+### Scenes
+1. **PREPARE**: Plan, setup session ID, and initialize memory files.
+2. **ACT**: Spawn agents by priority tier within parallelism limits.
+3. **VERIFY**: Run self-check, `oma verify`, and QA cross-review loop.
+4. **RECOVER**: Retry failed agents with review history when limits allow.
+5. **FINALIZE**: Collect result files, compile summary, and clean progress files.
+
+### Transitions
+- If native dispatch is available for current runtime/vendor, use it.
+- If vendors differ or native path is unavailable, use fallback spawn.
+- If verify or QA fails, feed feedback back to the implementation agent.
+- If review loop limits are exceeded, report review history and quality warning.
+
+### Failure and recovery
+- Retry failed agents up to configured limits.
+- Re-spawn with review history when review loop is exhausted.
+- Pause or request re-specification when clarification debt thresholds are exceeded.
+
+### Exit
+- Success: all tasks complete, verify/review pass, and results are summarized.
+- Partial success: failed agents, exhausted review loops, or clarification debt are explicit.
+
+## Logical Operations
+
+### Actions
+| Action | SSL primitive | Evidence |
+|--------|---------------|----------|
+| Read config and task context | `READ` | oma config, routing, request |
+| Select dispatch path | `SELECT` | Native vs fallback |
+| Write session state | `WRITE` | task board and memory files |
+| Spawn agents | `CALL_TOOL` | native CLI or `oh-my-ag agent:spawn` |
+| Poll progress | `READ` | progress/result files |
+| Run verification | `CALL_TOOL` | `oma verify`, tests, QA |
+| Update retry state | `UPDATE_STATE` | loop counters and CD metrics |
+| Report final result | `NOTIFY` | compiled summary |
+
+### Tools and instruments
+- Native CLI subagent dispatch, fallback spawn scripts, memory tools, verify script, QA agent
+- Session metrics, prompt templates, task templates
+
+### Canonical command path
+```bash
+oma agent:spawn <agent-type> "<task>" <session-id> -w <workspace>
+oma verify <agent-type> --workspace <workspace> --json
+```
+
+When native runtime dispatch is available, prefer the runtime-specific native path listed in this skill before falling back to `oma agent:spawn`.
+
+### Resource scope
+| Scope | Resource target |
+|-------|-----------------|
+| `LOCAL_FS` | Session, task-board, progress, result, config files |
+| `PROCESS` | Agent CLI processes and verify scripts |
+| `MEMORY` | Session state and clarification debt |
+| `CODEBASE` | Workspaces owned by spawned agents |
+
+### Preconditions
+- Task is decomposable into specialist agent work.
+- Runtime/vendor dispatch path or fallback exists.
+
+### Effects and side effects
+- Spawns agents and writes session/progress/result artifacts.
+- May cause code changes through specialist agents.
+- May trigger iterative review and retries.
+
+### Guardrails
+1. Orchestrate per-agent dispatch from the project configuration before spawning any agent.
+2. If `target_vendor === current_runtime_vendor` and the runtime has a verified native path, use native dispatch.
+3. Otherwise fall back to `oh-my-ag agent:spawn`.
+4. Never exceed the configured parallelism or retry limits.
+5. Keep session state, task-board state, progress files, and result files aligned throughout the run.
+
+Current native executor paths:
+- Claude Code: `claude --agent <agent>`
+- Codex CLI: `codex exec "@agent ..."` using `.codex/agents/*.toml`
+- Gemini CLI: `gemini -p "@agent ..."` using `.gemini/agents/*.md`
+
+Vendor-specific execution protocols are injected automatically for fallback CLI runs.
+
+### Configuration
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -30,7 +141,7 @@ This skill orchestrates CLI subagents via `oh-my-ag agent:spawn`. The CLI vendor
 | MAX_TURNS (review) | 15 | Turn limit for qa/debug |
 | MAX_TURNS (plan) | 10 | Turn limit for pm |
 
-## Memory Configuration
+### Memory Configuration
 
 Memory provider and tool names are configurable via `mcp.json`:
 ```json
@@ -47,28 +158,28 @@ Memory provider and tool names are configurable via `mcp.json`:
 }
 ```
 
-## Workflow Phases
+### Workflow Phases
 
 **PHASE 1 - Plan**: Analyze request -> decompose tasks -> generate session ID
 **PHASE 2 - Setup**: Use memory write tool to create `orchestrator-session.md` + `task-board.md`
 **PHASE 3 - Execute**: Spawn agents by priority tier (never exceed MAX_PARALLEL)
 **PHASE 4 - Monitor**: Poll every POLL_INTERVAL; handle completed/failed/crashed agents
-**PHASE 4.5 - Verify**: Run `oh-my-ag verify {agent-type}` per completed agent
-**PHASE 5 - Collect**: Read all `result-{agent}.md`, compile summary, cleanup progress files
+**PHASE 4.5 - Verify**: Run `oma verify {agent-type}` per completed agent
+**PHASE 5 - Collect**: Read all `result-{agent}-{sessionId}.md`, compile summary, cleanup progress files
 
 See `resources/subagent-prompt-template.md` for prompt construction.
 See `resources/memory-schema.md` for memory file formats.
 
-## Memory File Ownership
+### Memory File Ownership
 
 | File | Owner | Others |
 |------|-------|--------|
 | `orchestrator-session.md` | orchestrator | read-only |
 | `task-board.md` | orchestrator | read-only |
-| `progress-{agent}.md` | that agent | orchestrator reads |
-| `result-{agent}.md` | that agent | orchestrator reads |
+| `progress-{agent}[-{sessionId}].md` | that agent | orchestrator reads |
+| `result-{agent}[-{sessionId}].md` | that agent | orchestrator reads |
 
-## Agent-to-Agent Review Loop (PHASE 4.5)
+### Agent-to-Agent Review Loop (PHASE 4.5)
 
 After each agent completes, enter an iterative review loop — not a single-pass verification.
 
@@ -79,7 +190,7 @@ Agent completes work
     ↓
 [1] Mechanical Self-Check: lint, type-check, tests, diff scope
     ↓
-[2] Verify: Run `oh-my-ag verify {agent-type} --workspace {workspace}`
+[2] Verify: Run `oma verify {agent-type} --workspace {workspace}`
     ↓ FAIL → Agent receives feedback, fixes, back to [1]
     ↓ PASS
 [3] Cross-Review: QA agent reviews the changes
@@ -104,7 +215,7 @@ Reason: Self-evaluation bias — agents consistently overrate their own output
 
 **[2] Automated Verify**:
 ```bash
-oh-my-ag verify {agent-type} --workspace {workspace} --json
+oma verify {agent-type} --workspace {workspace} --json
 ```
 - **PASS (exit 0)**: Proceed to cross-review
 - **FAIL (exit 1)**: Feed verify output back to the agent as correction context
@@ -139,12 +250,12 @@ When feeding review results back to the implementation agent:
 This replaces single-pass verification. Most "nitpicking" should happen agent-to-agent.
 Human review is reserved for final approval, not catching lint errors.
 
-## Retry Logic (after review loop exhaustion)
+### Retry Logic (after review loop exhaustion)
 - 1st retry: Re-spawn agent with full review history as context
 - 2nd retry: Re-spawn with "Try a different approach" + review history
 - Final failure: Report to user with complete review trail, ask whether to continue or abort
 
-## Clarification Debt (CD) Monitoring
+### Clarification Debt (CD) Monitoring
 
 Track user corrections during session execution. See `../_shared/core/session-metrics.md` for full protocol.
 

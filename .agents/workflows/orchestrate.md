@@ -4,7 +4,7 @@ description: Automated CLI-based parallel agent execution — spawn subagents vi
 
 # MANDATORY RULES — VIOLATION IS FORBIDDEN
 
-- **Response language follows `language` setting in `.agents/config/user-preferences.yaml` if configured.**
+- **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip steps.** Execute from Step 0 in order. Explicitly report completion of each step before proceeding.
 - **You MUST use MCP tools throughout the entire workflow.** This is NOT optional.
   - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code exploration.
@@ -19,7 +19,7 @@ description: Automated CLI-based parallel agent execution — spawn subagents vi
 ## Vendor Detection
 
 Before starting, determine your runtime environment by following `.agents/skills/_shared/core/vendor-detection.md`.
-The detected vendor determines how agents are spawned (Step 3) and monitored (Step 4).
+The detected runtime vendor and each agent's target vendor determine how agents are spawned (Step 3) and monitored (Step 4).
 
 ---
 
@@ -33,10 +33,11 @@ The detected vendor determines how agents are spawned (Step 3) and monitored (St
 
 ## Step 1: Load or Create Plan
 
-Check if `.agents/plan.json` exists.
+Look for a plan file:
 
-- If yes: load it and proceed to Step 2.
-- If no: ask the user to run `/plan` first, or ask them to describe the tasks to execute.
+1. Check `.agents/results/plan-{sessionId}.json` (current session's plan).
+2. If not found: find the most recent `.agents/results/plan-*.json` file.
+3. If none exist: ask the user to run `/plan` first, or ask them to describe the tasks to execute.
 - **Do NOT proceed without a plan.**
 
 ---
@@ -46,7 +47,7 @@ Check if `.agents/plan.json` exists.
 // turbo
 
 1. 설정 파일 로드:
-   - `.agents/config/user-preferences.yaml` (언어, CLI 매핑)
+   - `.agents/oma-config.yaml` (언어, CLI 매핑)
 2. CLI 매핑 현황 표시:
 
    ```
@@ -75,7 +76,14 @@ For each priority tier (P0 first, then P1, etc.):
 - Each agent gets: task description, API contracts, relevant context from `_shared/core/context-loading.md`.
 - Use memory edit tool to update `task-board.md` with agent status.
 
-### If Claude Code
+### Per-Agent Dispatch
+
+For each planned agent, first resolve the target vendor from `.agents/oma-config.yaml`.
+
+- If `target_vendor === current_runtime_vendor` and that runtime has a verified native role-subagent path, use the native vendor variant agent definition.
+- Otherwise, use `oma agent:spawn` for that agent only.
+
+### If Claude Code and target vendor is Claude
 
 Spawn agents via **Agent tool** using `.claude/agents/{agent}.md` definitions.
 
@@ -91,29 +99,32 @@ Spawn agents via **Agent tool** using `.claude/agents/{agent}.md` definitions.
 | qa | `.claude/agents/qa-reviewer.md` |
 | debug | `.claude/agents/debug-investigator.md` |
 | pm | `.claude/agents/pm-planner.md` |
+| architecture | `.claude/agents/architecture-reviewer.md` |
+| tf-infra | `.claude/agents/tf-infra-engineer.md` |
 
 - Include API contracts from `.agents/skills/_shared/api-contracts/` if they exist
 - Load only task-relevant context (check codebase structure around affected domains)
 
-### If Codex CLI
+### If Codex CLI and target vendor is Codex
 
-Request parallel subagent execution via model-mediated parallel subagent request.
-Each subagent receives task description, API contracts, and relevant context.
-Results are returned as JSON output.
+Spawn native Codex custom agents using `.codex/agents/{agent}.toml` when available.
+Pass each agent its task description, API contracts, and relevant context.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn {agent_id} {prompt_file} {session_id} -w {workspace}`.
 
-### If Gemini CLI
+### If Gemini CLI and target vendor is Gemini
 
-Spawn agents using `oh-my-ag agent:spawn {agent_id} {prompt_file} {session_id} -w {workspace}`.
+Spawn native Gemini subagents using `.gemini/agents/{agent}.md` when available.
+If native dispatch is not verified in the current runtime, fall back to `oma agent:spawn {agent_id} {prompt_file} {session_id} -w {workspace}`.
 
-### If Antigravity or CLI Fallback
+### If target vendor differs from current runtime, or native dispatch is unavailable
 
-Spawn agents using `oh-my-ag agent:spawn {agent_id} {prompt_file} {session_id} -w {workspace}` only (custom subagents not available).
+Spawn agents using `oma agent:spawn {agent_id} {prompt_file} {session_id} -w {workspace}` only (custom subagents not available).
 
 ---
 
 ## Step 4: Monitor Progress
 
-Use `oh-my-ag agent:status {session_id} {agent_id}` to check process health.
+Use `oma agent:status {session_id} {agent_id}` to check process health.
 Also use memory read tool to poll `progress-{agent}.md` for logic updates.
 
 - Use memory edit tool to update `task-board.md` with turn counts and status changes.
@@ -153,8 +164,15 @@ bash .agents/skills/oma-orchestrator/scripts/verify.sh {agent-type} {workspace}
 ```
 
 - PASS (exit 0): accept result. If Quality Score is active, measure and record in Experiment Ledger.
-- FAIL (exit 1): re-spawn with error context (max 2 retries).
-- FAIL (after 2 retries): Activate **Exploration Loop** (load `exploration-loop.md` per `context-loading.md`):
+- FAIL (exit 1): Before re-spawning, apply the Review Loop termination check:
+
+  > **Review Loop termination conditions (OR — whichever fires first wins)**
+  > 1. Retry count for this agent has reached the configured maximum (default: 2 retries). Do not start another retry cycle.
+  > 2. Session cost cap exceeded: call `checkCap(sessionId, loadQuotaCap())` from `cli/io/session-cost.ts`. If `exceeded === true`, print `formatPromptMessage(result)` to the user and stop the loop immediately — save the current agent's partial results before stopping, then report early termination due to quota. Do not spawn the next retry or any remaining agents in the tier.
+  >
+  > If neither condition is met, re-spawn the agent with error context and increment the retry counter.
+
+- FAIL (after 2 retries, and cost cap not yet exceeded): Activate **Exploration Loop** (load `exploration-loop.md` per `context-loading.md`):
   1. Generate 2-3 alternative hypotheses for the failing task
   2. Spawn the **same agent type** with different hypothesis prompts (parallel, separate workspaces)
   3. Score each result with Quality Score (if available)
@@ -166,7 +184,7 @@ bash .agents/skills/oma-orchestrator/scripts/verify.sh {agent-type} {workspace}
 ## Step 6: Collect Results
 
 // turbo
-After all agents complete, use memory read tool to read all `result-{agent}.md` files.
+After all agents complete, use memory read tool to read all `result-{agent}-{sessionId}.md` files.
 Compile summary: completed tasks, failed tasks, files changed, remaining issues.
 
 ---
