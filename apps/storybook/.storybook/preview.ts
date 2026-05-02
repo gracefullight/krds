@@ -6,7 +6,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { withThemeFromJSXProvider } from "@storybook/addon-themes";
 
 import "@gracefullight/krds/reset.css";
-import "@gracefullight/krds-tw/theme.css";
+import "./krds-tw-entry.css";
 
 const muiDecorator = withThemeFromJSXProvider({
   themes: {

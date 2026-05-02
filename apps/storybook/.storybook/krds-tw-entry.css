@@ -1,0 +1,5 @@
+@import "@gracefullight/krds-tw/theme.css";
+
+/* Tell Tailwind v4 which source files contain class names to scan */
+@source "../../../packages/krds-tw/src/components/**/*.{ts,tsx}";
+@source "../../stories/tw/**/*.{ts,tsx}";
