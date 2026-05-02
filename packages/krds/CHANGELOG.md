@@ -1,5 +1,12 @@
 # Changelog
 
+- 0.14.0: Added KRDS v1.0.0 missing layout/navigation blocks and v1.1.0 new components
+  - Header, Footer, MainMenu (with viewport-height-aware dropdown — v1.1.0)
+  - SideNavigation, InPageNavigation
+  - HelpPanel (help / tutorial variants)
+  - Textarea (with character counter)
+  - VoiceAssist (음성지원, v1.1.0 신규)
+  - StructuredList: added `table` variant (v1.1.0)
 - 0.13.0: Added krds-icons into components
 - 0.12.0: Separated design tokens into standalone krds-tokens package
 - 0.11.0: Added MUI components and composite components
