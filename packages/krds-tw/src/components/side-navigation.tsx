@@ -94,7 +94,7 @@ function itemBase(active: boolean | undefined, depth: number): string {
     // cursor
     "cursor-pointer",
     // reset button defaults
-    "border-none bg-none font-inherit",
+    "border-none bg-transparent font-inherit",
   );
 }
 

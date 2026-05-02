@@ -117,7 +117,7 @@ const InPageNavigation = forwardRef<HTMLElement, InPageNavigationProps>(
               <li key={item.id} className="flex">
                 <a
                   href={item.href}
-                  aria-current={isActive ? "true" : undefined}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "text-body-sm -ml-0.5 block w-full border-l-2 px-4 py-2 no-underline transition-[color,border-color] duration-150 ease-in-out",
                     "hover:bg-surface-gray-subtler hover:text-fg-basic",

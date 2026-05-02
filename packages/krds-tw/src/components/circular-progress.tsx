@@ -64,7 +64,7 @@ const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(
       <div
         ref={ref}
         role="progressbar"
-        tabIndex={0}
+        tabIndex={-1}
         aria-valuenow={clampedValue}
         aria-valuemin={0}
         aria-valuemax={100}

@@ -38,7 +38,7 @@ const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
                 {isLast ? (
                   <span
                     aria-current="page"
-                    className="text-fg-strong font-medium"
+                    className="text-fg-bolder font-medium"
                   >
                     {item.label}
                   </span>
@@ -48,8 +48,8 @@ const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
                       href={item.href}
                       className={cn(
                         "text-fg-basic underline-offset-2 transition-colors",
-                        "hover:text-fg-strong hover:underline",
-                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focused",
+                        "hover:text-fg-bolder hover:underline",
+                        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
                       )}
                     >
                       {item.label}
