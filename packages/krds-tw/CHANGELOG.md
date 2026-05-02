@@ -1,5 +1,12 @@
 # Changelog
 
+- 0.6.0: Migrate hand-rolled to Base UI primitives
+  - Dialog → Base UI Dialog (focus trap, escape, scroll lock)
+  - Tooltip → Base UI Tooltip (Floating UI positioning)
+  - Switch → Base UI Switch (keyboard, ARIA)
+  - Checkbox → Base UI Checkbox (added indeterminate)
+  - Radio → Base UI RadioGroup + Radio (arrow key nav)
+  - All public APIs preserved; no breaking changes
 - 0.5.0: Phase 2D specialty components
   - VoiceAssist (음성지원, v1.1.0 신규, Web Speech API)
   - HelpPanel (help/tutorial variants, Base UI Dialog)

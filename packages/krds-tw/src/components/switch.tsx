@@ -1,4 +1,5 @@
-import { type ComponentProps, forwardRef } from "react";
+import { Switch as BaseSwitch } from "@base-ui-components/react/switch";
+import { type ComponentProps, forwardRef, useId } from "react";
 import { cn } from "#/utils/cn";
 
 interface SwitchProps extends Omit<ComponentProps<"input">, "type" | "size"> {
@@ -17,17 +18,34 @@ const thumbSize = {
 } as const;
 
 const thumbTranslate = {
-  medium: "peer-checked:translate-x-3",
-  large: "peer-checked:translate-x-4",
+  medium: "data-[checked]:translate-x-3",
+  large: "data-[checked]:translate-x-4",
 } as const;
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-  ({ className, size = "medium", label, id, disabled, ...props }, ref) => {
-    const inputId = id || `switch-${Math.random().toString(36).slice(2, 9)}`;
+  (
+    {
+      className,
+      size = "medium",
+      label,
+      id,
+      disabled,
+      checked,
+      defaultChecked,
+      onChange,
+      readOnly,
+      required,
+      name,
+      ...props
+    },
+    ref,
+  ) => {
+    const generatedId = useId();
+    const switchId = id ?? generatedId;
 
     return (
       <label
-        htmlFor={inputId}
+        htmlFor={switchId}
         className={cn(
           "inline-flex cursor-pointer items-center gap-2",
           disabled && "cursor-not-allowed opacity-50",
@@ -35,32 +53,41 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
         )}
       >
         <span className="relative inline-flex items-center">
-          <input
-            ref={ref}
-            id={inputId}
-            type="checkbox"
-            role="switch"
-            aria-checked={props.checked ?? props.defaultChecked ?? false}
+          <BaseSwitch.Root
+            id={switchId}
+            checked={checked}
+            defaultChecked={defaultChecked}
             disabled={disabled}
-            className="peer sr-only"
-            {...props}
-          />
-          <span
+            readOnly={readOnly}
+            required={required}
+            name={name}
+            inputRef={ref}
+            onCheckedChange={(nextChecked) => {
+              if (onChange) {
+                const event = {
+                  target: { checked: nextChecked },
+                  currentTarget: { checked: nextChecked },
+                } as React.ChangeEvent<HTMLInputElement>;
+                onChange(event);
+              }
+            }}
             className={cn(
               "rounded-full bg-element-gray transition-colors",
-              "peer-checked:bg-element-primary",
-              "peer-disabled:bg-element-disabled-light",
+              "data-[checked]:bg-element-primary",
+              "data-[disabled]:bg-element-disabled-light",
               trackSize[size],
             )}
-          />
-          <span
-            className={cn(
-              "absolute left-0.5 rounded-full bg-element-inverse transition-transform",
-              "peer-disabled:bg-element-disabled-dark",
-              thumbSize[size],
-              thumbTranslate[size],
-            )}
-          />
+            {...(props as object)}
+          >
+            <BaseSwitch.Thumb
+              className={cn(
+                "absolute left-0.5 rounded-full bg-element-inverse transition-transform",
+                "data-[disabled]:bg-element-disabled-dark",
+                thumbSize[size],
+                thumbTranslate[size],
+              )}
+            />
+          </BaseSwitch.Root>
         </span>
         {label && (
           <span

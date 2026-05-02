@@ -1,62 +1,80 @@
 "use client";
 
-import {
-  type ComponentProps,
-  type ReactNode,
-  forwardRef,
-  useCallback,
-  useState,
-} from "react";
+import { Tooltip } from "@base-ui-components/react/tooltip";
+import { type ComponentProps, type ReactNode, forwardRef } from "react";
 import { cn } from "#/utils/cn";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 type TooltipPlacement = "top" | "bottom" | "left" | "right";
 
-interface TooltipProps extends Omit<ComponentProps<"div">, "content"> {
+interface TooltipProps
+  extends Omit<ComponentProps<typeof Tooltip.Root>, "children"> {
+  /** Tooltip popup content. */
   content: ReactNode;
+  /** Preferred placement of the popup relative to the trigger. Defaults to "top". */
   placement?: TooltipPlacement;
+  /** Trigger element — typically a focusable/interactive element. */
+  children?: ReactNode;
+  /** Extra class names forwarded to the wrapper span. */
+  className?: string;
 }
 
-const placementStyles: Record<TooltipPlacement, string> = {
-  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-  left: "right-full top-1/2 -translate-y-1/2 mr-2",
-  right: "left-full top-1/2 -translate-y-1/2 ml-2",
-};
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
-const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
-  ({ className, content, placement = "top", children, ...props }, ref) => {
-    const [visible, setVisible] = useState(false);
-
-    const show = useCallback(() => setVisible(true), []);
-    const hide = useCallback(() => setVisible(false), []);
-
-    return (
-      <div
-        ref={ref}
-        className={cn("relative inline-flex", className)}
-        onMouseEnter={show}
-        onMouseLeave={hide}
-        onFocus={show}
-        onBlur={hide}
-        {...props}
-      >
-        {children}
-        {visible && (
-          <div
-            role="tooltip"
-            className={cn(
-              "pointer-events-none absolute z-50 whitespace-nowrap rounded-md-lg px-3 py-2",
-              "bg-surface-inverse text-body-sm text-fg-basic-inverse shadow-2",
-              placementStyles[placement],
-            )}
-          >
-            {content}
-          </div>
-        )}
-      </div>
-    );
-  },
+/**
+ * Tooltip — wraps Base UI Tooltip primitives.
+ * Positioning, delay, hover/focus, keyboard navigation, and ARIA are handled
+ * by Base UI (Floating UI under the hood). The `placement` prop maps directly
+ * to the positioner `side` prop.
+ *
+ * @example
+ * <Tooltip content="More details" placement="bottom">
+ *   <button type="button">Hover me</button>
+ * </Tooltip>
+ */
+const TooltipComponent = forwardRef<HTMLSpanElement, TooltipProps>(
+  ({ className, content, placement = "top", children, ...rootProps }, ref) => (
+    <Tooltip.Provider>
+      <Tooltip.Root {...rootProps}>
+        <Tooltip.Trigger
+          ref={ref}
+          render={<span className={cn("inline-flex", className)} />}
+        >
+          {children}
+        </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Positioner side={placement} sideOffset={8}>
+            <Tooltip.Popup
+              className={cn(
+                "pointer-events-none z-50 whitespace-nowrap rounded-md-lg px-3 py-2",
+                "bg-surface-inverse text-body-sm text-fg-basic-inverse shadow-2",
+                "data-[starting-style]:opacity-0",
+                "data-[ending-style]:opacity-0",
+                "transition-opacity duration-150 ease-out",
+              )}
+            >
+              {content}
+            </Tooltip.Popup>
+          </Tooltip.Positioner>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
+  ),
 );
 
-Tooltip.displayName = "Tooltip";
-export { Tooltip, type TooltipProps, type TooltipPlacement };
+TooltipComponent.displayName = "Tooltip";
+
+// ---------------------------------------------------------------------------
+// Exports — preserve existing API surface
+// ---------------------------------------------------------------------------
+
+export {
+  TooltipComponent as Tooltip,
+  type TooltipProps,
+  type TooltipPlacement,
+};
