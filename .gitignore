@@ -49,3 +49,6 @@ storybook-static
 
 # oh-my-agent
 .agents/.backup-pre-*/
+.agents/results/
+.agents/state/
+docs/plans/
