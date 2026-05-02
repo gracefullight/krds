@@ -128,7 +128,7 @@ const navItemStyles = cn(
 
 const disabledNavItemStyles = cn(
   baseItemStyles,
-  "px-2 text-fg-disabled-on cursor-not-allowed",
+  "px-2 text-fg-disabled cursor-not-allowed",
 );
 
 function getPageItemKey(item: PageItem): string | number {

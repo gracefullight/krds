@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, type ReactNode, forwardRef, useId } from "react";
 import { cn } from "#/utils/cn";
 
 // ---------------------------------------------------------------------------
@@ -30,10 +30,11 @@ const GettingStarted = forwardRef<HTMLElement, GettingStartedProps>(
     { className, title, description, steps, actionLabel, onAction, ...props },
     ref,
   ) => {
+    const titleId = useId();
     return (
       <section
         ref={ref}
-        aria-labelledby="getting-started-title"
+        aria-labelledby={titleId}
         className={cn(
           "flex flex-col gap-6 rounded-2xl bg-surface-white p-6",
           "outline outline-1 outline-stroke-gray-light",
@@ -43,10 +44,7 @@ const GettingStarted = forwardRef<HTMLElement, GettingStartedProps>(
       >
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <h2
-            id="getting-started-title"
-            className="text-heading-md text-fg-basic"
-          >
+          <h2 id={titleId} className="text-heading-md text-fg-basic">
             {title}
           </h2>
           {description && (

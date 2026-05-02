@@ -122,7 +122,6 @@ function DayCell({
         type="button"
         data-date={iso}
         disabled={isDisabled}
-        aria-selected={isSelected}
         aria-label={ariaLabel}
         aria-pressed={isSelected}
         onClick={() => onSelectDay(date)}

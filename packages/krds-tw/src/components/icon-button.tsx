@@ -34,6 +34,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       size = "medium",
       disabled,
       children,
+      type = "button",
       ...props
     },
     ref,
@@ -42,7 +43,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       <button
         ref={ref}
         disabled={disabled}
-        type={props.type ?? "button"}
+        type={type}
         className={cn(
           "inline-flex items-center justify-center rounded-md-lg font-bold shadow-none transition-colors select-none",
           "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
