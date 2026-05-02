@@ -64,7 +64,7 @@ const sampleItems = [
 ];
 
 const meta: Meta<typeof MainMenu> = {
-  title: "Components/MainMenu",
+  title: "KRDS-MUI/MainMenu",
   component: MainMenu,
   parameters: {
     design: {

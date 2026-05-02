@@ -9,7 +9,7 @@ import { expect, userEvent, within } from "@storybook/test";
 import { DateTime } from "luxon";
 
 const meta: Meta<typeof DatePicker> = {
-  title: "KRDS/DateInput",
+  title: "KRDS-MUI/DateInput",
   component: DatePicker,
   parameters: {
     design: {

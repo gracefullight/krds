@@ -7,7 +7,7 @@ import {
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Accordion> = {
-  title: "KRDS/Accordion",
+  title: "KRDS-MUI/Accordion",
   component: Accordion,
   parameters: {
     layout: "centered",

@@ -4,7 +4,7 @@ import { SkipLink } from "@gracefullight/krds/components";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof SkipLink> = {
-  title: "Components/SkipLink",
+  title: "KRDS-MUI/SkipLink",
   component: SkipLink,
   parameters: {
     design: {

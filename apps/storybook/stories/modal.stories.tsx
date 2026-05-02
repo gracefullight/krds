@@ -11,7 +11,7 @@ import {
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Dialog> = {
-  title: "KRDS/Modal",
+  title: "KRDS-MUI/Modal",
   component: Dialog,
   parameters: {
     design: {

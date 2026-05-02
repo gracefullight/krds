@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SplashScreen } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof SplashScreen> = {
-  title: "Components/SplashScreen",
+  title: "KRDS-MUI/SplashScreen",
   component: SplashScreen,
   parameters: {
     design: {

@@ -5,7 +5,7 @@ import { HelpPanel } from "@gracefullight/krds/components";
 import { useState } from "react";
 
 const meta: Meta<HelpPanelProps> = {
-  title: "KRDS/HelpPanel",
+  title: "KRDS-MUI/HelpPanel",
   component: HelpPanel,
   parameters: {
     design: {

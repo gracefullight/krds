@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LinearProgress } from "@mui/material";
 
 const meta: Meta<typeof LinearProgress> = {
-  title: "KRDS/ProgressBar",
+  title: "KRDS-MUI/ProgressBar",
   component: LinearProgress,
   parameters: {
     design: {

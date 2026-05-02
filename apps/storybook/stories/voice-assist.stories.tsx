@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { VoiceAssist } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof VoiceAssist> = {
-  title: "KRDS/VoiceAssist",
+  title: "KRDS-MUI/VoiceAssist",
   component: VoiceAssist,
   parameters: {
     design: {

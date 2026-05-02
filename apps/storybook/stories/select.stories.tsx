@@ -4,7 +4,7 @@ import type { Meta } from "@storybook/react";
 import { MenuItem, Select } from "@mui/material";
 
 const meta: Meta<typeof Select> = {
-  title: "KRDS/Select",
+  title: "KRDS-MUI/Select",
   component: Select,
   parameters: {
     design: {

@@ -4,7 +4,7 @@ import { Chip, ChipGroup } from "@gracefullight/krds/components";
 import { useState } from "react";
 
 const meta: Meta<typeof Chip> = {
-  title: "Components/Chip",
+  title: "KRDS-MUI/Chip",
   component: Chip,
   parameters: {
     design: {

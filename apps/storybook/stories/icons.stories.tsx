@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 
 const meta = {
-  title: "KRDS/Icons",
+  title: "KRDS-MUI/Icons",
   component: Icons.Time,
   parameters: {
     layout: "padded",

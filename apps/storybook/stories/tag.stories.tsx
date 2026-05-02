@@ -4,7 +4,7 @@ import { Chip } from "@mui/material";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Chip> = {
-  title: "KRDS/Tag",
+  title: "KRDS-MUI/Tag",
   component: Chip,
   parameters: {
     design: {

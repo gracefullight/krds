@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Pagination } from "@mui/material";
 
 const meta: Meta<typeof Pagination> = {
-  title: "KRDS/Pagination",
+  title: "KRDS-MUI/Pagination",
   component: Pagination,
   parameters: {
     design: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert, AlertTitle } from "@mui/material";
 
 const meta: Meta<typeof Alert> = {
-  title: "KRDS/Alert",
+  title: "KRDS-MUI/Alert",
   component: Alert,
   parameters: {
     design: {

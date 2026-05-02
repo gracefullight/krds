@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Button> = {
-  title: "KRDS/Button",
+  title: "KRDS-MUI/Button",
   component: Button,
   parameters: {
     design: {

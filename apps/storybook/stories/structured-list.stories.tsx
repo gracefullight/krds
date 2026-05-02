@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { StructuredList } from "@gracefullight/krds/components";
 
 const meta: Meta<StructuredListProps> = {
-  title: "KRDS/StructuredList",
+  title: "KRDS-MUI/StructuredList",
   component: StructuredList,
   parameters: {
     design: {

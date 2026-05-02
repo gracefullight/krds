@@ -4,7 +4,7 @@ import { CriticalAlerts } from "@gracefullight/krds/components";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof CriticalAlerts> = {
-  title: "Components/CriticalAlerts",
+  title: "KRDS-MUI/CriticalAlerts",
   component: CriticalAlerts,
   parameters: {
     design: {

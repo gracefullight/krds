@@ -4,7 +4,7 @@ import { TopButton } from "@gracefullight/krds/components";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof TopButton> = {
-  title: "Components/TopButton",
+  title: "KRDS-MUI/TopButton",
   component: TopButton,
   parameters: {
     design: {

@@ -5,7 +5,7 @@ import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 const meta: Meta<typeof DateCalendar> = {
-  title: "KRDS/Calendar",
+  title: "KRDS-MUI/Calendar",
   component: DateCalendar,
   parameters: {
     design: {

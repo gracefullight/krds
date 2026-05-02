@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Step, StepLabel, Stepper, Typography } from "@mui/material";
 
 const meta: Meta<typeof Stepper> = {
-  title: "KRDS/StepIndicator",
+  title: "KRDS-MUI/StepIndicator",
   component: Stepper,
   parameters: {
     design: {

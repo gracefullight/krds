@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SideNavigation } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof SideNavigation> = {
-  title: "KRDS/SideNavigation",
+  title: "KRDS-MUI/SideNavigation",
   component: SideNavigation,
   parameters: {
     design: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { CircularProgress } from "@mui/material";
 
 const meta: Meta<typeof CircularProgress> = {
-  title: "KRDS/Spinner",
+  title: "KRDS-MUI/Spinner",
   component: CircularProgress,
   parameters: {
     design: {

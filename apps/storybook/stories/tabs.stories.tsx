@@ -4,7 +4,7 @@ import { type SyntheticEvent, useState } from "react";
 import { Tab, Tabs } from "@mui/material";
 
 const meta: Meta<typeof Tabs> = {
-  title: "KRDS/Tabs",
+  title: "KRDS-MUI/Tabs",
   component: Tabs,
   parameters: {
     design: {

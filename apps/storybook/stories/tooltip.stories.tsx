@@ -4,7 +4,7 @@ import { IconButton, Tooltip, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Tooltip> = {
-  title: "KRDS/Tooltip",
+  title: "KRDS-MUI/Tooltip",
   component: Tooltip,
   parameters: {
     design: {

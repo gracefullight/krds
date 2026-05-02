@@ -10,7 +10,7 @@ import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import { useState } from "react";
 
 const meta: Meta<typeof BottomNavigation> = {
-  title: "KRDS/TabBars",
+  title: "KRDS-MUI/TabBars",
   component: BottomNavigation,
   parameters: {
     design: {

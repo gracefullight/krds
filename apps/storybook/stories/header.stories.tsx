@@ -4,7 +4,7 @@ import { Header } from "@gracefullight/krds/components";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof Header> = {
-  title: "KRDS/Header",
+  title: "KRDS-MUI/Header",
   component: Header,
   parameters: {
     design: {

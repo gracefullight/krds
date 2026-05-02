@@ -4,7 +4,7 @@ import { InPageNavigation } from "@gracefullight/krds/components";
 import { useState } from "react";
 
 const meta: Meta<typeof InPageNavigation> = {
-  title: "KRDS/InPageNavigation",
+  title: "KRDS-MUI/InPageNavigation",
   component: InPageNavigation,
   parameters: {
     design: {

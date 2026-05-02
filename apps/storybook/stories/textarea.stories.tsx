@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Textarea } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof Textarea> = {
-  title: "KRDS/Textarea",
+  title: "KRDS-MUI/Textarea",
   component: Textarea,
   parameters: {
     design: {

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 const meta: Meta<typeof Table> = {
-  title: "KRDS/Table",
+  title: "KRDS-MUI/Table",
   component: Table,
   parameters: {
     design: {

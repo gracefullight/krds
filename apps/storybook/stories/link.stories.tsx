@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Link } from "@mui/material";
 
 const meta: Meta<typeof Link> = {
-  title: "KRDS/Link",
+  title: "KRDS-MUI/Link",
   component: Link,
   parameters: {
     design: {

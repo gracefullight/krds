@@ -4,7 +4,7 @@ import { Home } from "@gracefullight/krds-icons";
 import { Breadcrumbs, type BreadcrumbsProps, Link } from "@mui/material";
 
 const meta: Meta<typeof Breadcrumbs> = {
-  title: "KRDS/Breadcrumbs",
+  title: "KRDS-MUI/Breadcrumbs",
   component: Breadcrumbs,
   parameters: {
     design: {

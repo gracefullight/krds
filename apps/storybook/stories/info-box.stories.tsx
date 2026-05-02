@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { InfoBox, type InfoBoxProps } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof InfoBox> = {
-  title: "Components/InfoBox",
+  title: "KRDS-MUI/InfoBox",
   component: InfoBox,
   parameters: {
     layout: "centered",

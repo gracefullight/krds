@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
 const meta: Meta<typeof Radio> = {
-  title: "KRDS/RadioButton",
+  title: "KRDS-MUI/RadioButton",
   component: Radio,
   parameters: {
     design: {

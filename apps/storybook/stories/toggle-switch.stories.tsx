@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FormControlLabel, Switch, type SwitchProps } from "@mui/material";
 
 const meta: Meta<typeof Switch> = {
-  title: "KRDS/ToggleSwitch",
+  title: "KRDS-MUI/ToggleSwitch",
   component: Switch,
   parameters: {
     design: {

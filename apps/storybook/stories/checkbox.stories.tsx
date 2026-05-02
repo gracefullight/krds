@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "KRDS/Checkbox",
+  title: "KRDS-MUI/Checkbox",
   component: Checkbox,
   parameters: {
     design: {

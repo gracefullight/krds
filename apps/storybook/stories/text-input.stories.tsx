@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 const meta: Meta<typeof TextField> = {
-  title: "KRDS/TextInput",
+  title: "KRDS-MUI/TextInput",
   component: TextField,
   parameters: {
     design: {

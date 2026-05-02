@@ -4,7 +4,7 @@ import { Close } from "@gracefullight/krds-icons";
 import { DialogTitle, IconButton, SwipeableDrawer } from "@mui/material";
 
 const meta: Meta<typeof SwipeableDrawer> = {
-  title: "KRDS/BottomSheet",
+  title: "KRDS-MUI/BottomSheet",
   component: SwipeableDrawer,
   parameters: {
     design: {

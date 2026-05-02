@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Masthead } from "@gracefullight/krds/components";
 
 const meta: Meta<typeof Masthead> = {
-  title: "Components/Masthead",
+  title: "KRDS-MUI/Masthead",
   component: Masthead,
   parameters: {
     design: {

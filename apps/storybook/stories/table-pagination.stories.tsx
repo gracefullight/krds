@@ -4,7 +4,7 @@ import { TablePagination } from "@mui/material";
 import { fn } from "@storybook/test";
 
 const meta: Meta<typeof TablePagination> = {
-  title: "KRDS/Pagination",
+  title: "KRDS-MUI/Pagination",
   component: TablePagination,
   parameters: {
     design: {

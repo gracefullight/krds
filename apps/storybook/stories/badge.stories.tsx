@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge } from "@mui/material";
 
 const meta: Meta<typeof Badge> = {
-  title: "KRDS/Badge",
+  title: "KRDS-MUI/Badge",
   component: Badge,
   parameters: {
     design: {
