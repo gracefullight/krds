@@ -50,3 +50,38 @@ export {
   CircularProgress,
   type CircularProgressProps,
 } from "#/components/circular-progress";
+export { SkipLink, type SkipLinkProps } from "#/components/skip-link";
+export { Masthead, type MastheadProps } from "#/components/masthead";
+export {
+  Identifier,
+  type IdentifierProps,
+  type IdentifierLink,
+} from "#/components/identifier";
+export {
+  Header,
+  type HeaderProps,
+  type HeaderNavItem,
+} from "#/components/header";
+export {
+  Footer,
+  type FooterProps,
+  type FooterOrganization,
+  type FooterLink,
+  type FooterSocial,
+  type FooterSlots,
+} from "#/components/footer";
+export {
+  default as MainMenu,
+  type MainMenuProps,
+  type MainMenuItem,
+} from "#/components/main-menu";
+export {
+  SideNavigation,
+  type SideNavigationProps,
+  type SideNavigationItem,
+} from "#/components/side-navigation";
+export {
+  InPageNavigation,
+  type InPageNavigationProps,
+  type InPageNavigationItem,
+} from "#/components/in-page-navigation";
