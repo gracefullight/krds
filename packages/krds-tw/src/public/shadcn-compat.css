@@ -1,0 +1,147 @@
+/* ============================================================
+   KRDS × shadcn/ui base-nova CSS variable bridge
+   ============================================================
+   Maps KRDS semantic tokens to shadcn-expected --color-* and
+   --radius variables so that shadcn/ui components render with
+   KRDS colors without modifying existing KRDS class names.
+
+   Import order in consumer:
+     @import "@gracefullight/krds-tw/theme.css";
+     @import "@gracefullight/krds-tw/shadcn-compat.css";  // optional
+
+   Or use the combined krds-theme.css which already imports this.
+   ============================================================ */
+
+/* ---------- Light mode (default) shadcn compat ---------- */
+:root {
+  /* background / foreground */
+  --color-background: var(--krds-canvas-white);
+  --color-foreground: var(--krds-fg-basic);
+
+  /* primary — KRDS primary button fill (#256ef4) */
+  --color-primary: var(--krds-btn-primary-fill);
+  --color-primary-foreground: var(--krds-fg-inverse-static);
+
+  /* secondary — KRDS secondary button fill (light blue tint) */
+  --color-secondary: var(--krds-btn-secondary-fill);
+  --color-secondary-foreground: var(--krds-fg-primary);
+
+  /* muted — subtle surface for de-emphasised regions */
+  --color-muted: var(--krds-surface-gray-subtler);
+  --color-muted-foreground: var(--krds-fg-subtle);
+
+  /* accent — hover / focus highlight using primary-subtler surface */
+  --color-accent: var(--krds-surface-primary-subtler);
+  --color-accent-foreground: var(--krds-fg-primary);
+
+  /* destructive — KRDS danger foreground */
+  --color-destructive: var(--krds-fg-danger);
+  --color-destructive-foreground: var(--krds-fg-inverse-static);
+
+  /* card & popover surfaces */
+  --color-card: var(--krds-canvas-white);
+  --color-card-foreground: var(--krds-fg-basic);
+  --color-popover: var(--krds-canvas-white);
+  --color-popover-foreground: var(--krds-fg-basic);
+
+  /* border / input / ring */
+  --color-border: var(--krds-line-gray-light);
+  --color-input: var(--krds-input-border);
+  --color-ring: var(--krds-input-border-active);
+
+  /* sidebar */
+  --color-sidebar: var(--krds-surface-secondary-subtler);
+  --color-sidebar-foreground: var(--krds-fg-basic);
+  --color-sidebar-primary: var(--krds-btn-primary-fill);
+  --color-sidebar-primary-foreground: var(--krds-fg-inverse-static);
+  --color-sidebar-accent: var(--krds-surface-primary-subtler);
+  --color-sidebar-accent-foreground: var(--krds-fg-primary);
+  --color-sidebar-border: var(--krds-line-gray-light);
+  --color-sidebar-ring: var(--krds-input-border-active);
+
+  /* chart palette (maps to KRDS element colors) */
+  --color-chart-1: var(--krds-element-primary);
+  --color-chart-2: var(--krds-element-secondary);
+  --color-chart-3: var(--krds-element-success);
+  --color-chart-4: var(--krds-element-warning);
+  --color-chart-5: var(--krds-element-danger);
+
+  /* radius — KRDS md-lg (8 px) aligns with shadcn default 0.5rem */
+  --radius: 8px;
+}
+
+/* ---------- High-contrast mode shadcn compat ---------- */
+/*
+   KRDS "high-contrast" flips surface/fg tokens to dark values.
+   The --krds-* token overrides in [data-theme="high-contrast"]
+   (defined in krds-theme.css) automatically propagate here because
+   the vars below reference --krds-* tokens, not hardcoded values.
+   No extra overrides needed for most variables.
+   Exception: --color-background needs to track --krds-canvas-white
+   which becomes #000000 in high-contrast mode.
+*/
+[data-theme="high-contrast"] {
+  /* All vars that reference --krds-* tokens update automatically.
+     Explicit overrides only where the semantic mapping differs. */
+
+  /* chart palette (high-contrast uses accessible icon-level shades) */
+  --color-chart-1: var(--krds-icon-primary);
+  --color-chart-2: var(--krds-icon-secondary);
+  --color-chart-3: var(--krds-icon-success);
+  --color-chart-4: var(--krds-icon-warning);
+  --color-chart-5: var(--krds-icon-danger);
+}
+
+/* ---------- Tailwind v4 @theme inline — register shadcn utilities ---------- */
+/*
+   @theme inline tells Tailwind to generate utility classes (e.g. bg-background,
+   text-foreground) that reference the CSS custom property at runtime rather
+   than resolving the value statically at build time. This is required for
+   theme-switching via :root overrides to work correctly.
+*/
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+
+  --color-destructive: var(--color-destructive);
+  --color-destructive-foreground: var(--color-destructive-foreground);
+
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+
+  --color-popover: var(--color-popover);
+  --color-popover-foreground: var(--color-popover-foreground);
+
+  --color-border: var(--color-border);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
+
+  --color-sidebar: var(--color-sidebar);
+  --color-sidebar-foreground: var(--color-sidebar-foreground);
+  --color-sidebar-primary: var(--color-sidebar-primary);
+  --color-sidebar-primary-foreground: var(--color-sidebar-primary-foreground);
+  --color-sidebar-accent: var(--color-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
+  --color-sidebar-border: var(--color-sidebar-border);
+  --color-sidebar-ring: var(--color-sidebar-ring);
+
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --color-chart-4: var(--color-chart-4);
+  --color-chart-5: var(--color-chart-5);
+
+  --radius: var(--radius);
+}

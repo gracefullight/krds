@@ -1,9 +1,5 @@
-import {
-  type ComponentProps,
-  type ReactNode,
-  forwardRef,
-} from "react";
 import { RoundCheck } from "@gracefullight/krds-icons";
+import { type ComponentProps, forwardRef } from "react";
 import { cn } from "#/utils/cn";
 
 type ChipSize = "small" | "medium" | "large";
@@ -48,8 +44,10 @@ const Chip = forwardRef<HTMLButtonElement, ChipProps>(
         className={cn(
           "inline-flex items-center justify-center whitespace-nowrap rounded-md border select-none transition-colors",
           "border-stroke-gray bg-action-white text-fg-basic",
-          selected && "border-stroke-primary bg-action-primary-selected text-fg-primary",
-          disabled && "cursor-not-allowed border-stroke-disabled bg-action-disabled text-fg-disabled-on",
+          selected &&
+            "border-stroke-primary bg-action-primary-selected text-fg-primary",
+          disabled &&
+            "cursor-not-allowed border-stroke-disabled bg-action-disabled text-fg-disabled-on",
           sizeStyles[size],
           className,
         )}

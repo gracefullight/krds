@@ -1,6 +1,6 @@
 {
   "name": "@gracefullight/krds-tw",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tailwind CSS v4 design system for KRDS",
   "homepage": "https://krds.gracefullight.dev",
   "license": "MIT",
@@ -22,7 +22,8 @@
       "import": "./dist/components/index.mjs",
       "require": "./dist/components/index.js"
     },
-    "./theme.css": "./dist/krds-theme.css"
+    "./theme.css": "./dist/krds-theme.css",
+    "./shadcn-compat.css": "./dist/shadcn-compat.css"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -30,6 +31,7 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-rc.0",
     "@gracefullight/krds-icons": "workspace:*",
     "@gracefullight/krds-tokens": "workspace:*",
     "clsx": "^2.1.1",

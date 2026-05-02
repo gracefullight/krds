@@ -18,7 +18,10 @@ interface ChipGroupProps extends Omit<ComponentProps<"fieldset">, "onChange"> {
 }
 
 const ChipGroup = forwardRef<HTMLFieldSetElement, ChipGroupProps>(
-  ({ className, value, onChange, multiple = false, children, ...props }, ref) => {
+  (
+    { className, value, onChange, multiple = false, children, ...props },
+    ref,
+  ) => {
     const [internalValue, setInternalValue] = useState<string | string[]>(
       multiple ? [] : "",
     );

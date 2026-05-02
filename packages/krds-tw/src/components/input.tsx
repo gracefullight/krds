@@ -51,7 +51,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative flex items-center">
           {startAdornment && (
-            <span className="absolute left-3 text-icon-gray-light">{startAdornment}</span>
+            <span className="absolute left-3 text-icon-gray-light">
+              {startAdornment}
+            </span>
           )}
           <input
             ref={ref}
@@ -70,7 +72,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {endAdornment && (
-            <span className="absolute right-3 text-icon-gray-light">{endAdornment}</span>
+            <span className="absolute right-3 text-icon-gray-light">
+              {endAdornment}
+            </span>
           )}
         </div>
         {helperText && (

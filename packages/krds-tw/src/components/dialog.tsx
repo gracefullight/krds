@@ -1,5 +1,6 @@
 "use client";
 
+import { Close } from "@gracefullight/krds-icons";
 import {
   type ComponentProps,
   type ReactNode,
@@ -7,7 +8,6 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { Close } from "@gracefullight/krds-icons";
 import { cn } from "#/utils/cn";
 
 interface DialogProps extends Omit<ComponentProps<"dialog">, "title"> {

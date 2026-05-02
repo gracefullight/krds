@@ -1,10 +1,12 @@
 @import "tailwindcss";
+@import "./shadcn-compat.css";
 
 /* ============================================================
    KRDS Design System – Tailwind CSS v4 Theme
    ============================================================
    Usage: @import "@gracefullight/krds-tw/theme.css";
    High-contrast: <html data-theme="high-contrast">
+   shadcn/ui compat: shadcn-compat.css is auto-imported above
    ============================================================ */
 
 /* ---------- Light mode (default) semantic tokens ---------- */
@@ -194,9 +196,12 @@
   --krds-alpha-shadow3: #0000001f;
 
   /* shadows */
-  --krds-shadow-1: 0px 0px 2px var(--krds-alpha-shadow1), 0px 1px 2px var(--krds-alpha-shadow1);
-  --krds-shadow-2: 0px 0px 2px var(--krds-alpha-shadow2), 0px 4px 8px var(--krds-alpha-shadow2);
-  --krds-shadow-3: 0px 0px 2px var(--krds-alpha-shadow3), 0px 7px 16px var(--krds-alpha-shadow3);
+  --krds-shadow-1: 0px 0px 2px var(--krds-alpha-shadow1), 0px 1px 2px
+    var(--krds-alpha-shadow1);
+  --krds-shadow-2: 0px 0px 2px var(--krds-alpha-shadow2), 0px 4px 8px
+    var(--krds-alpha-shadow2);
+  --krds-shadow-3: 0px 0px 2px var(--krds-alpha-shadow3), 0px 7px 16px
+    var(--krds-alpha-shadow3);
 
   /* border-width */
   --krds-border-width-regular: 1px;

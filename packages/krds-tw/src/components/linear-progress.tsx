@@ -25,11 +25,17 @@ const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(
         aria-valuenow={clampedValue}
         aria-valuemin={0}
         aria-valuemax={100}
-        className={cn("h-1 w-full overflow-hidden rounded-full bg-element-gray-light", className)}
+        className={cn(
+          "h-1 w-full overflow-hidden rounded-full bg-element-gray-light",
+          className,
+        )}
         {...props}
       >
         <div
-          className={cn("h-full rounded-full transition-all duration-300", colorStyles[color])}
+          className={cn(
+            "h-full rounded-full transition-all duration-300",
+            colorStyles[color],
+          )}
           style={{ width: `${clampedValue}%` }}
         />
       </div>

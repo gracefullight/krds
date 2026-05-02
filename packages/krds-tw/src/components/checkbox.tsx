@@ -39,7 +39,12 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           {...props}
         />
         {label && (
-          <span className={cn("text-body-md text-fg-basic", disabled && "text-fg-disabled")}>
+          <span
+            className={cn(
+              "text-body-md text-fg-basic",
+              disabled && "text-fg-disabled",
+            )}
+          >
             {label}
           </span>
         )}

@@ -63,7 +63,12 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           />
         </span>
         {label && (
-          <span className={cn("text-body-md text-fg-basic", disabled && "text-fg-disabled")}>
+          <span
+            className={cn(
+              "text-body-md text-fg-basic",
+              disabled && "text-fg-disabled",
+            )}
+          >
             {label}
           </span>
         )}

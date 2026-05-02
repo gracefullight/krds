@@ -13,7 +13,10 @@ const colorStyles = {
 } as const;
 
 const Divider = forwardRef<HTMLHRElement, DividerProps>(
-  ({ className, orientation = "horizontal", variant = "light", ...props }, ref) => {
+  (
+    { className, orientation = "horizontal", variant = "light", ...props },
+    ref,
+  ) => {
     return (
       <hr
         ref={ref}
