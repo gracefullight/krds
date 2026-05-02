@@ -17,8 +17,8 @@ export function Annotation({
     >
       <title>{title}</title>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M12 2C6.47715 2 2 6.47715 2 12C2 13.509 2.33425 14.94 2.93275 16.2229L2.06334 20.3992C1.98993 20.7518 2.30214 21.0641 2.65475 20.9907L6.31583 20.2285C7.92987 21.3456 9.88851 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
         fill="#256EF4"
       />{" "}

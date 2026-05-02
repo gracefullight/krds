@@ -21,8 +21,8 @@ export function SystemWarning({
         fill={color}
       />{" "}
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M11.5 8C11.2239 8 11 8.22386 11 8.5V14.5C11 14.7761 11.2239 15 11.5 15H12.5C12.7761 15 13 14.7761 13 14.5V8.5C13 8.22386 12.7761 8 12.5 8H11.5ZM11.5 16C11.2239 16 11 16.2239 11 16.5V17.5C11 17.7761 11.2239 18 11.5 18H12.5C12.7761 18 13 17.7761 13 17.5V16.5C13 16.2239 12.7761 16 12.5 16H11.5Z"
         fill="white"
       />
