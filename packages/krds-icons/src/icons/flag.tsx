@@ -16,7 +16,7 @@ export function Flag({
       {...props}
     >
       <title>{title}</title>
-      <g clip-path="url(#clip0_887_44026)">
+      <g clipPath="url(#clip0_887_44026)">
         {" "}
         <path d="M0 4H24V20H0V4Z" fill="white" />{" "}
         <path

@@ -120,7 +120,7 @@ function CarouselSlideItem({
       aria-label={`${index + 1} / ${total}`}
       aria-hidden={!isActive}
       className={cn(
-        "absolute inset-0 w-full h-full list-none transition-opacity duration-300 motion-reduce:transition-none",
+        "[grid-area:1/1] w-full list-none transition-opacity duration-300 motion-reduce:transition-none",
         isActive ? "opacity-100" : "opacity-0 pointer-events-none",
       )}
     >
@@ -281,7 +281,7 @@ const Carousel = ({
       className={cn("relative w-full overflow-hidden", className)}
       {...props}
     >
-      <ul className="relative w-full h-full m-0 p-0">
+      <ul className="relative grid w-full m-0 p-0">
         {slides.map((slide, i) => (
           <CarouselSlideItem
             key={slide.id}

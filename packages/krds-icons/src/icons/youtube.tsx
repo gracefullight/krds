@@ -16,7 +16,7 @@ export function Youtube({
       {...props}
     >
       <title>{title}</title>
-      <g clip-path="url(#clip0_2365_45206)">
+      <g clipPath="url(#clip0_2365_45206)">
         {" "}
         <path
           fillRule="evenodd"

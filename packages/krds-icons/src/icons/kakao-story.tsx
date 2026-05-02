@@ -16,7 +16,7 @@ export function KakaoStory({
       {...props}
     >
       <title>{title}</title>
-      <g clip-path="url(#clip0_2365_45467)">
+      <g clipPath="url(#clip0_2365_45467)">
         {" "}
         <path
           d="M16.5 10.0956V3H7.5V12.7278L11.6642 12.7293C11.2668 15.206 9.89608 17.1126 8.48792 18.1942L11.1048 21C14.358 18.6415 16.5 14.6464 16.5 10.0956Z"

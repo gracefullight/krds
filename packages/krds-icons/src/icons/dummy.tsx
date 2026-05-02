@@ -16,7 +16,7 @@ export function Dummy({
       {...props}
     >
       <title>{title}</title>
-      <g clip-path="url(#clip0_1446_129192)">
+      <g clipPath="url(#clip0_1446_129192)">
         {" "}
         <path
           fillRule="evenodd"
