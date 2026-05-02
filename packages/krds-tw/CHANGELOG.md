@@ -1,5 +1,14 @@
 # Changelog
 
+- 0.4.0: Phase 2C display components
+  - Table (composable Header/Body/Row/Head/Cell/Caption + density variant)
+  - StructuredList (default + table variants)
+  - Disclosure, CriticalAlerts, InfoBox
+  - Carousel (keyboard nav, prefers-reduced-motion)
+  - TextList (ordered/unordered/none + marker variants)
+  - BottomSheet (Base UI Dialog primitive)
+  - TabBars (mobile bottom navigation)
+  - ContextualHelp (Base UI Popover primitive)
 - 0.3.0: Phase 2B layout components
   - SkipLink, Masthead, Identifier, Header, Footer
   - MainMenu (Base UI NavigationMenu, v1.1.0 viewport-aware)

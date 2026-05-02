@@ -85,3 +85,61 @@ export {
   type InPageNavigationProps,
   type InPageNavigationItem,
 } from "#/components/in-page-navigation";
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+  type TableProps,
+  type TableDensity,
+} from "#/components/table";
+export {
+  StructuredList,
+  type StructuredListProps,
+  type StructuredListVariant,
+  type StructuredListItem,
+  type StructuredListColumn,
+} from "#/components/structured-list";
+export { Disclosure, type DisclosureProps } from "#/components/disclosure";
+export {
+  CriticalAlerts,
+  type CriticalAlertsProps,
+  type CriticalAlertsSeverity,
+} from "#/components/critical-alerts";
+export { InfoBox, InfoBoxItem } from "#/components/info-box";
+export {
+  Carousel,
+  type CarouselProps,
+  type CarouselSlide,
+} from "#/components/carousel";
+export {
+  TextList,
+  type TextListProps,
+  type TextListVariant,
+  type TextListMarker,
+  type TextListItem,
+} from "#/components/text-list";
+export {
+  BottomSheet,
+  BottomSheetTrigger,
+  BottomSheetContent,
+  BottomSheetHeader,
+  BottomSheetTitle,
+  BottomSheetClose,
+  type BottomSheetProps,
+} from "#/components/bottom-sheet";
+export { TabBars } from "#/components/tab-bars";
+export {
+  ContextualHelp,
+  ContextualHelpTrigger,
+  ContextualHelpContent,
+  SimpleContextualHelp,
+  type ContextualHelpRootProps,
+  type ContextualHelpTriggerProps,
+  type ContextualHelpContentProps,
+  type SimpleContextualHelpProps,
+} from "#/components/contextual-help";
