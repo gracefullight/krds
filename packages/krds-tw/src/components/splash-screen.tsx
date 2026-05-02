@@ -126,10 +126,7 @@ function SplashScreen({
       )}
       {...props}
     >
-      <div
-        className="absolute flex flex-col items-center gap-5"
-        style={{ top: "37.76%" }}
-      >
+      <div className="absolute top-1/3 flex flex-col items-center gap-5">
         <div className="shrink-0">{resolvedLogo}</div>
 
         {(title || description) && (

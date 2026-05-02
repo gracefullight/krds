@@ -85,7 +85,6 @@ const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>(
         disabled={disabled}
         className={cn(
           "rounded-lg bg-action-secondary",
-          "hover:bg-action-secondary-hover",
           "data-[open]:bg-action-secondary-hover",
           "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
           className,
@@ -117,6 +116,8 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
             "px-4 py-5",
             // typography
             "text-heading-xs text-fg-basic",
+            // hover
+            "hover:bg-action-secondary-hover",
             // focus
             "rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-input-border-active",
             // active press state

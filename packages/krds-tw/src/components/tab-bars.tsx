@@ -49,11 +49,7 @@ const TabBars = forwardRef<HTMLElement, TabBarsProps>(
         )}
         {...props}
       >
-        <ul
-          role="tablist"
-          aria-label={ariaLabel}
-          className="flex w-full list-none m-0 p-0"
-        >
+        <ul role="tablist" className="flex w-full list-none m-0 p-0">
           {items.map((item) => {
             const isSelected = item.id === value;
 
@@ -91,7 +87,7 @@ const TabBars = forwardRef<HTMLElement, TabBarsProps>(
                           "active:bg-surface-gray-subtle",
                           "[&_svg]:text-icon-gray-light",
                         ],
-                    "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-stroke-primary",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-stroke-primary",
                   )}
                 >
                   <span

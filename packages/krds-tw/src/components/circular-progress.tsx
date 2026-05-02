@@ -11,7 +11,7 @@ interface CircularProgressProps extends Omit<ComponentProps<"div">, "role"> {
 
 const SIZES: Record<CircularProgressSize, number> = {
   small: 16,
-  medium: 24,
+  medium: 32,
   large: 40,
 } as const;
 

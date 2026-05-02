@@ -194,7 +194,7 @@ function CoachMark({
                   "text-label-sm text-fg-subtle",
                   "rounded-sm px-1 py-0.5",
                   "underline-offset-2 hover:underline",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
                 )}
               >
                 건너뛰기
@@ -212,7 +212,7 @@ function CoachMark({
                       "outline outline-1 outline-btn-tertiary-border",
                       "hover:bg-btn-tertiary-fill-hover",
                       "active:bg-btn-tertiary-fill-pressed",
-                      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+                      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
                       "transition-colors",
                     )}
                   >
@@ -230,7 +230,7 @@ function CoachMark({
                     "bg-btn-primary-fill text-fg-inverse-static",
                     "hover:bg-btn-primary-fill-hover",
                     "active:bg-btn-primary-fill-pressed",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
                     "transition-colors",
                   )}
                 >

@@ -145,7 +145,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const currentValue = isControlled ? value : internalValue;
     const currentLength = currentValue?.length ?? 0;
 
-    const isOverLimit = maxLength !== undefined && currentLength >= maxLength;
+    const isOverLimit = maxLength !== undefined && currentLength > maxLength;
     const isInvalid = error || isOverLimit;
 
     const ariaDescribedBy = buildAriaDescribedBy(

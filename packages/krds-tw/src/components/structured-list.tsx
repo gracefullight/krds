@@ -68,7 +68,7 @@ function DefaultVariant({ items, className }: DefaultVariantProps) {
         >
           <dt
             className={cn(
-              "w-40 min-w-40 shrink-0 text-label-md font-bold text-fg-subtle",
+              "w-40 min-w-40 shrink-0 text-label-md font-bold text-fg-basic",
               "max-md:w-auto max-md:min-w-0 max-md:text-label-sm",
             )}
           >
@@ -108,7 +108,7 @@ function TableVariant({
     <div className={cn("w-full overflow-x-auto", className)}>
       <table
         aria-label={caption}
-        className="w-full border-collapse border-t-2 border-divider-gray-dark"
+        className="w-full border-collapse border-t border-divider-gray-dark"
         style={{ tableLayout: "fixed" }}
       >
         <caption className="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap [clip-path:inset(50%)] [clip:rect(0_0_0_0)]">

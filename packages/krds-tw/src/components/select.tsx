@@ -66,7 +66,8 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
       className={cn(
         "relative inline-flex w-full items-center justify-between gap-2 rounded-md-lg",
         "border bg-input-surface text-fg-basic transition-colors",
-        "focus:border-input-border-active focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0",
+        "focus:border-input-border-active outline-none",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
         "disabled:cursor-not-allowed disabled:border-input-border-disabled disabled:bg-input-surface-disabled disabled:text-fg-disabled",
         "data-[popup-open]:border-input-border-active",
         error ? "border-input-border-error" : "border-input-border",

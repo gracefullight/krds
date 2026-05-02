@@ -42,7 +42,7 @@ const TableBody = forwardRef<HTMLTableSectionElement, ComponentProps<"tbody">>(
     return (
       <tbody
         ref={ref}
-        className={cn("bg-surface-white-subtle", className)}
+        className={cn("bg-surface-white", className)}
         {...props}
       />
     );
@@ -78,7 +78,7 @@ const TableHead = forwardRef<HTMLTableCellElement, ComponentProps<"th">>(
         ref={ref}
         scope="col"
         className={cn(
-          "border-b border-border-secondary-light px-4 text-text-bolder",
+          "border-b border-divider-gray px-4 text-text-bolder",
           "text-label-sm font-bold",
           "py-2",
           "[table[data-density=compact]_&]:py-1",
