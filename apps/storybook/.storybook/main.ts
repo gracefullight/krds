@@ -1,6 +1,8 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 
 import { dirname, join } from "node:path";
+import tailwindcss from "@tailwindcss/vite";
+import { mergeConfig } from "vite";
 
 const html = String.raw;
 
@@ -39,6 +41,11 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
+
+  viteFinal: async (config) =>
+    mergeConfig(config, {
+      plugins: [tailwindcss()],
+    }),
 
   managerHead: (head) => html`
     ${head}

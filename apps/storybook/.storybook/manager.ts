@@ -8,7 +8,7 @@ const krdsTheme = create({
   base: "light",
 
   // 브랜딩
-  brandTitle: "Korea Design System - MUI",
+  brandTitle: "Korea Design System",
   brandUrl: "https://github.com/gracefullight/krds",
 
   // UI
