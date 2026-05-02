@@ -149,7 +149,10 @@ export {
   type VoiceAssistSpeed,
   type VoiceAssistState,
 } from "#/components/voice-assist";
-export { default as HelpPanel } from "#/components/help-panel";
+export {
+  default as HelpPanel,
+  type HelpPanelTutorialStep,
+} from "#/components/help-panel";
 export { CoachMark } from "#/components/coach-mark";
 export { FileUpload, type FileUploadProps } from "#/components/file-upload";
 export { LanguageSwitcher } from "#/components/language-switcher";
