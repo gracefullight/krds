@@ -1,5 +1,15 @@
 # Changelog
 
+- 0.5.0: Phase 2D specialty components
+  - VoiceAssist (음성지원, v1.1.0 신규, Web Speech API)
+  - HelpPanel (help/tutorial variants, Base UI Dialog)
+  - CoachMark (Base UI Popover with sequential steps)
+  - FileUpload (drag-drop)
+  - LanguageSwitcher (Base UI Select)
+  - Resize (글자 크기 조정 a11y)
+  - Search, TopButton, SplashScreen
+  - GettingStarted, UserFeedback
+  - DatePicker (Base UI Popover + custom calendar grid)
 - 0.4.0: Phase 2C display components
   - Table (composable Header/Body/Row/Head/Cell/Caption + density variant)
   - StructuredList (default + table variants)

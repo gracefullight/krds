@@ -143,3 +143,31 @@ export {
   type ContextualHelpContentProps,
   type SimpleContextualHelpProps,
 } from "#/components/contextual-help";
+export {
+  VoiceAssist,
+  type VoiceAssistProps,
+  type VoiceAssistSpeed,
+  type VoiceAssistState,
+} from "#/components/voice-assist";
+export { default as HelpPanel } from "#/components/help-panel";
+export { CoachMark } from "#/components/coach-mark";
+export { FileUpload, type FileUploadProps } from "#/components/file-upload";
+export { LanguageSwitcher } from "#/components/language-switcher";
+export { Resize, type ResizeProps } from "#/components/resize";
+export { Search, type SearchProps, type SearchSize } from "#/components/search";
+export { TopButton, type TopButtonProps } from "#/components/top-button";
+export {
+  SplashScreen,
+  type SplashScreenProps,
+} from "#/components/splash-screen";
+export {
+  GettingStarted,
+  type GettingStartedProps,
+  type GettingStartedStep,
+} from "#/components/getting-started";
+export {
+  UserFeedback,
+  type UserFeedbackProps,
+  type FeedbackOption,
+} from "#/components/user-feedback";
+export { DatePicker } from "#/components/date-picker";
