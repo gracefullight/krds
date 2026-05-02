@@ -107,10 +107,10 @@ const Disclosure = forwardRef<HTMLDivElement, DisclosureProps>(
         <BaseCollapsible.Panel
           className={cn(
             "overflow-hidden",
-            // height animation driven by Base UI CSS var
-            "transition-[height] duration-200 ease-in-out",
+            "data-[ending-style]:h-0 data-[starting-style]:h-0",
+            "h-[var(--collapsible-panel-height)]",
+            "transition-[height] duration-200",
             "motion-reduce:transition-none",
-            "[height:0] data-[open]:[height:var(--collapsible-panel-height)]",
           )}
         >
           <div className="px-4 pb-5 text-body-md text-fg-basic">{children}</div>

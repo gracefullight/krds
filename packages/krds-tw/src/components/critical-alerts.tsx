@@ -35,6 +35,12 @@ const labelMap: Record<CriticalAlertsSeverity, string> = {
   info: "안내",
 };
 
+const closeAriaLabelMap: Record<CriticalAlertsSeverity, string> = {
+  danger: "긴급 공지 닫기",
+  warning: "경고 공지 닫기",
+  info: "공지 닫기",
+};
+
 const CriticalAlerts = forwardRef<HTMLElement, CriticalAlertsProps>(
   (
     {
@@ -50,6 +56,7 @@ const CriticalAlerts = forwardRef<HTMLElement, CriticalAlertsProps>(
   ) => {
     const Icon = iconMap[severity];
     const label = labelMap[severity];
+    const closeAriaLabel = closeAriaLabelMap[severity];
 
     return (
       <aside
@@ -94,7 +101,7 @@ const CriticalAlerts = forwardRef<HTMLElement, CriticalAlertsProps>(
           <button
             type="button"
             onClick={onClose}
-            aria-label="긴급 공지 닫기"
+            aria-label={closeAriaLabel}
             className={cn(
               "shrink-0 inline-flex items-center justify-center rounded-md p-1 text-icon-gray transition-colors",
               "hover:bg-surface-gray-subtler",

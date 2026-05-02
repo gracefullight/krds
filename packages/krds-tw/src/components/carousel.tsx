@@ -91,11 +91,11 @@ function CarouselDot({ index, isActive, onClick }: CarouselDotProps) {
       aria-current={isActive ? true : undefined}
       onClick={onClick}
       className={cn(
-        "size-2 rounded-full transition-colors duration-150",
+        "rounded-full transition-[colors,width] duration-150",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
         isActive
-          ? "bg-btn-primary-fill"
-          : "bg-btn-secondary-fill hover:bg-btn-tertiary-fill-hover",
+          ? "w-5 h-2 bg-btn-primary-fill"
+          : "size-2 bg-btn-secondary-fill hover:bg-btn-tertiary-fill-hover",
       )}
     />
   );

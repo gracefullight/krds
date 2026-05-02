@@ -114,6 +114,11 @@ const BottomSheetContent = forwardRef<HTMLDivElement, BottomSheetContentProps>(
           ref={ref}
           {...props}
         >
+          {/* Home indicator bar — iOS-style drag handle */}
+          <div
+            className="mx-auto mt-2 mb-4 h-[5px] w-[139px] rounded-full bg-fg-disabled"
+            aria-hidden="true"
+          />
           {children}
         </Dialog.Popup>
       </Dialog.Portal>

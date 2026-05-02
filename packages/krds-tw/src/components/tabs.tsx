@@ -82,7 +82,7 @@ const triggerVariantStyles: Record<TabsVariant, string> = {
   pill: [
     "rounded-md text-fg-subtle font-bold",
     "hover:text-fg-basic hover:bg-surface-gray-subtle",
-    "data-[selected]:bg-surface-white data-[selected]:text-fg-primary data-[selected]:shadow-1",
+    "data-[selected]:bg-action-secondary-active data-[selected]:text-fg-primary data-[selected]:shadow-1",
     "disabled:text-fg-disabled disabled:cursor-not-allowed",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
     "transition-colors select-none",

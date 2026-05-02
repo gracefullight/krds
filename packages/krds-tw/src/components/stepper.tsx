@@ -23,7 +23,8 @@ function getStepState(index: number, activeStep: number): StepState {
 
 const stepCircleStyles: Record<StepState, string> = {
   completed: "bg-element-primary text-fg-inverse-static border-transparent",
-  active: "bg-element-primary text-fg-inverse-static border-transparent",
+  active:
+    "bg-element-primary text-fg-inverse-static border-transparent outline outline-2 outline-stroke-primary outline-offset-1",
   upcoming: "bg-action-white text-fg-basic border-stroke-gray",
 };
 
