@@ -61,6 +61,99 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
+// ─── StepperItem 서브컴포넌트 ─────────────────────────────────────────────────
+
+interface StepperItemProps {
+  step: StepItem;
+  index: number;
+  state: StepState;
+  isLast: boolean;
+  isHorizontal: boolean;
+}
+
+function StepperItem({
+  step,
+  index,
+  state,
+  isLast,
+  isHorizontal,
+}: StepperItemProps) {
+  const isActive = state === "active";
+  const isCompleted = state === "completed";
+
+  return (
+    <li
+      aria-current={isActive ? "step" : undefined}
+      className={cn(
+        "flex",
+        isHorizontal ? "flex-col items-center" : "flex-row items-start",
+        isHorizontal && !isLast && "flex-1",
+      )}
+    >
+      {/* Step indicator row: circle + connector */}
+      <div
+        className={cn(
+          "flex items-center",
+          isHorizontal ? "w-full flex-row" : "flex-col",
+        )}
+      >
+        {/* Circle */}
+        <div
+          className={cn(
+            "relative z-10 flex shrink-0 items-center justify-center rounded-full border text-label-xs font-bold transition-colors size-7",
+            stepCircleStyles[state],
+          )}
+        >
+          {isCompleted ? <CheckIcon /> : <span>{index + 1}</span>}
+        </div>
+
+        {/* Connector line */}
+        {!isLast && (
+          <div
+            aria-hidden="true"
+            className={cn(
+              "transition-colors",
+              isHorizontal ? "h-px flex-1" : "mx-auto w-px my-1 h-8",
+              isCompleted ? "bg-element-primary" : "bg-element-disabled-light",
+            )}
+          />
+        )}
+      </div>
+
+      {/* Label and description */}
+      <div
+        className={cn(
+          isHorizontal
+            ? "mt-2 flex flex-col items-center text-center"
+            : "ml-3 flex flex-col pb-6",
+          isHorizontal && !isLast && "w-full",
+        )}
+      >
+        <span
+          className={cn(
+            "text-label-sm transition-colors",
+            stepLabelStyles[state],
+          )}
+        >
+          {step.label}
+        </span>
+        {step.description && (
+          <span
+            className={cn(
+              "mt-0.5 text-label-xs transition-colors",
+              stepDescriptionStyles[state],
+            )}
+          >
+            {step.description}
+          </span>
+        )}
+      </div>
+    </li>
+  );
+}
+
+// ─── 공개 컴포넌트 ────────────────────────────────────────────────────────────
+
 const Stepper = forwardRef<HTMLOListElement, StepperProps>(
   (
     {
@@ -87,88 +180,16 @@ const Stepper = forwardRef<HTMLOListElement, StepperProps>(
         )}
         {...props}
       >
-        {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Step rendering branches on horizontal/vertical orientation and 3 visual states; future refactor can extract sub-components. */}
-        {steps.map((step, index) => {
-          const state = getStepState(index, clampedActive);
-          const isActive = state === "active";
-          const isCompleted = state === "completed";
-          const isLast = index === steps.length - 1;
-
-          return (
-            <li
-              key={step.id}
-              aria-current={isActive ? "step" : undefined}
-              className={cn(
-                "flex",
-                isHorizontal ? "flex-col items-center" : "flex-row items-start",
-                isHorizontal && !isLast && "flex-1",
-              )}
-            >
-              {/* Step indicator row: circle + connector */}
-              <div
-                className={cn(
-                  "flex items-center",
-                  isHorizontal ? "w-full flex-row" : "flex-col",
-                )}
-              >
-                {/* Circle */}
-                <div
-                  className={cn(
-                    "relative z-10 flex shrink-0 items-center justify-center rounded-full border text-label-xs font-bold transition-colors",
-                    isHorizontal ? "size-7" : "size-7",
-                    stepCircleStyles[state],
-                  )}
-                >
-                  {isCompleted ? <CheckIcon /> : <span>{index + 1}</span>}
-                </div>
-
-                {/* Connector line */}
-                {!isLast && (
-                  <div
-                    aria-hidden="true"
-                    className={cn(
-                      "transition-colors",
-                      isHorizontal ? "h-px flex-1" : "mx-auto w-px",
-                      isHorizontal ? "" : "my-1 h-8",
-                      isCompleted
-                        ? "bg-element-primary"
-                        : "bg-element-disabled-light",
-                    )}
-                  />
-                )}
-              </div>
-
-              {/* Label and description */}
-              <div
-                className={cn(
-                  isHorizontal
-                    ? "mt-2 flex flex-col items-center text-center"
-                    : "ml-3 flex flex-col pb-6",
-                  isHorizontal && !isLast && "w-full",
-                )}
-              >
-                <span
-                  className={cn(
-                    "text-label-sm transition-colors",
-                    stepLabelStyles[state],
-                  )}
-                >
-                  {step.label}
-                </span>
-                {step.description && (
-                  <span
-                    className={cn(
-                      "mt-0.5 text-label-xs transition-colors",
-                      stepDescriptionStyles[state],
-                    )}
-                  >
-                    {step.description}
-                  </span>
-                )}
-              </div>
-            </li>
-          );
-        })}
+        {steps.map((step, index) => (
+          <StepperItem
+            key={step.id}
+            step={step}
+            index={index}
+            state={getStepState(index, clampedActive)}
+            isLast={index === steps.length - 1}
+            isHorizontal={isHorizontal}
+          />
+        ))}
       </ol>
     );
   },

@@ -10,24 +10,107 @@ import {
 import { cn } from "#/utils/cn";
 
 interface TextareaProps extends Omit<ComponentProps<"textarea">, "onChange"> {
-  /** 라벨 텍스트 */
   label?: string;
-  /** 현재 값 (제어 컴포넌트) */
   value?: string;
-  /** 기본값 (비제어 컴포넌트) */
   defaultValue?: string;
-  /** 변경 핸들러 */
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  /** 도움말 텍스트 */
   helperText?: ReactNode;
-  /** 에러 상태 */
   error?: boolean;
-  /** 표시 행 수 */
   rows?: number;
-  /** 최대 글자 수 (설정 시 카운터 표시, 초과 입력 차단) */
   maxLength?: number;
-  /** 필드 name */
   name?: string;
+}
+
+function buildAriaDescribedBy(
+  external: string | undefined,
+  helperId: string | undefined,
+  counterId: string | undefined,
+): string | undefined {
+  return [external, helperId, counterId].filter(Boolean).join(" ") || undefined;
+}
+
+interface TextareaLabelProps {
+  id: string;
+  label: string;
+  required: boolean;
+  disabled: boolean;
+}
+
+function TextareaLabel({ id, label, required, disabled }: TextareaLabelProps) {
+  return (
+    <Field.Label
+      htmlFor={id}
+      className={cn(
+        "text-label-sm text-fg-basic",
+        disabled && "text-fg-disabled",
+      )}
+    >
+      {label}
+      {required && (
+        <span aria-hidden="true" className="ml-0.5 text-fg-danger">
+          *
+        </span>
+      )}
+    </Field.Label>
+  );
+}
+
+interface TextareaFooterProps {
+  helperText: ReactNode;
+  helperId: string;
+  counterId: string;
+  currentLength: number;
+  maxLength: number | undefined;
+  isOverLimit: boolean;
+  error: boolean;
+  disabled: boolean;
+}
+
+function TextareaFooter({
+  helperText,
+  helperId,
+  counterId,
+  currentLength,
+  maxLength,
+  isOverLimit,
+  error,
+  disabled,
+}: TextareaFooterProps) {
+  const showHelper = helperText !== undefined;
+  const showCounter = maxLength !== undefined;
+  if (!(showHelper || showCounter)) return null;
+  return (
+    <div className="flex items-start justify-between gap-2">
+      {showHelper ? (
+        <output
+          id={helperId}
+          className={cn(
+            "flex items-center gap-1 text-label-xs",
+            error ? "text-fg-danger" : "text-fg-information",
+            disabled && "text-fg-disabled",
+          )}
+        >
+          {helperText}
+        </output>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+
+      {showCounter && (
+        <span
+          id={counterId}
+          aria-live="polite"
+          aria-label={`${currentLength}자 입력됨, 최대 ${maxLength}자`}
+          className={cn(
+            "shrink-0 text-label-xs tabular-nums",
+            isOverLimit ? "text-fg-danger" : "text-fg-subtle",
+          )}
+        >
+          {currentLength}/{maxLength}
+        </span>
+      )}
+    </div>
+  );
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -51,12 +134,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       ...rest
     },
     ref,
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Textarea handles label, helper, error, counter, controlled/uncontrolled, and maxLength enforcement; splitting concerns is a future refactor.
   ) => {
     const generatedId = useId();
     const id = idProp ?? generatedId;
-    const helperId = helperText !== undefined ? `${id}-helper` : undefined;
-    const counterId = maxLength !== undefined ? `${id}-counter` : undefined;
+    const helperId = `${id}-helper`;
+    const counterId = `${id}-counter`;
 
     const isControlled = value !== undefined;
     const [internalValue, setInternalValue] = useState(defaultValue ?? "");
@@ -66,21 +148,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const isOverLimit = maxLength !== undefined && currentLength >= maxLength;
     const isInvalid = error || isOverLimit;
 
-    const ariaDescribedBy =
-      [externalDescribedBy, helperId, counterId].filter(Boolean).join(" ") ||
-      undefined;
+    const ariaDescribedBy = buildAriaDescribedBy(
+      externalDescribedBy,
+      helperText !== undefined ? helperId : undefined,
+      maxLength !== undefined ? counterId : undefined,
+    );
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
       const next = event.target.value;
-
-      // maxLength 초과 입력 차단
-      if (maxLength !== undefined && next.length > maxLength) {
-        return;
-      }
-
-      if (!isControlled) {
-        setInternalValue(next);
-      }
+      if (maxLength !== undefined && next.length > maxLength) return;
+      if (!isControlled) setInternalValue(next);
       onChange?.(event);
     };
 
@@ -91,20 +168,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         className={cn("flex flex-col gap-1", className)}
       >
         {label && (
-          <Field.Label
-            htmlFor={id}
-            className={cn(
-              "text-label-sm text-fg-basic",
-              disabled && "text-fg-disabled",
-            )}
-          >
-            {label}
-            {required && (
-              <span aria-hidden="true" className="ml-0.5 text-fg-danger">
-                *
-              </span>
-            )}
-          </Field.Label>
+          <TextareaLabel
+            id={id}
+            label={label}
+            required={required}
+            disabled={disabled}
+          />
         )}
 
         <textarea
@@ -130,38 +199,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...rest}
         />
 
-        <div className="flex items-start justify-between gap-2">
-          {helperText !== undefined ? (
-            <Field.Description
-              id={helperId}
-              // biome-ignore lint/a11y/useSemanticElements: <output> would change Field.Description rendering; role="status" is the minimal a11y change.
-              role="status"
-              className={cn(
-                "flex items-center gap-1 text-label-xs",
-                error ? "text-fg-danger" : "text-fg-information",
-                disabled && "text-fg-disabled",
-              )}
-            >
-              {helperText}
-            </Field.Description>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-
-          {maxLength !== undefined && (
-            <span
-              id={counterId}
-              aria-live="polite"
-              aria-label={`${currentLength}자 입력됨, 최대 ${maxLength}자`}
-              className={cn(
-                "shrink-0 text-label-xs tabular-nums",
-                isOverLimit ? "text-fg-danger" : "text-fg-subtle",
-              )}
-            >
-              {currentLength}/{maxLength}
-            </span>
-          )}
-        </div>
+        <TextareaFooter
+          helperText={helperText}
+          helperId={helperId}
+          counterId={counterId}
+          currentLength={currentLength}
+          maxLength={maxLength}
+          isOverLimit={isOverLimit}
+          error={error}
+          disabled={disabled}
+        />
       </Field.Root>
     );
   },

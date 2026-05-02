@@ -21,8 +21,8 @@ export const HelpPanelOverlay = styled("div")<{ $open: boolean }>(
   }),
 );
 
-/** 패널 루트 (aside — 오른쪽 슬라이드인) */
-export const HelpPanelRoot = styled("aside")<{ $open: boolean }>(
+/** 패널 루트 (dialog — 오른쪽 슬라이드인) */
+export const HelpPanelRoot = styled("dialog")<{ $open: boolean }>(
   ({ theme, $open }) => ({
     backgroundColor: getPalette("surface.white"),
     bottom: 0,

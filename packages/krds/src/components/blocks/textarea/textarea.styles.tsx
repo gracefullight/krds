@@ -87,7 +87,7 @@ export const TextareaFooter = styled("div")({
   gap: "8px",
 });
 
-export const TextareaHelperText = styled("span")<TextareaStyleProps>(
+export const TextareaHelperText = styled("output")<TextareaStyleProps>(
   ({ error, disabled, theme }) => ({
     ...getTypography("pc.label.xsmall"),
     color: getHelperColor(disabled, error),

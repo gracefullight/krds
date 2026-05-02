@@ -12,7 +12,7 @@ import * as S from "#/components/blocks/help-panel/help-panel.styles";
  *
  * - variant="help": 오른쪽에서 슬라이드인되는 도움말 패널
  * - variant="tutorial": 단계별 따라하기 패널 (Prev/Next/Close, dot indicator)
- * - `<aside role="complementary" aria-labelledby>` 시맨틱 마크업
+ * - `<dialog aria-labelledby>` 시맨틱 마크업 — dialog role 내재
  * - Focus trap: 패널 열릴 때 내부로 포커스 이동, ESC로 닫기
  * - WCAG 2.2 AA: focus-visible, keyboard nav
  */
@@ -20,7 +20,7 @@ export default function HelpPanel(props: HelpPanelProps) {
   const { variant, open, onClose, title } = props;
 
   const titleId = useId();
-  const panelRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -53,7 +53,7 @@ export default function HelpPanel(props: HelpPanelProps) {
 
   /** 포커스 트랩: Tab / Shift+Tab 순환 */
   const handlePanelKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
+    (e: KeyboardEvent<HTMLDialogElement>) => {
       if (e.key === "Escape") {
         onClose();
         return;
@@ -103,12 +103,10 @@ export default function HelpPanel(props: HelpPanelProps) {
       {/* 오버레이 */}
       <S.HelpPanelOverlay $open={open} onClick={onClose} aria-hidden="true" />
 
-      {/* 패널 본체 */}
+      {/* 패널 본체 — <dialog> 자체가 dialog role을 내재함 */}
       <S.HelpPanelRoot
         ref={panelRef}
         $open={open}
-        // biome-ignore lint/a11y/useSemanticElements: needs role="dialog" for aria-modal focus trap, even though the underlying element is <aside>
-        role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-hidden={!open}
