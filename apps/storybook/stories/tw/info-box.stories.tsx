@@ -7,7 +7,7 @@ const meta: Meta<typeof InfoBox> = {
   component: InfoBox,
   parameters: { layout: "padded" },
   argTypes: {
-    variant: {
+    type: {
       options: ["primary", "secondary"],
       control: { type: "radio" },
     },
@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <InfoBox
-      variant="primary"
+      type="primary"
       title="개인정보 처리 안내"
       content="수집된 개인정보는 서비스 제공 목적으로만 사용됩니다."
     >
@@ -38,7 +38,7 @@ export const Default: Story = {
 export const Secondary: Story = {
   render: () => (
     <InfoBox
-      variant="secondary"
+      type="secondary"
       title="유의사항"
       content="아래 사항을 반드시 확인해 주세요."
     >
@@ -53,12 +53,12 @@ export const Slim: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
       <InfoBox
-        variant="primary"
+        type="primary"
         size="slim"
         content="로그인 후 모든 서비스를 이용하실 수 있습니다."
       />
       <InfoBox
-        variant="secondary"
+        type="secondary"
         size="slim"
         content="입력하신 정보는 암호화되어 안전하게 처리됩니다."
       />

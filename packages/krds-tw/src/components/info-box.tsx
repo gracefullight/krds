@@ -2,7 +2,7 @@ import { SystemInfo } from "@gracefullight/krds-icons";
 import { type ComponentProps, type ReactNode, forwardRef } from "react";
 import { cn } from "#/utils/cn";
 
-export type InfoBoxVariant = "primary" | "secondary";
+export type InfoBoxType = "primary" | "secondary";
 export type InfoBoxSize = "default" | "slim";
 
 export interface InfoBoxItemProps {
@@ -10,26 +10,26 @@ export interface InfoBoxItemProps {
 }
 
 export interface InfoBoxProps extends Omit<ComponentProps<"div">, "content"> {
-  variant?: InfoBoxVariant;
+  type?: InfoBoxType;
   size?: InfoBoxSize;
   title?: string;
   content?: ReactNode;
   icon?: ReactNode;
 }
 
-const containerStyles: Record<InfoBoxVariant, string> = {
+const containerStyles: Record<InfoBoxType, string> = {
   primary:
     "bg-surface-secondary-subtler outline outline-1 outline-stroke-secondary-light",
   secondary:
     "bg-surface-gray-subtler outline outline-1 outline-stroke-gray-light",
 };
 
-const iconColorStyles: Record<InfoBoxVariant, string> = {
+const iconColorStyles: Record<InfoBoxType, string> = {
   primary: "text-icon-secondary",
   secondary: "text-icon-gray",
 };
 
-const titleColorStyles: Record<InfoBoxVariant, string> = {
+const titleColorStyles: Record<InfoBoxType, string> = {
   primary: "text-fg-secondary",
   secondary: "text-fg-basic",
 };
@@ -49,7 +49,7 @@ const InfoBox = forwardRef<HTMLDivElement, InfoBoxProps>(
   (
     {
       className,
-      variant = "primary",
+      type = "primary",
       size = "default",
       title,
       content,
@@ -69,15 +69,13 @@ const InfoBox = forwardRef<HTMLDivElement, InfoBoxProps>(
         role="note"
         className={cn(
           "flex flex-col gap-3 rounded-2xl p-4",
-          containerStyles[variant],
+          containerStyles[type],
           className,
         )}
         {...props}
       >
         {isSlim ? (
-          <div
-            className={cn("flex items-center gap-2", iconColorStyles[variant])}
-          >
+          <div className={cn("flex items-center gap-2", iconColorStyles[type])}>
             <span className="shrink-0">{resolvedIcon}</span>
             {content && (
               <p className="text-body-sm text-fg-subtle">{content}</p>
@@ -87,15 +85,10 @@ const InfoBox = forwardRef<HTMLDivElement, InfoBoxProps>(
           <>
             {title && (
               <div
-                className={cn(
-                  "flex items-center gap-2",
-                  iconColorStyles[variant],
-                )}
+                className={cn("flex items-center gap-2", iconColorStyles[type])}
               >
                 <span className="shrink-0">{resolvedIcon}</span>
-                <span
-                  className={cn("text-heading-xs", titleColorStyles[variant])}
-                >
+                <span className={cn("text-heading-xs", titleColorStyles[type])}>
                   {title}
                 </span>
               </div>
