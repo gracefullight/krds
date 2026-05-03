@@ -2,7 +2,7 @@
 
 [한국어](README.md)
 
-🇰🇷 Themes and components inspired by the [Korea Design System](https://www.krds.go.kr/) — Provides principles, guidelines, and code to help design and build government web app digital services.
+🇰🇷 A theme and component library inspired by the [Korea Design System](https://www.krds.go.kr/) — providing principles, guidelines, and code to help design and build digital government services and web apps.
 
 ## Packages
 
@@ -17,6 +17,6 @@
 
 - KRDS typography and spacing rules applied
 - Accessible and contrast-friendly color palette
-- Harmonized UI components styled with user-centered KRDS design guidelines
+- UI components aligned with KRDS user-centered design guidelines
 - Easily extendable and customizable
 - Pre-built UI components for rapid development
