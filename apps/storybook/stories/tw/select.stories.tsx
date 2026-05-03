@@ -74,7 +74,7 @@ export const Disabled: Story = {
 export const Composable: Story = {
   render: () => (
     <div className="w-64">
-      <Select defaultValue="seoul">
+      <Select items={시도목록} defaultValue="seoul">
         <SelectTrigger size="medium">
           <SelectValue placeholder="시/도를 선택해주세요" />
           <SelectIconTrigger />

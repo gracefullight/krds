@@ -426,6 +426,8 @@
   --shadow-3: var(--krds-shadow-3);
 
   /* ---- Spacing (semantic gap/padding) ---- */
+  /* Base unit for Tailwind's calc(var(--spacing) * N) fallback (4px = 1 design unit) */
+  --spacing: 4px;
   --spacing-0_5: 2px;
   --spacing-1: 4px;
   --spacing-2: 8px;

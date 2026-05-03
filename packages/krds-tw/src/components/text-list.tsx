@@ -39,7 +39,7 @@ const markerStyles: Record<TextListMarker, string> = {
   disc: "list-disc",
   circle: "list-[circle]",
   square: "list-[square]",
-  dash: "list-['\\2013\\20']",
+  dash: "list-['–_']",
   decimal: "list-decimal",
   "decimal-leading-zero": "list-[decimal-leading-zero]",
   "lower-alpha": "list-[lower-alpha]",

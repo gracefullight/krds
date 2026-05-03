@@ -97,15 +97,16 @@ const SelectValue = forwardRef<HTMLSpanElement, SelectValueProps>(
   ({ className, placeholder, children, ...props }, ref) => (
     <BaseSelect.Value
       ref={ref}
-      className={cn("flex-1 truncate text-left", className)}
+      data-placeholder-text={placeholder}
+      className={cn(
+        "flex-1 truncate text-left",
+        placeholder &&
+          "empty:before:content-[attr(data-placeholder-text)] empty:before:text-fg-disabled",
+        className,
+      )}
       {...props}
     >
-      {/* Base UI renders children or falls back to the selected item label */}
-      {children ??
-        ((value: string | null) =>
-          value == null || value === "" ? (
-            <span className="text-fg-disabled">{placeholder}</span>
-          ) : undefined)}
+      {children}
     </BaseSelect.Value>
   ),
 );
