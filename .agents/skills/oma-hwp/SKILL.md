@@ -114,7 +114,7 @@ Convert Korean HWP-family documents into readable Markdown or structured JSON wh
 ### Canonical command path
 ```bash
 bunx kordoc@latest "{input_path}" -o "{output_path}"
-bun run ".agents/skills/oma-hwp/resources/flatten-tables.ts" "{output_path}"
+node ".agents/skills/oma-hwp/resources/flatten-tables.ts" "{output_path}"
 ```
 
 For batch conversion, use an explicit output directory:
@@ -155,7 +155,7 @@ bunx kordoc@latest "{input_pattern}" -d "{output_dir}"
 | HWPX | `.hwpx` | Full support incl. nested tables, merged cells |
 | HWPML | `.hwp` (XML variant) | Auto-detected by signature |
 
-> kordoc also parses PDF / XLSX / DOCX. Those are intentionally outside this skill's scope — see "When NOT to use".
+> kordoc also parses PDF / XLSX / DOCX. Those are intentionally outside this skill's scope; see "When NOT to use".
 
 ## References
 - Execution protocol: `resources/execution-protocol.md`

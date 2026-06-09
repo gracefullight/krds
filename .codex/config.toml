@@ -1,10 +1,23 @@
 [features]
-codex_hooks = true
+goals = true
+child_agents_md = true
 
+hooks = true
 [mcp_servers.serena]
-command = "uvx"
-args = [ "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server", "--context", "codex", "--project", "." ]
+command = "serena"
+args = [ "start-mcp-server", "--context", "codex", "--project", ".", "--open-web-dashboard", "false" ]
+startup_timeout_sec = 90
 
 [mcp_servers.serena.env]
 SERENA_LOG_LEVEL = "info"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = [ "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--isolated" ]
+
+[analytics]
+enabled = false
+
+[feedback]
+enabled = false
 

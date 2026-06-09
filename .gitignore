@@ -52,3 +52,6 @@ storybook-static
 .agents/results/
 .agents/state/
 docs/plans/
+
+# oh-my-agent runtime (local artifacts — do not commit)
+.antigravitycli/

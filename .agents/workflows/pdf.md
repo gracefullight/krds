@@ -1,8 +1,10 @@
 ---
-description: Convert PDF to Markdown using opendataloader-pdf — extracts text, tables, headings, and images with correct reading order
+name: pdf
+description: Convert PDF to Markdown using opendataloader-pdf, extracting text, tables, headings, and images with correct reading order
+disable-model-invocation: true
 ---
 
-# MANDATORY RULES — VIOLATION IS FORBIDDEN
+# MANDATORY RULES: VIOLATION IS FORBIDDEN
 
 - **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip steps.** Execute from Step 1 in order.

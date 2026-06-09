@@ -10,9 +10,9 @@ Run the **Clarification Protocol** in `SKILL.md` before shelling out.
 2. Resolve defaults from `config/image-config.yaml` → env vars → CLI flags (lowest to highest precedence).
 3. Validate:
    - `count` ∈ [1, 5]
-   - `size` ∈ {`1024x1024`, `1024x1536`, `1536x1024`, `auto`}
+   - `size` is `auto` or any `WxH` passing `size-guard.ts` (each edge ∈ [16, 3840], multiples of 16, aspect ratio 1:3..3:1).
    - `quality` ∈ {`low`, `medium`, `high`, `auto`}
-   - `vendor` ∈ {`auto`, `codex`, `pollinations`, `gemini`, `all`} or a concrete registered name.
+   - `vendor` ∈ {`auto`, `codex`, `pollinations`, `antigravity`, `all`} or a concrete registered name.
    - `reference` (if any): each path exists, is a regular file ≤ 5MB, magic-byte-matches PNG/JPEG/GIF/WebP, ≤ 10 total, and duplicate paths are rejected with exit 4.
 4. If invalid: exit code 4 and a message identifying the offending field.
 
@@ -21,15 +21,15 @@ Run the **Clarification Protocol** in `SKILL.md` before shelling out.
 When `--reference <path...>` is supplied:
 
 1. Validate every path via `reference-guard.ts`. On failure → exit 4.
-2. Reject the request if the selected vendor(s) do not support references (currently only `codex` and `gemini`). Pollinations returns exit 4 with a hint to switch vendor.
+2. Reject the request if the selected vendor(s) do not support references (currently only `codex` and `antigravity`). Pollinations returns exit 4 with a hint to switch vendor.
 3. Pass validated absolute paths through `GenerateInput.referenceImages`:
    - `codex` provider appends `-i <path>` per reference to `codex exec` and adds a guidance sentence to the instruction text.
-   - `gemini` api strategy reads each file, base64-encodes it, and prepends `{ inlineData: { mimeType, data } }` parts before the text prompt.
+   - `antigravity` provider copies each reference into a per-run temp dir, exposes it to agy via `--add-dir <tmpdir>`, and lists the resulting paths inline in the agy prompt.
 4. Record reference paths in `manifest.json` under `reference_images` (top-level array of absolute paths).
 
 ### Auto-forward attached images (MANDATORY)
 
-If the user asks to generate/edit an image AND a host-attached image is visible to the agent (e.g. `[Image: source: <path>]` in a Claude Code system message, Antigravity workspace upload, or explicit user-provided path), the agent MUST pass it via `--reference <path>`. Do not fall back to describing the image in prose. Do not ask the user to re-type the path. If `oma image generate --help` shows no `--reference` flag, instruct the user to run `oma update` and retry — do not silently degrade.
+If the user asks to generate/edit an image AND a host-attached image is visible to the agent (e.g. `[Image: source: <path>]` in a Claude Code system message, Antigravity workspace upload, or explicit user-provided path), the agent MUST pass it via `--reference <path>`. Do not fall back to describing the image in prose. Do not ask the user to re-type the path. If `oma image generate --help` shows no `--reference` flag, instruct the user to run `oma update` and retry; do not silently degrade.
 
 ### Host-Specific Reference Paths
 
@@ -48,8 +48,8 @@ Agents should prefer user-supplied explicit paths (e.g., `~/Downloads/otter.jpeg
 
 1. Call `health()` on every registered provider in parallel.
 2. Classify:
-   - `healthy` — `ok: true`
-   - `unhealthy` — `ok: false` with a hint
+   - `healthy`: `ok: true`
+   - `unhealthy`: `ok: false` with a hint
 3. Decide based on `--vendor`:
    - `auto`: continue with every `healthy` provider. If zero → exit 5.
    - `all`: every provider must be healthy. Any missing → exit 5 naming the specific vendor.
@@ -71,9 +71,9 @@ Agents should prefer user-supplied explicit paths (e.g., `~/Downloads/otter.jpeg
 
 ## Step 4: Dispatch
 
-- **Single vendor** — run `provider.generate(input)` sequentially.
-- **Multi-vendor (`all` or `auto` with 2+ healthy)** — `Promise.allSettled` across providers.
-- Providers with sub-strategies escalate internally (e.g. Gemini: `mcp → stream → api`). Record every strategy attempt (ok/skipped/failed with reason).
+- **Single vendor**: run `provider.generate(input)` sequentially.
+- **Multi-vendor (`all` or `auto` with 2+ healthy)**: `Promise.allSettled` across providers.
+- Providers with sub-strategies escalate internally and record every strategy attempt (ok/skipped/failed with reason).
 - Non-retryable errors (safety-refused, invalid-input) short-circuit the escalation chain.
 
 ## Step 5: Write Artifacts
