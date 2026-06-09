@@ -55,3 +55,6 @@ docs/plans/
 
 # oh-my-agent runtime (local artifacts — do not commit)
 .antigravitycli/
+
+# local scratch
+tmp/
