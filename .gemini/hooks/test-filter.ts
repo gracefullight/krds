@@ -3,26 +3,30 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { makePreToolOutput, resolveGitRoot, type Vendor } from "./types.ts";
+import { resolveGitRoot } from "./fs-utils.ts";
+import { makePreToolOutput } from "./hook-output.ts";
+import type { HandlerCtx, HandlerResult, HookInput, Vendor } from "./types.ts";
 
 // --- Vendor detection (same logic as keyword-detector.ts) ---
 
-function inferVendorFromScriptPath(): Vendor | null {
-  const path = import.meta.path;
-  if (path.includes(`${join(".cursor", "hooks")}`)) return "cursor";
-  if (path.includes(`${join(".qwen", "hooks")}`)) return "qwen";
-  if (path.includes(`${join(".claude", "hooks")}`)) return "claude";
-  if (path.includes(`${join(".gemini", "hooks")}`)) return "gemini";
-  if (path.includes(`${join(".codex", "hooks")}`)) return "codex";
-  return null;
-}
-
 function detectVendor(input: Record<string, unknown>): Vendor {
   const event = input.hook_event_name as string | undefined;
-  const byScriptPath = inferVendorFromScriptPath();
-  if (byScriptPath) return byScriptPath;
+  const _hookEventName = input.hookEventName as string | undefined;
+
+  // pi spawns this script from `.pi/extensions/oma/`; trust the script path.
+  if (import.meta.filename.includes(`${join(".pi", "extensions")}`))
+    return "pi";
+
+  if (process.env.GROK_WORKSPACE_ROOT) return "grok";
+  if (process.env.KIRO_PROJECT_DIR) return "kiro";
+
   if (event === "BeforeTool") return "gemini";
-  if (event === "PreToolUse" && "session_id" in input) return "codex";
+  if (event === "preToolUse" || _hookEventName === "preToolUse") return "kiro";
+  if (event === "PreToolUse" && process.env.ANTIGRAVITY_PROJECT_DIR)
+    return "antigravity";
+  if (event === "PreToolUse") {
+    if ("session_id" in input && !("sessionId" in input)) return "codex";
+  }
   if (process.env.QWEN_PROJECT_DIR) return "qwen";
   return "claude";
 }
@@ -36,8 +40,25 @@ function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
     case "gemini":
       dir = process.env.GEMINI_PROJECT_DIR || process.cwd();
       break;
+    case "antigravity":
+      dir =
+        (input.cwd as string) ||
+        process.env.ANTIGRAVITY_PROJECT_DIR ||
+        process.env.AGY_PROJECT_DIR ||
+        process.cwd();
+      break;
     case "qwen":
       dir = process.env.QWEN_PROJECT_DIR || process.cwd();
+      break;
+    case "grok":
+      dir =
+        process.env.GROK_WORKSPACE_ROOT ||
+        (input.cwd as string) ||
+        process.cwd();
+      break;
+    case "kiro":
+      dir =
+        process.env.KIRO_PROJECT_DIR || (input.cwd as string) || process.cwd();
       break;
     default:
       dir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
@@ -52,8 +73,18 @@ function getHookDir(vendor: Vendor): string {
       return ".codex/hooks";
     case "gemini":
       return ".gemini/hooks";
+    case "antigravity":
+      return ".gemini/antigravity-cli/hooks";
     case "qwen":
       return ".qwen/hooks";
+    case "grok":
+      return ".grok/hooks";
+    case "kiro":
+      return ".kiro/hooks";
+    case "pi":
+      // pi keeps the core scripts (and filter-test-output.sh) inside the
+      // bridge's directory extension, not a dedicated hooks dir.
+      return join(".pi", "extensions", "oma");
     default:
       return ".claude/hooks";
   }
@@ -108,58 +139,99 @@ interface PreToolUseInput {
   session_id?: string;
   sessionId?: string;
   cwd?: string;
+  // Index signature so the typed payload is accepted by the vendor-agnostic
+  // helpers detectVendor()/getProjectDir() which take Record<string, unknown>.
+  [key: string]: unknown;
 }
 
-// --- Main ---
+// ── Pure handler (canonical ABI) ─────────────────────────────
 
-// Use fd 0 (sync) instead of Bun.stdin.text() — works under both Bun and
-// Node, and avoids stdin-buffering timing differences between hosts.
-// Fallback: when OMA_HOOK_INPUT_FILE is set, read from that file. This
-// makes the hook testable from environments (vitest worker pools under
-// bun) where piping stdin to a child process is unreliable.
-const inputFile = process.env.OMA_HOOK_INPUT_FILE;
-const raw = inputFile
-  ? readFileSync(inputFile, "utf-8")
-  : readFileSync(0, "utf-8");
-if (!raw.trim()) process.exit(0);
+/**
+ * Pure decision function — the single logic source for test-filter.
+ *
+ * Returns a `mutate` HandlerResult when a test command should be piped through
+ * the failure-filter script, or `null` when the input is not a test command /
+ * the filter script is not installed.
+ * `ctx.cwd` must be the resolved git-root project directory.
+ */
+export async function run(
+  input: HookInput,
+  ctx: HandlerCtx,
+): Promise<HandlerResult | null> {
+  if (input.kind !== "pre_tool") return null;
 
-const input: PreToolUseInput = JSON.parse(raw);
+  const { toolName, toolInput, cwd: projectDir } = input;
+  const { vendor } = ctx;
 
-// Gemini uses run_shell_command; Claude-family uses Bash.
-if (input.tool_name !== "Bash" && input.tool_name !== "run_shell_command") {
-  process.exit(0);
+  // Gemini uses run_shell_command; Claude-family uses Bash.
+  if (toolName !== "Bash" && toolName !== "run_shell_command") return null;
+
+  const command = toolInput.command as string | undefined;
+  if (!command) return null;
+
+  const isTestCommand = TEST_PATTERNS.some((p) => p.test(command));
+  if (!isTestCommand) return null;
+
+  const isExcluded = EXCLUDE_PATTERNS.some((p) => p.test(command));
+  if (isExcluded) return null;
+
+  const filterScript = join(
+    projectDir,
+    getHookDir(vendor),
+    "filter-test-output.sh",
+  );
+  if (!existsSync(filterScript)) return null;
+
+  const filteredCmd = `set -o pipefail; (${command}) 2>&1 | bash "${filterScript}"`;
+  const updatedInput: Record<string, unknown> = {
+    ...toolInput,
+    command: filteredCmd,
+  };
+
+  return { type: "mutate", updatedInput };
 }
 
-const command = input.tool_input?.command;
-if (!command) process.exit(0);
+// ── Standalone entry (pi subprocess / direct bun invocation) ──
 
-// Check if this is a test command
-const isTestCommand = TEST_PATTERNS.some((p) => p.test(command));
-if (!isTestCommand) process.exit(0);
+function main() {
+  // Use fd 0 (sync) instead of Bun.stdin.text() — works under both Bun and
+  // Node, and avoids stdin-buffering timing differences between hosts.
+  // Fallback: when OMA_HOOK_INPUT_FILE is set, read from that file. This
+  // makes the hook testable from environments (vitest worker pools under
+  // bun) where piping stdin to a child process is unreliable.
+  const inputFile = process.env.OMA_HOOK_INPUT_FILE;
+  const raw = inputFile
+    ? readFileSync(inputFile, "utf-8")
+    : readFileSync(0, "utf-8");
+  if (!raw.trim()) process.exit(0);
 
-// Skip if it's a non-test use of test tool names (install, cat, etc.)
-const isExcluded = EXCLUDE_PATTERNS.some((p) => p.test(command));
-if (isExcluded) process.exit(0);
+  const parsed: PreToolUseInput = JSON.parse(raw);
 
-// Detect vendor and resolve project dir
-const vendor = detectVendor(input);
-const projectDir = getProjectDir(vendor, input);
-const filterScript = join(
-  projectDir,
-  getHookDir(vendor),
-  "filter-test-output.sh",
-);
+  const vendor = detectVendor(parsed);
+  const projectDir = getProjectDir(vendor, parsed);
 
-// Skip filtering if the script doesn't exist (hooks not fully installed)
-if (!existsSync(filterScript)) process.exit(0);
+  // Build canonical HookInput and delegate to run() — single logic source.
+  const toolInput: Record<string, unknown> = {
+    ...(parsed.tool_input ?? {}),
+  };
+  const hookInput: HookInput = {
+    kind: "pre_tool",
+    toolName: parsed.tool_name,
+    toolInput,
+    cwd: projectDir,
+  };
+  const ctx: HandlerCtx = { vendor, cwd: projectDir };
 
-// Rewrite command to pipe through filter
-const filteredCmd = `set -o pipefail; (${command}) 2>&1 | bash "${filterScript}"`;
+  run(hookInput, ctx)
+    .then((result) => {
+      if (result && result.type === "mutate") {
+        console.log(makePreToolOutput(vendor, result.updatedInput));
+      }
+      process.exit(0);
+    })
+    .catch(() => process.exit(0));
+}
 
-// Return updated input with all original fields preserved
-const updatedInput: Record<string, unknown> = {
-  ...input.tool_input,
-  command: filteredCmd,
-};
-
-console.log(makePreToolOutput(vendor, updatedInput));
+if (import.meta.main) {
+  main();
+}

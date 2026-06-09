@@ -14,7 +14,17 @@
     "vendor": {
       "type": "string",
       "description": "Vendor identifier matching VendorType in cli/types.",
-      "enum": ["claude", "codex", "cursor", "gemini", "qwen"]
+      "enum": [
+        "antigravity",
+        "claude",
+        "codex",
+        "commandcode",
+        "cursor",
+        "gemini",
+        "grok",
+        "kiro",
+        "qwen"
+      ]
     },
     "hookDir": {
       "type": "string",
@@ -50,7 +60,11 @@
     },
     "statusLine": {
       "$ref": "#/$defs/hookRef",
-      "description": "Hook script for the status line display (Claude Code only)."
+      "description": "Hook script for the status line display (Claude / agy use root statusLine; Qwen nests under ui via statusLineKey)."
+    },
+    "statusLineKey": {
+      "type": "string",
+      "description": "Parent settings key to nest statusLine under. Omit for root-level (Claude/agy). Qwen requires \"ui\" — a root-level statusLine is ignored by the Qwen renderer."
     },
     "extra": {
       "type": "object",

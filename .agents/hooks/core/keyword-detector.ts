@@ -20,20 +20,131 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import {
-  type ModeState,
-  makePromptOutput,
-  resolveGitRoot,
-  type Vendor,
+  agyConversationId,
+  agyProjectDir,
+  isAgyInput,
+  readAgyPrompt,
+} from "./agy-input.ts";
+import { VENDORS } from "./constants.ts";
+import { resolveGitRoot } from "./fs-utils.ts";
+import { clearGrokContext } from "./grok-context.ts";
+import { makePromptOutput } from "./hook-output.ts";
+// triggers.json is imported statically: the bundler inlines it into the oma
+// binary (bundled `oma hook` path needs no file on disk), while a standalone
+// bun run resolves the sibling file next to this module (pi / direct run).
+import embeddedTriggers from "./triggers.json" with { type: "json" };
+import type {
+  HandlerCtx,
+  HandlerResult,
+  HookInput,
+  ModeState,
+  Vendor,
 } from "./types.ts";
+
+// ── Unicode normalization ─────────────────────────────────────
+
+/**
+ * Normalize text for keyword matching.
+ * NFKC converts fullwidth Latin characters produced by CJK IMEs
+ * (e.g. ｐａｒａｌｌｅｌ → parallel) to their ASCII equivalents,
+ * then lowercases the result.
+ *
+ * Placed here so that Task 3 (KEYWORD_SKIP_PREDICATES) and any
+ * future layers can import and reuse the same normalization path.
+ */
+export function normalizeForMatching(text: string): string {
+  return text.normalize("NFKC").toLowerCase();
+}
+
+// ── CLI Invocation Guard ──────────────────────────────────────
+
+/**
+ * Brands that count as CLI invocations: Oma plus the host LLM CLIs declared
+ * in `VENDORS` (claude, codex, cursor, gemini, qwen). The vendor list is
+ * the single source of truth for hook-supported runtimes; pulling from it
+ * here keeps the brand set in sync when a new vendor is added.
+ *
+ * Third-party harnesses (omc, omx, omo) are intentionally NOT included: they
+ * are separate projects, not host CLIs a user would invoke from an Oma
+ * session. opencode is also not a supported vendor in this codebase.
+ */
+const CLI_INVOCATION_BRANDS = ["oma", ...VENDORS] as const;
+const CLI_INVOCATION_SIGNALS = [
+  "agent",
+  "auto",
+  "exec",
+  "run",
+  "spawn",
+  String.raw`--\S+`,
+  String.raw`\S+:\S+`,
+] as const;
+
+const BRANDS_RE_SOURCE = CLI_INVOCATION_BRANDS.join("|");
+const SIGNALS_RE_SOURCE = CLI_INVOCATION_SIGNALS.join("|");
+
+/**
+ * Matches CLI invocations at the start of the prompt.
+ *
+ * All brand names require an explicit CLI signal after the brand. Brand-only
+ * prefixes are NOT treated as CLI invocations because every brand name can
+ * appear in natural-language usage ('claude, review this code', 'oma
+ * 프로젝트의 brainstorm 알려줘', 'cursor in the editor moves'). Requiring
+ * an explicit signal avoids false-positive skips on conversational prompts.
+ *
+ * Two accepted invocation shapes:
+ *
+ *   1. Slash form: '/oma:brainstorm', '/claude:exec'. The leading slash
+ *      plus brand-colon prefix is a definitive CLI marker. Matches
+ *      '/<brand>:'.
+ *
+ *   2. Bare form: '<brand>\s+<signal>' where <signal> is one of the
+ *      enumerated subcommand verbs (agent / auto / exec / run / spawn),
+ *      a --flag, or a colon-namespaced subcommand ('agent:spawn').
+ *      Examples: 'oma agent:spawn brainstorm', 'claude --help',
+ *      'codex exec --workflow ralph', 'gemini agent', 'cursor agent',
+ *      'qwen run'.
+ */
+export const CLI_INVOCATION_AT_START = new RegExp(
+  `^\\s*(?:\\/(?:${BRANDS_RE_SOURCE}):|(?:${BRANDS_RE_SOURCE})\\s+(?:${SIGNALS_RE_SOURCE}))`,
+  "i",
+);
+
+/**
+ * Per-workflow skip predicates. A workflow listed here will be skipped when
+ * its predicate returns true for the (already-normalized) cleaned text.
+ * The map is intentionally empty at boot — populate it to add workflow-specific
+ * overrides without restructuring the matching loop.
+ */
+export const KEYWORD_SKIP_PREDICATES: Record<
+  string,
+  (text: string) => boolean
+> = {};
+
+/**
+ * Default predicate: skip ALL workflow triggers when the prompt starts with a
+ * CLI invocation of `oma` or one of the host LLM CLIs in `VENDORS`. Applies
+ * to every workflow unless an explicit per-workflow predicate in
+ * KEYWORD_SKIP_PREDICATES overrides it.
+ *
+ * The regex is applied to the NFKC-lowercased `cleaned` text produced by
+ * normalizeForMatching. All brand names are ASCII so NFKC has no effect on
+ * them; the `^\s*` start-anchor is unaffected by normalization.
+ */
+export function shouldSkipAllWorkflows(text: string): boolean {
+  return CLI_INVOCATION_AT_START.test(text);
+}
 
 // ── Guard 1: UserPromptSubmit-only trigger ────────────────────
 // Hook event names that represent genuine user input (not agent responses)
 const VALID_USER_EVENTS = new Set([
   "UserPromptSubmit",
+  "user_prompt_submit", // Grok
+  "userPromptSubmit", // Kiro
   "beforeSubmitPrompt", // Cursor
   "BeforeAgent", // Gemini (fires before agent processes user prompt)
+  "PreInvocation", // Antigravity CLI (agy)
 ]);
 
 /**
@@ -163,19 +274,43 @@ export function recordKwTrigger(
 // ── Vendor Detection ──────────────────────────────────────────
 
 function inferVendorFromScriptPath(): Vendor | null {
-  const path = import.meta.path;
+  const path = import.meta.filename;
+  if (path.includes(`${join(".gemini", "antigravity-cli", "hooks")}`))
+    return "antigravity";
   if (path.includes(`${join(".cursor", "hooks")}`)) return "cursor";
   if (path.includes(`${join(".qwen", "hooks")}`)) return "qwen";
   if (path.includes(`${join(".claude", "hooks")}`)) return "claude";
   if (path.includes(`${join(".gemini", "hooks")}`)) return "gemini";
   if (path.includes(`${join(".codex", "hooks")}`)) return "codex";
+  if (path.includes(`${join(".grok", "hooks")}`)) return "grok";
+  if (path.includes(`${join(".kiro", "hooks")}`)) return "kiro";
   return null;
 }
 
 function detectVendor(input: Record<string, unknown>): Vendor {
   const event = input.hook_event_name as string | undefined;
+  const hookEventName = input.hookEventName as string | undefined;
   const byScriptPath = inferVendorFromScriptPath();
   if (byScriptPath) return byScriptPath;
+
+  // agy (Antigravity) sends no hook_event_name; detect by its stdin shape.
+  if (isAgyInput(input)) return "antigravity";
+
+  // Grok uses hookEventName (e.g. "user_prompt_submit") + GROK_* env vars
+  if (process.env.GROK_WORKSPACE_ROOT || hookEventName?.includes("prompt")) {
+    // Prefer explicit grok signal; fall through to other checks only if ambiguous
+    if (process.env.GROK_WORKSPACE_ROOT) return "grok";
+  }
+
+  if (
+    process.env.KIRO_PROJECT_DIR ||
+    event === "userPromptSubmit" ||
+    hookEventName === "userPromptSubmit"
+  ) {
+    return "kiro";
+  }
+
+  if (event === "PreInvocation") return "antigravity";
   if (event === "BeforeAgent") return "gemini";
   if (event === "beforeSubmitPrompt") return "cursor";
   if (event === "UserPromptSubmit") {
@@ -197,8 +332,27 @@ function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
     case "gemini":
       dir = process.env.GEMINI_PROJECT_DIR || process.cwd();
       break;
+    case "antigravity":
+      dir =
+        agyProjectDir(input) ||
+        (input.cwd as string) ||
+        process.env.ANTIGRAVITY_PROJECT_DIR ||
+        process.env.AGY_PROJECT_DIR ||
+        process.env.GEMINI_PROJECT_DIR ||
+        process.cwd();
+      break;
     case "qwen":
       dir = process.env.QWEN_PROJECT_DIR || process.cwd();
+      break;
+    case "grok":
+      dir =
+        process.env.GROK_WORKSPACE_ROOT ||
+        (input.cwd as string) ||
+        process.cwd();
+      break;
+    case "kiro":
+      dir =
+        process.env.KIRO_PROJECT_DIR || (input.cwd as string) || process.cwd();
       break;
     default:
       dir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
@@ -209,7 +363,10 @@ function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
 
 function getSessionId(input: Record<string, unknown>): string {
   return (
-    (input.sessionId as string) || (input.session_id as string) || "unknown"
+    (input.sessionId as string) ||
+    (input.session_id as string) ||
+    agyConversationId(input) ||
+    "unknown"
   );
 }
 
@@ -221,6 +378,7 @@ interface TriggerConfig {
     {
       persistent: boolean;
       keywords: Record<string, string[]>;
+      patterns?: Record<string, string[]>;
     }
   >;
   informationalPatterns: Record<string, string[]>;
@@ -229,9 +387,9 @@ interface TriggerConfig {
   extensionRouting?: Record<string, string[]>;
 }
 
+/** Load the triggers config from the embedded (bundler-inlined / sibling-resolved) JSON. */
 function loadConfig(): TriggerConfig {
-  const configPath = join(dirname(import.meta.path), "triggers.json");
-  return JSON.parse(readFileSync(configPath, "utf-8"));
+  return structuredClone(embeddedTriggers) as TriggerConfig;
 }
 
 function detectLanguage(projectDir: string): string {
@@ -268,21 +426,51 @@ export function buildPatterns(
     if (cjkScripts.includes(lang) || /[^\p{ASCII}]/u.test(kw)) {
       return new RegExp(escaped, "i");
     }
-    return new RegExp(`\\b${escaped}\\b`, "i");
+    return new RegExp(`(?:^|[^\\w-])${escaped}(?:$|[^\\w-])`, "i");
   });
+}
+
+/**
+ * Build raw regex patterns from a workflow's `patterns` field.
+ * Unlike buildPatterns, these strings are compiled directly without
+ * escaping or word-boundary wrapping — pattern authors are responsible
+ * for boundary handling. Invalid patterns are skipped silently.
+ */
+export function buildRawPatterns(
+  patterns: Record<string, string[]> | undefined,
+  lang: string,
+): RegExp[] {
+  if (!patterns) return [];
+  const all = [
+    ...(patterns["*"] ?? []),
+    ...(patterns.en ?? []),
+    ...(lang !== "en" ? (patterns[lang] ?? []) : []),
+  ];
+  const compiled: RegExp[] = [];
+  for (const raw of all) {
+    try {
+      compiled.push(new RegExp(raw, "iu"));
+    } catch {
+      // Skip invalid regex — surfaces during config edit, not at runtime
+    }
+  }
+  return compiled;
 }
 
 function buildInformationalPatterns(
   config: TriggerConfig,
   lang: string,
 ): RegExp[] {
-  const patterns = [...(config.informationalPatterns.en ?? [])];
+  const patterns = [
+    ...(config.informationalPatterns["*"] ?? []),
+    ...(config.informationalPatterns.en ?? []),
+  ];
   if (lang !== "en") {
     patterns.push(...(config.informationalPatterns[lang] ?? []));
   }
   return patterns.map((p) => {
     if (/[^\p{ASCII}]/u.test(p)) return new RegExp(escapeRegex(p), "i");
-    return new RegExp(`\\b${escapeRegex(p)}\\b`, "i");
+    return new RegExp(`(?:^|[^\\w-])${escapeRegex(p)}(?:$|[^\\w-])`, "i");
   });
 }
 
@@ -324,6 +512,7 @@ const QUESTION_PATTERNS: RegExp[] = [
   /^.*참고할/,
   /^.*비교해/,
   /^.*분석해/,
+  /^.*분석도/,
   /^.*있냐/,
   /^.*있나\?/,
   /^.*있는지/,
@@ -333,6 +522,9 @@ const QUESTION_PATTERNS: RegExp[] = [
   /^.*뭐가\s*있/,
   /^.*어떤\s*(게|것|거)\s*있/,
   /^.*차이가?\s*뭐/,
+  // Korean meta-continuation patterns (referring to prior discussion)
+  /^.*그것도/,
+  /^.*보강할/,
   // English question patterns
   /^.*\bis there\b/i,
   /^.*\bare there\b/i,
@@ -342,7 +534,7 @@ const QUESTION_PATTERNS: RegExp[] = [
 ];
 
 export function isAnalyticalQuestion(prompt: string): boolean {
-  const firstLine = prompt.split("\n")[0].trim();
+  const firstLine = (prompt.split("\n")[0] ?? "").trim();
   return QUESTION_PATTERNS.some((p) => p.test(firstLine));
 }
 
@@ -353,6 +545,34 @@ export function stripCodeBlocks(text: string): string {
     .replace(/`{3,}[^`]*`{3,}/g, "") // single-line fenced blocks (```...```)
     .replace(/`[^`\n]+`/g, "") // inline code (no newlines allowed)
     .replace(/"[^"\n]*"/g, ""); // quoted strings
+}
+
+// System echo block patterns — strip pasted hook self-output to prevent
+// re-trigger loops where the user pastes back oma's own context messages.
+const SYSTEM_ECHO_LINE_PATTERNS: RegExp[] = [
+  /^.*\[OMA WORKFLOW:[^\]]*\].*$/gim,
+  /^.*\[OMA PERSISTENT MODE:[^\]]*\].*$/gim,
+  /^.*\[OMA AGENT HINT:[^\]]*\].*$/gim,
+  /^.*\[MAGIC KEYWORD:[^\]]*\].*$/gim,
+  /^.*\[MAGIC KEYWORDS? DETECTED:[^\]]*\].*$/gim,
+  /^.*Stop hook (?:blocking error|feedback|stopped continuation).*$/gim,
+  /^.*PreToolUse:[^\n]*hook additional context:.*$/gim,
+  /^.*PostToolUse:[^\n]*hook additional context:.*$/gim,
+  /^.*hookSpecificOutput.*$/gim,
+  /^.*The \/[a-z-]+ workflow is still active.*$/gim,
+];
+
+/**
+ * Strip pasted system-echo blocks (oma's own hook outputs) so meta-discussion
+ * about workflows doesn't re-trigger via paste-back. Operates line-by-line
+ * to preserve surrounding user text.
+ */
+export function stripSystemEchoes(text: string): string {
+  let cleaned = text;
+  for (const pattern of SYSTEM_ECHO_LINE_PATTERNS) {
+    cleaned = cleaned.replace(pattern, "");
+  }
+  return cleaned;
 }
 
 export function startsWithSlashCommand(prompt: string): boolean {
@@ -393,8 +613,8 @@ export function detectExtensions(prompt: string): string[] {
   const extPattern = /\.([a-zA-Z]{1,12})\b/g;
   const extensions = new Set<string>();
   for (const match of prompt.matchAll(extPattern)) {
-    const ext = match[1].toLowerCase();
-    if (!EXCLUDE_EXTS.has(ext)) {
+    const ext = match[1]?.toLowerCase();
+    if (ext && !EXCLUDE_EXTS.has(ext)) {
       extensions.add(ext);
     }
   }
@@ -453,6 +673,35 @@ function activateMode(
   );
 }
 
+async function activateL1WorkflowSession(
+  projectDir: string,
+  workflow: string,
+  vendor: string,
+  vendorSid: string,
+  category = "main",
+): Promise<string | null> {
+  try {
+    const [{ setActiveSession }, { createEventId, emitEvent }] =
+      await Promise.all([
+        import("./state-marker.ts"),
+        import("./state-emit.ts"),
+      ]);
+    const sid = `oma-${createEventId()}`;
+    setActiveSession(projectDir, category, sid);
+    await emitEvent(projectDir, sid, {
+      kind: "session.created",
+      vendor,
+      vendorSid,
+      payload: { workflow, category },
+    });
+    return sid;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    process.stderr.write(`[oma] L1 session activation failed: ${msg}\n`);
+    return null;
+  }
+}
+
 // ── Deactivation Detection ───────────────────────────────────
 
 export const DEACTIVATION_PHRASES: Record<string, string[]> = {
@@ -474,8 +723,10 @@ export function isDeactivationRequest(prompt: string, lang: string): boolean {
     ...(DEACTIVATION_PHRASES.en ?? []),
     ...(lang !== "en" ? (DEACTIVATION_PHRASES[lang] ?? []) : []),
   ];
-  const lower = prompt.toLowerCase();
-  return phrases.some((phrase) => lower.includes(phrase.toLowerCase()));
+  const normalized = normalizeForMatching(prompt);
+  return phrases.some((phrase) =>
+    normalized.includes(normalizeForMatching(phrase)),
+  );
 }
 
 export function deactivateAllPersistentModes(
@@ -501,27 +752,32 @@ export function deactivateAllPersistentModes(
   }
 }
 
-// ── Main ──────────────────────────────────────────────────────
+// ── Pure handler (canonical ABI) ─────────────────────────────
 
-async function main() {
-  const raw = readFileSync(0, "utf-8");
-  let input: Record<string, unknown>;
-  try {
-    input = JSON.parse(raw);
-  } catch {
-    process.exit(0);
-  }
+/**
+ * Pure decision function — the single logic source for keyword detection.
+ *
+ * Called in-process by `oma hook` dispatch (Task 3+) and by the standalone
+ * `main()` entry below (pi subprocess path). Both paths share exactly this
+ * code; no business logic is duplicated.
+ *
+ * Returns a `context` HandlerResult when a workflow keyword matches, or
+ * `null` when no match / early-exit condition (no stdout side-effect here).
+ *
+ * NOTE: `ctx.cwd` is expected to be the resolved git-root project directory,
+ * as computed by `getProjectDir()` in the standalone path.
+ */
+export async function run(
+  input: HookInput,
+  ctx: HandlerCtx,
+): Promise<HandlerResult | null> {
+  if (input.kind !== "prompt") return null;
 
-  // Guard 1: Only process genuine user prompts — skip agent-generated content
-  if (!isGenuineUserPrompt(input)) process.exit(0);
+  const { prompt } = input;
+  const { vendor, cwd: projectDir, sid: sessionId = "unknown" } = ctx;
 
-  const vendor = detectVendor(input);
-  const projectDir = getProjectDir(vendor, input);
-  const sessionId = getSessionId(input);
-  const prompt = (input.prompt as string) ?? "";
-
-  if (!prompt.trim()) process.exit(0);
-  if (startsWithSlashCommand(prompt)) process.exit(0);
+  if (!prompt.trim()) return null;
+  if (startsWithSlashCommand(prompt)) return null;
 
   const config = loadConfig();
   const lang = detectLanguage(projectDir);
@@ -529,11 +785,17 @@ async function main() {
   // Check for deactivation request before workflow detection
   if (isDeactivationRequest(prompt, lang)) {
     deactivateAllPersistentModes(projectDir, sessionId);
-    process.exit(0);
+    // Grok's resume context lives in a session-start file, not L1 stdout — clear it.
+    if (vendor === "grok") clearGrokContext(projectDir);
+    return null;
   }
+
   const infoPatterns = buildInformationalPatterns(config, lang);
-  // Guard 2: Strip code blocks and inline code before scanning for keywords
-  const cleaned = stripCodeBlocks(prompt);
+  // Guard 2: Strip code blocks, inline code, and pasted system-echo blocks
+  // before scanning for keywords. NFKC normalization collapses fullwidth Latin.
+  const cleaned = normalizeForMatching(
+    stripSystemEchoes(stripCodeBlocks(prompt)),
+  );
   const excluded = new Set(config.excludedWorkflows);
 
   // Guard 3: Load reinforcement suppression state
@@ -544,27 +806,30 @@ async function main() {
 
   for (const [workflow, def] of Object.entries(config.workflows)) {
     if (excluded.has(workflow)) continue;
+    if (shouldSkipAllWorkflows(cleaned)) continue;
 
-    // Analytical questions should never trigger persistent workflows
+    const workflowPredicate = KEYWORD_SKIP_PREDICATES[workflow];
+    if (workflowPredicate?.(cleaned)) continue;
+
     if (analytical && def.persistent) continue;
 
-    const patterns = buildPatterns(def.keywords, lang, config.cjkScripts);
+    const patterns = [
+      ...buildPatterns(def.keywords, lang, config.cjkScripts),
+      ...buildRawPatterns(def.patterns, lang),
+    ];
 
     for (const pattern of patterns) {
       const match = pattern.exec(cleaned);
       if (!match) continue;
       if (isInformationalContext(cleaned, match.index, infoPatterns)) continue;
-      // Keywords deep in long prompts are likely pasted content, not user intent
       if (isPastedContent(match.index, def.persistent, cleaned.length))
         continue;
-
-      // Guard 3: Suppress if same workflow triggered too many times in 60s
       if (isReinforcementSuppressed(kwState, workflow)) continue;
 
       if (def.persistent) {
         activateMode(projectDir, workflow, sessionId);
       }
-      // Record this trigger for reinforcement tracking
+      await activateL1WorkflowSession(projectDir, workflow, vendor, sessionId);
       const updatedState = recordKwTrigger(kwState, workflow);
       saveKwState(projectDir, updatedState);
 
@@ -587,13 +852,50 @@ async function main() {
         }
       }
 
-      const context = contextLines.join("\n");
-
-      process.stdout.write(makePromptOutput(vendor, context));
-      process.exit(0);
+      return { type: "context", additionalContext: contextLines.join("\n") };
     }
   }
 
+  return null;
+}
+
+// ── Standalone entry (pi subprocess / direct bun invocation) ──
+
+async function main() {
+  const raw = readFileSync(0, "utf-8");
+  let input: Record<string, unknown>;
+  try {
+    input = JSON.parse(raw);
+  } catch {
+    process.exit(0);
+  }
+
+  // Guard 1: Only process genuine user prompts — skip agent-generated content
+  if (!isGenuineUserPrompt(input)) process.exit(0);
+
+  const vendor = detectVendor(input);
+  const projectDir = getProjectDir(vendor, input);
+  const sessionId = getSessionId(input);
+  let prompt = (input.prompt as string) ?? "";
+
+  // agy's PreInvocation stdin carries no `prompt` — recover the user request
+  // from the transcript. PreInvocation fires before every model call, so only
+  // act on the first invocation of a turn (invocationNum) to avoid re-running
+  // keyword detection mid-turn.
+  if (vendor === "antigravity" && !prompt) {
+    const invocationNum = input.invocationNum;
+    if (typeof invocationNum === "number" && invocationNum > 1) process.exit(0);
+    prompt = readAgyPrompt(input.transcriptPath);
+  }
+
+  // Build canonical inputs and delegate to run() — single logic source.
+  const hookInput: HookInput = { kind: "prompt", prompt, cwd: projectDir };
+  const ctx: HandlerCtx = { vendor, cwd: projectDir, sid: sessionId };
+
+  const result = await run(hookInput, ctx);
+  if (result && result.type === "context") {
+    process.stdout.write(makePromptOutput(vendor, result.additionalContext));
+  }
   process.exit(0);
 }
 

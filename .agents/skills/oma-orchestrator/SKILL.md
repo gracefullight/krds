@@ -49,7 +49,9 @@ Automatically orchestrate multi-agent execution with task decomposition, native/
 ### Entry
 1. Resolve agent vendor routing and runtime dispatch path.
 2. Decompose request into priority-tiered tasks.
-3. Create session memory and task board.
+3. For each task, classify into one or more `domain_tags` by matching against the `Intent signature` block of each installed `.agents/skills/oma-*/SKILL.md`. Tasks that match no domain confidently inherit the union of their parent feature's tags.
+4. Build a per-task `exposed_skill_set` = skills whose name is in `domain_tags`. If `|exposed_skill_set| < 2` after classification, fall back to the full installed set (flat exposure) and record `exposure_fallback: true` in the task board.
+5. Create session memory and task board with `exposed_skill_set` and `exposure_fallback` per task.
 
 ### Scenes
 1. **PREPARE**: Plan, setup session ID, and initialize memory files.
@@ -63,6 +65,7 @@ Automatically orchestrate multi-agent execution with task decomposition, native/
 - If vendors differ or native path is unavailable, use fallback spawn.
 - If verify or QA fails, feed feedback back to the implementation agent.
 - If review loop limits are exceeded, report review history and quality warning.
+- If a task's `exposed_skill_set` excludes a skill that a recovered failure indicates was needed, re-classify the task and re-dispatch with the expanded set rather than retrying against the original narrow set.
 
 ### Failure and recovery
 - Retry failed agents up to configured limits.
@@ -79,6 +82,8 @@ Automatically orchestrate multi-agent execution with task decomposition, native/
 | Action | SSL primitive | Evidence |
 |--------|---------------|----------|
 | Read config and task context | `READ` | oma config, routing, request |
+| Classify task into domain tags | `INFER` | task text vs each skill's `Intent signature` |
+| Compute exposed skill set | `SELECT` | intersection of domain tags and installed skills |
 | Select dispatch path | `SELECT` | Native vs fallback |
 | Write session state | `WRITE` | task board and memory files |
 | Spawn agents | `CALL_TOOL` | native CLI or `oh-my-ag agent:spawn` |
@@ -122,6 +127,7 @@ When native runtime dispatch is available, prefer the runtime-specific native pa
 3. Otherwise fall back to `oh-my-ag agent:spawn`.
 4. Never exceed the configured parallelism or retry limits.
 5. Keep session state, task-board state, progress files, and result files aligned throughout the run.
+6. Domain gating must be soft: prefer a narrower `exposed_skill_set`, but fall back to flat exposure when classification confidence is low rather than starving a task of a required specialist.
 
 Current native executor paths:
 - Claude Code: `claude --agent <agent>`
@@ -161,8 +167,9 @@ Memory provider and tool names are configurable via `mcp.json`:
 ### Workflow Phases
 
 **PHASE 1 - Plan**: Analyze request -> decompose tasks -> generate session ID
-**PHASE 2 - Setup**: Use memory write tool to create `orchestrator-session.md` + `task-board.md`
-**PHASE 3 - Execute**: Spawn agents by priority tier (never exceed MAX_PARALLEL)
+**PHASE 1.5 - Domain gate**: For each task, intersect `Intent signature` matches across installed skills to derive `exposed_skill_set`. Record `exposure_fallback: true` when the intersection is too small to be useful and the flat library is used instead.
+**PHASE 2 - Setup**: Use memory write tool to create `orchestrator-session.md` + `task-board.md` (include `exposed_skill_set` per task)
+**PHASE 3 - Execute**: Spawn agents by priority tier (never exceed MAX_PARALLEL); inject only `exposed_skill_set` into each subagent's available specialist list
 **PHASE 4 - Monitor**: Poll every POLL_INTERVAL; handle completed/failed/crashed agents
 **PHASE 4.5 - Verify**: Run `oma verify {agent-type}` per completed agent
 **PHASE 5 - Collect**: Read all `result-{agent}-{sessionId}.md`, compile summary, cleanup progress files
@@ -181,7 +188,7 @@ See `resources/memory-schema.md` for memory file formats.
 
 ### Agent-to-Agent Review Loop (PHASE 4.5)
 
-After each agent completes, enter an iterative review loop — not a single-pass verification.
+After each agent completes, enter an iterative review loop, not a single-pass verification.
 
 ### Loop Flow
 
@@ -196,7 +203,7 @@ Agent completes work
 [3] Cross-Review: QA agent reviews the changes
     ↓ FAIL → Agent receives review feedback, fixes, back to [1]
     ↓ PASS
-Accept result ✓
+Accept result
 ```
 
 ### Step Details
@@ -207,10 +214,10 @@ Before requesting external review, the implementation agent must:
 - Verify only planned files were modified (diff scope check)
 - Fix any mechanical failures (compile errors, test failures)
 
-⚠️ **Quality judgment is NOT performed in this step.**
+**Quality judgment is NOT performed in this step.**
 Design quality, architecture alignment, and acceptance criteria satisfaction
 are evaluated exclusively in [3] Cross-Review by the QA agent.
-Reason: Self-evaluation bias — agents consistently overrate their own output
+Reason: Self-evaluation bias causes agents to consistently overrate their own output
 (ref: Anthropic harness design research).
 
 **[2] Automated Verify**:

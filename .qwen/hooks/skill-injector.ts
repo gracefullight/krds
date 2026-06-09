@@ -13,6 +13,7 @@
  */
 
 import {
+  type Dirent,
   existsSync,
   mkdirSync,
   readdirSync,
@@ -20,7 +21,18 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join } from "node:path";
-import { makePromptOutput, resolveGitRoot, type Vendor } from "./types.ts";
+import {
+  agyConversationId,
+  agyProjectDir,
+  isAgyInput,
+  readAgyPrompt,
+} from "./agy-input.ts";
+import { resolveGitRoot, toPosixPath } from "./fs-utils.ts";
+import { makePromptOutput } from "./hook-output.ts";
+// triggers.json is imported statically: bundler inlines it into the oma binary;
+// standalone bun runs resolve the sibling file (pi / direct run).
+import embeddedTriggers from "./triggers.json" with { type: "json" };
+import type { HandlerCtx, HandlerResult, HookInput, Vendor } from "./types.ts";
 
 const MAX_SKILLS = 3;
 const SESSION_TTL_MS = 60 * 60 * 1000;
@@ -29,19 +41,44 @@ const DEFAULT_CJK_SCRIPTS = ["ko", "ja", "zh"];
 // ── Vendor Detection ──────────────────────────────────────────
 
 function inferVendorFromScriptPath(): Vendor | null {
-  const path = import.meta.path;
+  const path = import.meta.filename;
+  if (path.includes(`${join(".gemini", "antigravity-cli", "hooks")}`))
+    return "antigravity";
   if (path.includes(`${join(".cursor", "hooks")}`)) return "cursor";
   if (path.includes(`${join(".qwen", "hooks")}`)) return "qwen";
   if (path.includes(`${join(".claude", "hooks")}`)) return "claude";
   if (path.includes(`${join(".gemini", "hooks")}`)) return "gemini";
   if (path.includes(`${join(".codex", "hooks")}`)) return "codex";
+  if (path.includes(`${join(".grok", "hooks")}`)) return "grok";
+  if (path.includes(`${join(".kiro", "hooks")}`)) return "kiro";
+  // pi auto-loads the bridge from `.pi/extensions/oma/`; the core scripts are
+  // copied alongside it and spawned as subprocesses from there.
+  if (path.includes(`${join(".pi", "extensions")}`)) return "pi";
   return null;
 }
 
 function detectVendor(input: Record<string, unknown>): Vendor {
   const event = input.hook_event_name as string | undefined;
+  const hookEventName = input.hookEventName as string | undefined;
   const byScriptPath = inferVendorFromScriptPath();
   if (byScriptPath) return byScriptPath;
+
+  // agy (Antigravity) sends no hook_event_name; detect by its stdin shape.
+  if (isAgyInput(input)) return "antigravity";
+
+  if (process.env.GROK_WORKSPACE_ROOT || hookEventName?.includes("prompt")) {
+    if (process.env.GROK_WORKSPACE_ROOT) return "grok";
+  }
+
+  if (
+    process.env.KIRO_PROJECT_DIR ||
+    event === "userPromptSubmit" ||
+    hookEventName === "userPromptSubmit"
+  ) {
+    return "kiro";
+  }
+
+  if (event === "PreInvocation") return "antigravity";
   if (event === "BeforeAgent") return "gemini";
   if (event === "beforeSubmitPrompt") return "cursor";
   if (event === "UserPromptSubmit") {
@@ -61,8 +98,27 @@ function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
     case "gemini":
       dir = process.env.GEMINI_PROJECT_DIR || process.cwd();
       break;
+    case "antigravity":
+      dir =
+        agyProjectDir(input) ||
+        (input.cwd as string) ||
+        process.env.ANTIGRAVITY_PROJECT_DIR ||
+        process.env.AGY_PROJECT_DIR ||
+        process.env.GEMINI_PROJECT_DIR ||
+        process.cwd();
+      break;
     case "qwen":
       dir = process.env.QWEN_PROJECT_DIR || process.cwd();
+      break;
+    case "grok":
+      dir =
+        process.env.GROK_WORKSPACE_ROOT ||
+        (input.cwd as string) ||
+        process.cwd();
+      break;
+    case "kiro":
+      dir =
+        process.env.KIRO_PROJECT_DIR || (input.cwd as string) || process.cwd();
       break;
     default:
       dir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
@@ -73,7 +129,10 @@ function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
 
 function getSessionId(input: Record<string, unknown>): string {
   return (
-    (input.sessionId as string) || (input.session_id as string) || "unknown"
+    (input.sessionId as string) ||
+    (input.session_id as string) ||
+    agyConversationId(input) ||
+    "unknown"
   );
 }
 
@@ -84,11 +143,13 @@ interface SkillsTriggerConfig {
   cjkScripts?: string[];
 }
 
+/**
+ * Load the skills-trigger config from the embedded (bundler-inlined /
+ * sibling-resolved) triggers.json. Returns {} on any shape error.
+ */
 function loadTriggersConfig(): SkillsTriggerConfig {
-  const configPath = join(dirname(import.meta.path), "triggers.json");
-  if (!existsSync(configPath)) return {};
   try {
-    return JSON.parse(readFileSync(configPath, "utf-8"));
+    return structuredClone(embeddedTriggers) as SkillsTriggerConfig;
   } catch {
     return {};
   }
@@ -139,9 +200,12 @@ export function discoverSkills(projectDir: string): SkillEntry[] {
   if (!existsSync(skillsDir)) return [];
 
   const out: SkillEntry[] = [];
-  let entries: ReturnType<typeof readdirSync>;
+  let entries: Dirent<string>[];
   try {
-    entries = readdirSync(skillsDir, { withFileTypes: true });
+    entries = readdirSync(skillsDir, {
+      withFileTypes: true,
+      encoding: "utf8",
+    });
   } catch {
     return out;
   }
@@ -205,8 +269,10 @@ export function matchSkills(
     let score = 0;
 
     for (let i = 0; i < patterns.length; i++) {
-      if (patterns[i].test(prompt)) {
-        matched.push(allTriggers[i]);
+      const pattern = patterns[i];
+      const trigger = allTriggers[i];
+      if (pattern && trigger && pattern.test(prompt)) {
+        matched.push(trigger);
         score += 10;
       }
     }
@@ -320,6 +386,97 @@ export function startsWithSlashCommand(prompt: string): boolean {
   return /^\/[a-zA-Z][\w-]*/.test(prompt.trim());
 }
 
+// Match an explicit `/<name>` token at the very start of the prompt
+// or after whitespace. Stays conservative to avoid path/URL false positives.
+export function parseExplicitSlash(prompt: string): string | null {
+  const m = /(?:^|\s)\/([a-z][a-z0-9_-]{0,40})\b/i.exec(prompt);
+  return m?.[1] ?? null;
+}
+
+// ── Claude Slash Skill Resolution ─────────────────────────────
+// Claude Code deprecated `.claude/commands/` and now uses `.claude/skills/`
+// for slash-invocable workflows. To express "user-only invocation" (slash
+// command typed by the user but NOT auto-callable by the model), the
+// Claude Code idiom is `disable-model-invocation: true` in SKILL.md
+// frontmatter. Such skills are absent from the available-skills list,
+// so when the user types /<name> the model has no native signal that it
+// exists. This resolver bridges that gap. Other vendors use different
+// command/skill mechanisms; this is intentionally Claude-specific.
+
+export interface ClaudeSlashSkillEntry {
+  name: string;
+  skillRelPath: string;
+  body: string;
+}
+
+export function parseSkillFrontmatter(content: string): {
+  frontmatter: Record<string, string | boolean>;
+  body: string;
+} {
+  const m = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/.exec(content);
+  if (!m) return { frontmatter: {}, body: content };
+  const fm: Record<string, string | boolean> = {};
+  const block = m[1] ?? "";
+  for (const line of block.split(/\r?\n/)) {
+    const kv = /^([a-z][\w-]*)\s*:\s*(.*)$/i.exec(line);
+    if (!kv) continue;
+    const key = kv[1];
+    const rawValue = (kv[2] ?? "").trim();
+    if (!key) continue;
+    if (rawValue === "true") fm[key] = true;
+    else if (rawValue === "false") fm[key] = false;
+    else fm[key] = rawValue.replace(/^['"]|['"]$/g, "");
+  }
+  return { frontmatter: fm, body: m[2] ?? "" };
+}
+
+export function findClaudeSlashSkill(
+  name: string,
+  projectDir: string,
+): ClaudeSlashSkillEntry | null {
+  const candidates = [
+    join(projectDir, ".claude", "skills", name, "SKILL.md"),
+    join(projectDir, ".agents", "skills", name, "SKILL.md"),
+  ];
+
+  for (const skillPath of candidates) {
+    if (!existsSync(skillPath)) continue;
+    let content: string;
+    try {
+      content = readFileSync(skillPath, "utf-8");
+    } catch {
+      continue;
+    }
+    const { frontmatter, body } = parseSkillFrontmatter(content);
+    if (frontmatter["disable-model-invocation"] !== true) continue;
+    const posixPath = toPosixPath(skillPath);
+    const posixRoot = toPosixPath(projectDir);
+    return {
+      name,
+      skillRelPath: posixPath.startsWith(`${posixRoot}/`)
+        ? posixPath.slice(posixRoot.length + 1)
+        : posixPath,
+      body: body.trim(),
+    };
+  }
+  return null;
+}
+
+export function formatClaudeSlashSkillContext(
+  entry: ClaudeSlashSkillEntry,
+): string {
+  return [
+    `[OMA CLAUDE SLASH SKILL INVOKED: ${entry.name}]`,
+    `User explicitly typed /${entry.name}. Claude Code deprecated \`.claude/commands/\`, so this slash-only workflow lives in SKILL.md with \`disable-model-invocation: true\` — it is NOT in the available-skills list and is NOT callable via the Skill tool.`,
+    "",
+    `Honor the user's explicit invocation by reading \`${entry.skillRelPath}\` and following its instructions:`,
+    "",
+    entry.body,
+    "",
+    "Read any referenced workflow / resource files and proceed step by step. Do NOT respond that the skill is unavailable.",
+  ].join("\n");
+}
+
 export function stripCodeBlocks(text: string): string {
   return text
     .replace(/(`{3,})[^\n]*\n[\s\S]*?\1/g, "")
@@ -348,7 +505,63 @@ export function formatContext(matches: SkillMatch[]): string {
   return lines.join("\n");
 }
 
-// ── Main ──────────────────────────────────────────────────────
+// ── Pure handler (canonical ABI) ─────────────────────────────
+
+/**
+ * Pure decision function — the single logic source for skill injection.
+ *
+ * Returns a `context` HandlerResult when skills match, or `null` otherwise.
+ * `ctx.cwd` must be the resolved git-root project directory.
+ */
+export async function run(
+  input: HookInput,
+  ctx: HandlerCtx,
+): Promise<HandlerResult | null> {
+  if (input.kind !== "prompt") return null;
+
+  const { prompt } = input;
+  const { vendor, cwd: projectDir, sid: sessionId = "unknown" } = ctx;
+
+  if (!prompt.trim()) return null;
+
+  // Claude-specific: slash-skill resolution must run BEFORE the slash early-exit
+  // and persistent-workflow guard (same order as the original standalone path).
+  if (vendor === "claude") {
+    const slashName = parseExplicitSlash(prompt);
+    if (slashName) {
+      const slashSkill = findClaudeSlashSkill(slashName, projectDir);
+      if (slashSkill) {
+        return {
+          type: "context",
+          additionalContext: formatClaudeSlashSkillContext(slashSkill),
+        };
+      }
+    }
+  }
+
+  if (startsWithSlashCommand(prompt)) return null;
+  if (isPersistentWorkflowActive(projectDir, sessionId)) return null;
+
+  const lang = detectLanguage(projectDir);
+  const config = loadTriggersConfig();
+  const cleaned = stripCodeBlocks(prompt);
+  const skills = discoverSkills(projectDir);
+
+  const matches = matchSkills(cleaned, lang, skills, config);
+  if (matches.length === 0) return null;
+
+  const { fresh, nextState } = filterFreshMatches(
+    matches,
+    projectDir,
+    sessionId,
+  );
+  if (fresh.length === 0) return null;
+
+  writeState(projectDir, nextState);
+  return { type: "context", additionalContext: formatContext(fresh) };
+}
+
+// ── Standalone entry (pi subprocess / direct bun invocation) ──
 
 async function main() {
   const raw = readFileSync(0, "utf-8");
@@ -362,29 +575,24 @@ async function main() {
   const vendor = detectVendor(input);
   const projectDir = getProjectDir(vendor, input);
   const sessionId = getSessionId(input);
-  const prompt = (input.prompt as string) ?? "";
+  let prompt = (input.prompt as string) ?? "";
 
-  if (!prompt.trim()) process.exit(0);
-  if (startsWithSlashCommand(prompt)) process.exit(0);
-  if (isPersistentWorkflowActive(projectDir, sessionId)) process.exit(0);
+  // agy's PreInvocation stdin carries no `prompt`; recover it from the
+  // transcript, and only act on the first invocation of a turn.
+  if (vendor === "antigravity" && !prompt) {
+    const invocationNum = input.invocationNum;
+    if (typeof invocationNum === "number" && invocationNum > 1) process.exit(0);
+    prompt = readAgyPrompt(input.transcriptPath);
+  }
 
-  const lang = detectLanguage(projectDir);
-  const config = loadTriggersConfig();
-  const cleaned = stripCodeBlocks(prompt);
-  const skills = discoverSkills(projectDir);
+  // Build canonical inputs and delegate to run() — single logic source.
+  const hookInput: HookInput = { kind: "prompt", prompt, cwd: projectDir };
+  const ctx: HandlerCtx = { vendor, cwd: projectDir, sid: sessionId };
 
-  const matches = matchSkills(cleaned, lang, skills, config);
-  if (matches.length === 0) process.exit(0);
-
-  const { fresh, nextState } = filterFreshMatches(
-    matches,
-    projectDir,
-    sessionId,
-  );
-  if (fresh.length === 0) process.exit(0);
-
-  writeState(projectDir, nextState);
-  process.stdout.write(makePromptOutput(vendor, formatContext(fresh)));
+  const result = await run(hookInput, ctx);
+  if (result && result.type === "context") {
+    process.stdout.write(makePromptOutput(vendor, result.additionalContext));
+  }
   process.exit(0);
 }
 

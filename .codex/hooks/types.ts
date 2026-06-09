@@ -1,37 +1,27 @@
-// Claude Code Hook Types for oh-my-agent
-// Shared across Claude Code, Codex CLI, Cursor, Gemini CLI, and Qwen Code
+// Hook-runtime types shared across Claude Code, Codex CLI, Cursor,
+// Gemini CLI, and Qwen Code. Functions live in `fs-utils.ts` and
+// `hook-output.ts`; this file is types-only. The `Vendor` type is derived
+// from the `VENDORS` runtime constant in `constants.ts` so the two stay
+// in sync.
+//
+// This file is the SSOT for canonical handler contracts (HookInput,
+// HandlerResult, HandlerCtx, HookHandler). It is self-contained — no imports
+// from `cli/` — so that both `cli/` and the `.agents/hooks/core/` standalone
+// scripts can import from here without creating a circular dependency.
+// `cli/commands/hook/types.ts` re-exports these symbols plus the transport
+// envelope types (HookRequest, HookResponse, HookTransport).
 
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
+import type { VENDORS } from "./constants.ts";
 
-// --- Project Root Resolution ---
+export type Vendor = (typeof VENDORS)[number];
 
 /**
- * Walk up from startDir to find the git repository root.
- * This prevents CLAUDE_PROJECT_DIR pointing to a subdirectory
- * (e.g. packages/i18n during a build) from creating state files
- * in the wrong location.
+ * Raw stdin shape delivered by the vendor hook registration.
+ * Handlers receive this as `Record<string, unknown>` from stdin; this
+ * interface documents the common fields. Not to be confused with the
+ * canonical normalized `HookInput` below.
  */
-const MAX_DEPTH = 20;
-
-export function resolveGitRoot(startDir: string): string {
-  let dir = startDir;
-  for (let i = 0; i < MAX_DEPTH; i++) {
-    if (existsSync(join(dir, ".git"))) return dir;
-    const parent = dirname(dir);
-    if (parent === dir) return startDir;
-    dir = parent;
-  }
-  return startDir;
-}
-
-// --- Vendor Detection ---
-
-export type Vendor = "claude" | "codex" | "cursor" | "gemini" | "qwen";
-
-// --- Hook Input (unified) ---
-
-export interface HookInput {
+export interface RawHookInput {
   prompt?: string;
   sessionId?: string;
   session_id?: string;
@@ -45,102 +35,65 @@ export interface HookInput {
   stopReason?: string;
 }
 
-// --- Hook Output Builders ---
-
-export function makePromptOutput(
-  vendor: Vendor,
-  additionalContext: string,
-): string {
-  switch (vendor) {
-    case "claude":
-      return JSON.stringify({ additionalContext });
-    case "codex":
-      return JSON.stringify({
-        hookSpecificOutput: {
-          hookEventName: "UserPromptSubmit",
-          additionalContext,
-        },
-      });
-    case "cursor":
-      return JSON.stringify({
-        additionalContext,
-        additional_context: additionalContext,
-        hookSpecificOutput: {
-          hookEventName: "UserPromptSubmit",
-          additionalContext,
-        },
-      });
-    case "gemini":
-      return JSON.stringify({
-        hookSpecificOutput: {
-          hookEventName: "BeforeAgent",
-          additionalContext,
-        },
-      });
-    case "qwen":
-      // Qwen Code fork uses hookSpecificOutput (same as Codex)
-      return JSON.stringify({
-        hookSpecificOutput: {
-          hookEventName: "UserPromptSubmit",
-          additionalContext,
-        },
-      });
-  }
-}
-
-export function makeBlockOutput(vendor: Vendor, reason: string): string {
-  switch (vendor) {
-    case "claude":
-    case "codex":
-    case "cursor":
-    case "qwen":
-      return JSON.stringify({ decision: "block", reason });
-    case "gemini":
-      // Gemini AfterAgent uses "deny" to reject response and force retry
-      return JSON.stringify({ decision: "deny", reason });
-  }
-}
-
-// --- PreToolUse Output Builder ---
-
-export function makePreToolOutput(
-  vendor: Vendor,
-  updatedInput: Record<string, unknown>,
-): string {
-  switch (vendor) {
-    case "gemini":
-      return JSON.stringify({
-        decision: "rewrite",
-        tool_input: updatedInput,
-      });
-    case "cursor":
-      return JSON.stringify({
-        updated_input: updatedInput,
-        hookSpecificOutput: {
-          hookEventName: "PreToolUse",
-          updatedInput,
-        },
-      });
-    case "claude":
-      return JSON.stringify({
-        hookSpecificOutput: {
-          hookEventName: "PreToolUse",
-          updatedInput,
-        },
-      });
-    case "codex":
-    case "qwen":
-      return JSON.stringify({
-        updated_input: updatedInput,
-      });
-  }
-}
-
-// --- Shared Types ---
-
 export interface ModeState {
   workflow: string;
   sessionId: string;
   activatedAt: string;
   reinforcementCount: number;
+}
+
+// ---------------------------------------------------------------------------
+// Canonical handler contracts — design 019 (hook → oma hook canonical ABI).
+// These are the types every centralized handler must use. They are canonical
+// here (not in cli/) so that the standalone pi subprocess scripts can import
+// them without depending on cli/.
+// ---------------------------------------------------------------------------
+
+/**
+ * HookInput — normalised event payload delivered to each handler.
+ * Discriminated on `kind`; produced by adapters.ts normalizeInput().
+ */
+export type HookInput =
+  | { kind: "prompt"; prompt: string; cwd: string }
+  | {
+      kind: "pre_tool";
+      toolName: string;
+      toolInput: Record<string, unknown>;
+      cwd: string;
+    }
+  | {
+      kind: "stop";
+      cwd: string;
+      /**
+       * Assistant response / transcript text from the stop payload, if any.
+       * Carries deactivation phrases ("workflow done") so persistent-mode can
+       * deactivate via the central `oma hook` path, matching the standalone path.
+       */
+      responseText?: string;
+    };
+
+/**
+ * HandlerResult — what a single handler may return.
+ *
+ * Forward-compatible with pi's .on() interception result:
+ *   context  ↔  systemPrompt inject  (pi: before_agent_start → { systemPrompt })
+ *   mutate   ↔  event.input rewrite  (pi: tool_call event.input mutation)
+ *   block    ↔  block                (pi: block decision on tool_call / stop)
+ */
+export type HandlerResult =
+  | { type: "context"; additionalContext: string }
+  | { type: "mutate"; updatedInput: Record<string, unknown> }
+  | { type: "block"; reason: string };
+
+/** Context passed to every handler alongside the normalized HookInput. */
+export interface HandlerCtx {
+  vendor: Vendor;
+  cwd: string;
+  sid?: string;
+}
+
+/** Interface every centralized handler must implement. */
+export interface HookHandler {
+  id: string;
+  run(input: HookInput, ctx: HandlerCtx): Promise<HandlerResult | null>;
 }

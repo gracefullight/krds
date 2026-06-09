@@ -12,6 +12,10 @@
         "timeout": 5
       },
       {
+        "hook": "state-boundary.ts",
+        "timeout": 5
+      },
+      {
         "hook": "skill-injector.ts",
         "timeout": 3
       }
@@ -30,7 +34,7 @@
     "file": ".codex/config.toml",
     "section": "features",
     "flags": {
-      "codex_hooks": true
+      "hooks": true
     }
   }
 }

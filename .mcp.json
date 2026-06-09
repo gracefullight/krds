@@ -2,9 +2,28 @@
   "mcpServers": {
     "figma": {
       "command": "npx",
-      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--stdio"
+      ],
       "env": {
         "FIGMA_API_KEY": "${FIGMA_API_KEY}"
+      }
+    },
+    "serena": {
+      "command": "serena",
+      "args": [
+        "start-mcp-server",
+        "--context",
+        "claude-code",
+        "--project",
+        ".",
+        "--open-web-dashboard",
+        "false"
+      ],
+      "env": {
+        "SERENA_LOG_LEVEL": "info"
       }
     }
   }

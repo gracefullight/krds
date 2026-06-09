@@ -26,14 +26,14 @@ Route, design, tune, and review observability work across MELT+P signals, layers
 - Migrating off deprecated tools (Fluentd → Fluent Bit or OTel Collector, per CNCF 2025-10 guide)
 
 ### When NOT to use
-- LLM ops (prompt versioning, evals, gen_ai span deep dive) — use Langfuse, Arize Phoenix, LangSmith, or Braintrust directly
-- Data pipeline lineage — use OpenLineage + Marquez, dbt test, or Airflow lineage backends
-- IoT / hardware / datacenter physical-layer telemetry (IPMI, BMC, SNMP) — use vendor DCIM tooling (Nlyte, Sunbird, Device42)
-- Chaos engineering orchestration — use Chaos Mesh, Litmus, Gremlin, or ChaosToolkit (this skill consumes their telemetry; it does not orchestrate chaos)
-- GPU / TPU infrastructure observability — use NVIDIA DCGM Exporter + Prometheus
-- Software supply chain (SBOM, attestation) — use sigstore (cosign / rekor), in-toto framework, SLSA level attestations
-- Incident response workflow (on-call rotation, paging, escalation) — use PagerDuty, OpsGenie, or Grafana OnCall
-- Single-vendor setup already fully covered by that vendor's own published skill — invoke the vendor skill directly
+- LLM ops (prompt versioning, evals, gen_ai span deep dive); use Langfuse, Arize Phoenix, LangSmith, or Braintrust directly
+- Data pipeline lineage: use OpenLineage + Marquez, dbt test, or Airflow lineage backends
+- IoT / hardware / datacenter physical-layer telemetry (IPMI, BMC, SNMP); use vendor DCIM tooling (Nlyte, Sunbird, Device42)
+- Chaos engineering orchestration: use Chaos Mesh, Litmus, Gremlin, or ChaosToolkit (this skill consumes their telemetry; it does not orchestrate chaos)
+- GPU / TPU infrastructure observability: use NVIDIA DCGM Exporter + Prometheus
+- Software supply chain (SBOM, attestation): use sigstore (cosign / rekor), in-toto framework, SLSA level attestations
+- Incident response workflow (on-call rotation, paging, escalation); use PagerDuty, OpsGenie, or Grafana OnCall
+- Single-vendor setup already fully covered by that vendor's own published skill; invoke the vendor skill directly
 
 ### Expected inputs
 - Observability intent, target system, architecture boundary, signals, vendor context, and incident symptoms if any
@@ -127,7 +127,7 @@ When CNCF/vendor status is load-bearing, verify live state at `https://landscape
 - May route to vendor-owned skills or external tools.
 
 ### Guardrails
-1. **Classify intent before routing**: every query goes through intent classification — setup | migrate | investigate | alert | trace | tune | route
+1. **Classify intent before routing**: every query goes through intent classification; setup | migrate | investigate | alert | trace | tune | route
 2. **Category-first, not vendor-registry**: delegate to vendor-owned skills via `resources/vendor-categories.md`; do not duplicate their documentation
 3. **Transport tuning is the moat**: UDP/MTU thresholds, OTLP protocol selection, Collector topology, and sampling recipes are in-skill depth that other skills do not cover
 4. **Meta-observability is non-negotiable**: always validate pipeline self-health, clock sync (< 100 ms drift), cardinality, and retention before declaring setup complete
@@ -152,7 +152,7 @@ The combinations below are outside this skill's boundary. The external tools lis
 | GPU / AI infra (DCGM, NVIDIA) | NVIDIA DCGM Exporter + Prometheus; OTel GPU semconv (Development, not production-ready) |
 | Software supply chain (SBOM, attestation) | sigstore (cosign / rekor), in-toto framework, SLSA level attestations |
 | Incident response workflow (paging, rotation) | PagerDuty, OpsGenie, Grafana OnCall |
-| Fluentd (primary tool) | Deprecated CNCF 2025-10 — use Fluent Bit or OTel Collector |
+| Fluentd (primary tool) | Deprecated CNCF 2025-10; use Fluent Bit or OTel Collector |
 
 ### Architecture (4 x 4 x 7 matrix)
 
@@ -257,18 +257,16 @@ Before submitting, run `resources/checklist.md`.
 
 ### Integrations with OMA Ecosystem
 
-> **Integration status (2026-Q2)**: rows below describe **recommended handoff patterns** from the oma-observability side. As of this version, reciprocal cross-references from the other skills' SKILL.md files are not yet in place — this is a v1.1 follow-up item. Users invoking the other skills directly will need to surface this integration manually until the reciprocal links land.
-
-| Skill | Integration point | Reciprocal link status |
-|-------|------------------|-------|
-| `oma-debug` | On failure: pull traces + logs by `request_id` → trigger `resources/incident-forensics.md` 6-dim localization playbook | ⏳ pending (v1.1) |
-| `oma-qa` | Canary post-deploy loop via chrome-devtools MCP: console errors + Core Web Vitals trend; INP/LCP/CLS from `layers/L7-application/web-rum.md` | ⏳ pending (v1.1) |
-| `oma-tf-infra` | Terraform modules for OTel Collector, Grafana, and Loki stack provisioning | ⏳ pending (v1.1) |
-| `oma-scm` | Deployment SHA → `service.version` OTel attribute + release marker events; see `boundaries/release.md` | ⏳ pending (v1.1) |
-| `oma-backend` | Propagator and baggage rules cross-referenced in `backend.md` ruleset; DB N+1 + Kafka patterns in `signals/traces.md` | ⏳ pending (v1.1) |
-| `oma-frontend` | `layers/L7-application/web-rum.md` INP/LCP/CLS checklist cross-referenced in `frontend.md` ruleset | ⏳ pending (v1.1) |
-| `oma-mobile` | `layers/L7-application/mobile-rum.md` offline-queuing pattern cross-referenced in `mobile.md` ruleset | ⏳ pending (v1.1) |
-| `oma-db` | `signals/traces.md` DB patterns (N+1, connection pool) cross-referenced in `database.md` ruleset | ⏳ pending (v1.1) |
+| Skill | Integration point |
+|-------|------------------|
+| `oma-debug` | On failure: pull traces + logs by `request_id` → trigger `resources/incident-forensics.md` 6-dim localization playbook |
+| `oma-qa` | Canary post-deploy loop via chrome-devtools MCP: console errors + Core Web Vitals trend; INP/LCP/CLS from `layers/L7-application/web-rum.md` |
+| `oma-tf-infra` | Terraform modules for OTel Collector, Grafana, and Loki stack provisioning |
+| `oma-scm` | Deployment SHA → `service.version` OTel attribute + release marker events; see `boundaries/release.md` |
+| `oma-backend` | Propagator and baggage rules cross-referenced in `backend.md` ruleset; DB N+1 + Kafka patterns in `signals/traces.md` |
+| `oma-frontend` | `layers/L7-application/web-rum.md` INP/LCP/CLS checklist cross-referenced in `frontend.md` ruleset |
+| `oma-mobile` | `layers/L7-application/mobile-rum.md` offline-queuing pattern cross-referenced in `mobile.md` ruleset |
+| `oma-db` | `signals/traces.md` DB patterns (N+1, connection pool) cross-referenced in `database.md` ruleset |
 
 ### Versioning & Deprecation
 
@@ -277,7 +275,7 @@ Before submitting, run `resources/checklist.md`.
   - OTel semconv promotion (Development → RC → Stable) affecting attributes cited in this skill → update `resources/standards.md` and the affected file, bump minor version.
   - Attribute deprecation → replace across all citing files; migration note in `resources/standards.md`.
   - CNCF status change for a vendor/project named in `vendor-categories.md` (Graduated / Archived / acquired) → update the vendor table.
-- **Authoritative live state**: `https://landscape.cncf.io` for CNCF project status. This skill does not promise to track it on any schedule — verify at use time if the information is load-bearing.
+- **Authoritative live state**: `https://landscape.cncf.io` for CNCF project status. This skill does not promise to track it on any schedule; verify at use time if the information is load-bearing.
 - **No per-file review stamps**: earlier drafts carried `last_reviewed` / `next_review` frontmatter. Those were removed because no automated enforcement exists; relying on voluntary manual review produces stale stamps that misrepresent currency. Git history (`git log path/to/file`) is the source of truth for when a file was last changed.
 
 ### Contribution Protocol
@@ -310,6 +308,7 @@ Before submitting, run `resources/checklist.md`.
   - `resources/layers/L7-application/web-rum.md`
   - `resources/layers/L7-application/mobile-rum.md`
   - `resources/layers/L7-application/crash-analytics.md`
+  - `resources/layers/L7-application/waf.md`
 - Boundaries:
   - `resources/boundaries/multi-tenant.md`
   - `resources/boundaries/cross-application.md`
