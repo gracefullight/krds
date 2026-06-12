@@ -1,7 +1,6 @@
 import type { Components, Theme } from "@mui/material";
-
-import { getTypography } from "@gracefullight/krds-tokens";
 import { stepLabelClasses } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/StepLabel" {}
 
@@ -12,10 +11,7 @@ export const MuiStepLabel: Components["MuiStepLabel"] = {
     root: ({ theme }) => ({
       alignItems: "flex-start",
 
-      ...getTypography("pc.body.xsmall"),
-      [(theme as Theme).breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.xsmall"),
-      },
+      ...responsiveTypography("body.xsmall")({ theme: theme as Theme }),
 
       [`& .${stepLabelClasses.label}`]: {
         display: "flex",

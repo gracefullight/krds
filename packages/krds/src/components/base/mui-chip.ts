@@ -1,10 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import { chipClasses } from "@mui/material";
 
 declare module "@mui/material/Chip" {
@@ -58,11 +55,7 @@ export const MuiChip: Components["MuiChip"] = {
     {
       props: { size: "small" },
       style: ({ theme }) => ({
-        ...getTypography("pc.label.xsmall"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.xsmall"),
-        },
+        ...responsiveTypography("label.xsmall")({ theme: theme as Theme }),
 
         padding: "2px 8px",
       }),
@@ -70,11 +63,7 @@ export const MuiChip: Components["MuiChip"] = {
     {
       props: { size: "medium" },
       style: ({ theme }) => ({
-        ...getTypography("pc.label.small"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.small"),
-        },
+        ...responsiveTypography("label.small")({ theme: theme as Theme }),
 
         padding: "4.5px 10px",
       }),
@@ -82,11 +71,7 @@ export const MuiChip: Components["MuiChip"] = {
     {
       props: { size: "large" },
       style: ({ theme }) => ({
-        ...getTypography("pc.label.medium"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.medium"),
-        },
+        ...responsiveTypography("label.medium")({ theme: theme as Theme }),
 
         padding: "7px 12px",
       }),

@@ -1,6 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
 import { tableCellClasses, tableRowClasses } from "@mui/material";
 
 declare module "@mui/material/TableHead" {}
@@ -14,11 +15,7 @@ export const MuiTableHead: Components["MuiTableHead"] = {
         backgroundColor: getPalette("surface.secondary-subtler"),
 
         [`& .${tableCellClasses.root}`]: {
-          ...getTypography("pc.heading.xxsmall"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.heading.xxsmall"),
-          },
+          ...responsiveTypography("heading.xxsmall")({ theme: theme as Theme }),
         },
       },
     }),

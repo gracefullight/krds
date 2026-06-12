@@ -4,6 +4,7 @@ import type {
   PickersCalendarHeaderProps,
 } from "@mui/x-date-pickers";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 import {
   ArrowDropDown,
@@ -230,11 +231,7 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
               borderRadius: getRadius("medium1"),
               paddingBottom: "8.5px",
               paddingTop: "8.5px",
-              ...getTypography("pc.label.small"),
-
-              [(theme as Theme).breakpoints.down("medium")]: {
-                ...getTypography("mobile.label.small"),
-              },
+              ...responsiveTypography("label.small")({ theme: theme as Theme }),
 
               [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {
@@ -253,11 +250,9 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
               borderRadius: getRadius("medium2"),
               paddingBottom: "11px",
               paddingTop: "11px",
-              ...getTypography("pc.label.medium"),
-
-              [(theme as Theme).breakpoints.down("medium")]: {
-                ...getTypography("mobile.label.medium"),
-              },
+              ...responsiveTypography("label.medium")({
+                theme: theme as Theme,
+              }),
 
               [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {
@@ -276,11 +271,7 @@ export const MuiPickersTextField: Components["MuiPickersTextField"] = {
               borderRadius: getRadius("medium3"),
               paddingBottom: "13.5px",
               paddingTop: "13.5px",
-              ...getTypography("pc.label.large"),
-
-              [(theme as Theme).breakpoints.down("medium")]: {
-                ...getTypography("mobile.label.large"),
-              },
+              ...responsiveTypography("label.large")({ theme: theme as Theme }),
 
               [`& .${inputAdornmentClasses.root} .${iconButtonClasses.root} svg`]:
                 {

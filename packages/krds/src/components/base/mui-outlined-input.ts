@@ -18,8 +18,6 @@ declare module "@mui/material/InputBase" {
   }
 }
 
-declare module "@mui/material/OutlinedInput" {}
-
 export const MuiOutlinedInput: Components["MuiOutlinedInput"] = {
   defaultProps: {},
   styleOverrides: {

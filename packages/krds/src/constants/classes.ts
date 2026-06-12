@@ -7,4 +7,4 @@ export const krdsSelectClasses = {
 export const krdsAccordionClasses = {
   sizeMedium: "size-medium",
   sizeLarge: "size-large",
-};
+} as const;

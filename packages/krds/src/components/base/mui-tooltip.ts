@@ -1,10 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import {
   iconButtonClasses,
   tooltipClasses,
@@ -40,10 +37,7 @@ export const MuiTooltip: Components["MuiTooltip"] = {
       [`& .${tooltipClasses.tooltip}`]: {
         display: "flex",
 
-        ...getTypography("pc.body.small"),
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.body.small"),
-        },
+        ...responsiveTypography("body.small")({ theme: theme as Theme }),
 
         [`& .${typographyClasses.root}`]: {
           flex: 1,

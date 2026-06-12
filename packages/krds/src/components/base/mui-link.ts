@@ -1,6 +1,7 @@
-import type { Components, Theme } from "@mui/material";
+import type { Components } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
 
 // ? https://github.com/mui/material-ui/blob/master/packages/mui-icons-material/lib/OpenInNew.js#L13
 const openInNewIconBase64 =
@@ -77,37 +78,19 @@ export const MuiLink: Components["MuiLink"] = {
       props: {
         size: "small",
       },
-      style: ({ theme }) => ({
-        ...getTypography("pc.label.small"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.small"),
-        },
-      }),
+      style: responsiveTypography("label.small"),
     },
     {
       props: {
         size: "medium",
       },
-      style: ({ theme }) => ({
-        ...getTypography("pc.label.medium"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.medium"),
-        },
-      }),
+      style: responsiveTypography("label.medium"),
     },
     {
       props: {
         size: "large",
       },
-      style: ({ theme }) => ({
-        ...getTypography("pc.label.large"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.large"),
-        },
-      }),
+      style: responsiveTypography("label.large"),
     },
 
     // * icon

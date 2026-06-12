@@ -1,11 +1,8 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 import { ArrowDown } from "@gracefullight/krds-icons";
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import { accordionClasses, accordionSummaryClasses } from "@mui/material";
 import { krdsAccordionClasses } from "#/constants/classes";
 
@@ -39,10 +36,7 @@ export const MuiAccordion: Components["MuiAccordion"] = {
           minHeight: "unset",
           paddingInline: "16px",
 
-          ...getTypography("pc.heading.xsmall"),
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.heading.xsmall"),
-          },
+          ...responsiveTypography("heading.xsmall")({ theme: theme as Theme }),
 
           [`& .${accordionSummaryClasses.content}`]: {
             margin: "20px 0",
@@ -67,10 +61,7 @@ export const MuiAccordion: Components["MuiAccordion"] = {
           minHeight: "unset",
           paddingInline: "24px",
 
-          ...getTypography("pc.heading.small"),
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.heading.small"),
-          },
+          ...responsiveTypography("heading.small")({ theme: theme as Theme }),
 
           [`& .${accordionSummaryClasses.content}`]: {
             margin: "24px 0",

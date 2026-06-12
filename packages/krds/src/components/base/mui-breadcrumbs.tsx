@@ -1,7 +1,8 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 import { ArrowRight } from "@gracefullight/krds-icons";
-import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
 import {
   breadcrumbsClasses,
   buttonBaseClasses,
@@ -29,11 +30,7 @@ export const MuiBreadcrumbs: Components["MuiBreadcrumbs"] = {
       },
 
       [`& .${linkClasses.root}`]: {
-        ...getTypography("pc.label.small"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.small"),
-        },
+        ...responsiveTypography("label.small")({ theme: theme as Theme }),
 
         color: getPalette("text.basic"),
         textDecorationColor: getPalette("text.basic"),

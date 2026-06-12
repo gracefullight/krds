@@ -1,4 +1,5 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 import {
   getPalette,
@@ -173,11 +174,7 @@ export const MuiBadge: Components["MuiBadge"] = {
       props: { variant: "text", size: "large" },
       style: ({ theme }) => ({
         [`& .${badgeClasses.badge}`]: {
-          ...getTypography("pc.label.medium"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.medium"),
-          },
+          ...responsiveTypography("label.medium")({ theme: theme as Theme }),
 
           paddingBottom: "3px",
           paddingTop: "3px",
@@ -195,150 +192,87 @@ export const MuiBadge: Components["MuiBadge"] = {
       },
     },
     // * variant, fill, color
-    {
-      props: { variant: "text", fill: "outlined", color: "primary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.primary"),
-          outline: `1px solid ${getPalette("border.primary")}`,
+    ...(
+      [
+        {
+          color: "primary",
+          text: "text.primary",
+          border: "border.primary",
+          bg: "element.primary-light",
+        },
+        {
+          color: "secondary",
+          text: "text.secondary",
+          border: "border.secondary",
+          bg: "element.secondary-lighter",
+        },
+        {
+          color: "tertiary",
+          text: "text.subtle",
+          border: "element.gray-dark",
+          bg: "element.gray-light",
+        },
+        {
+          color: "point",
+          text: "text.point",
+          border: "border.point",
+          bg: "element.point-lighter",
+        },
+        {
+          color: "danger",
+          text: "text.danger",
+          border: "border.danger",
+          bg: "element.danger-lighter",
+        },
+        {
+          color: "warning",
+          text: "text.warning",
+          border: "border.warning",
+          bg: "element.warning-lighter",
+        },
+        {
+          color: "success",
+          text: "text.success",
+          border: "border.success",
+          bg: "element.success-lighter",
+        },
+        {
+          color: "info",
+          text: "text.information",
+          border: "border.information",
+          bg: "element.information-lighter",
+        },
+      ] as const
+    ).flatMap((conf) => [
+      {
+        props: {
+          variant: "text" as const,
+          fill: "outlined" as const,
+          color: conf.color,
+        },
+        style: {
+          [`& .${badgeClasses.badge}`]: {
+            color: getPalette(conf.text as Parameters<typeof getPalette>[0]),
+            outline: `1px solid ${getPalette(conf.border as Parameters<typeof getPalette>[0])}`,
+          },
         },
       },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "secondary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.secondary"),
-          outline: `1px solid ${getPalette("border.secondary")}`,
+      {
+        props: {
+          variant: "text" as const,
+          fill: "light" as const,
+          color: conf.color,
+        },
+        style: {
+          [`& .${badgeClasses.badge}`]: {
+            backgroundColor: getPalette(
+              conf.bg as Parameters<typeof getPalette>[0],
+            ),
+            color: getPalette(conf.text as Parameters<typeof getPalette>[0]),
+          },
         },
       },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "tertiary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.subtle"),
-          outline: `1px solid ${getPalette("element.gray-dark")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "point" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.point"),
-          outline: `1px solid ${getPalette("border.point")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "danger" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.danger"),
-          outline: `1px solid ${getPalette("border.danger")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "warning" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.warning"),
-          outline: `1px solid ${getPalette("border.warning")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "success" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.success"),
-          outline: `1px solid ${getPalette("border.success")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "outlined", color: "info" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          color: getPalette("text.information"),
-          outline: `1px solid ${getPalette("border.information")}`,
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "primary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.primary-light"),
-          color: getPalette("text.primary"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "secondary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.secondary-lighter"),
-          color: getPalette("text.secondary"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "tertiary" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.gray-light"),
-          color: getPalette("text.subtle"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "point" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.point-lighter"),
-          color: getPalette("text.point"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "danger" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.danger-lighter"),
-          color: getPalette("text.danger"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "warning" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.warning-lighter"),
-          color: getPalette("text.warning"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "success" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.success-lighter"),
-          color: getPalette("text.success"),
-        },
-      },
-    },
-    {
-      props: { variant: "text", fill: "light", color: "info" },
-      style: {
-        [`& .${badgeClasses.badge}`]: {
-          backgroundColor: getPalette("element.information-lighter"),
-          color: getPalette("text.information"),
-        },
-      },
-    },
+    ]),
     // * variant, fill, disabled
     {
       props: { variant: "text", fill: "outlined", className: "disabled" },

@@ -1,10 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import { menuClasses } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
 
@@ -25,31 +22,19 @@ export const MuiMenu: Components["MuiMenu"] = {
 
       [`&.${krdsSelectClasses.sizeSmall}`]: {
         [`& .${menuClasses.list}`]: {
-          ...getTypography("pc.label.small"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.small"),
-          },
+          ...responsiveTypography("label.small")({ theme: theme as Theme }),
         },
       },
 
       [`&.${krdsSelectClasses.sizeMedium}`]: {
         [`& .${menuClasses.list}`]: {
-          ...getTypography("pc.label.medium"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.medium"),
-          },
+          ...responsiveTypography("label.medium")({ theme: theme as Theme }),
         },
       },
 
       [`&.${krdsSelectClasses.sizeLarge}`]: {
         [`& .${menuClasses.list}`]: {
-          ...getTypography("pc.label.large"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.large"),
-          },
+          ...responsiveTypography("label.large")({ theme: theme as Theme }),
         },
       },
     }),

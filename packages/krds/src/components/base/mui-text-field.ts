@@ -1,6 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
 import { formHelperTextClasses } from "@mui/material";
 
 declare module "@mui/material/TextField" {
@@ -28,10 +29,7 @@ export const MuiTextField: Components["MuiTextField"] = {
         marginRight: 0,
         marginTop: "8px",
 
-        ...getTypography("pc.label.xsmall"),
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.xsmall"),
-        },
+        ...responsiveTypography("label.xsmall")({ theme: theme as Theme }),
 
         [`&.${formHelperTextClasses.focused}`]: {
           color: getPalette("text.information"),

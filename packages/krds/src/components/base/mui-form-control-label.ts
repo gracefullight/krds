@@ -1,6 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import { getPalette } from "@gracefullight/krds-tokens";
 import {
   checkboxClasses,
   formControlLabelClasses,
@@ -22,20 +23,12 @@ export const MuiFormControlLabel: Components["MuiFormControlLabel"] = {
 
       [`& .${checkboxClasses.root}`]: {
         [`&.${checkboxClasses.sizeMedium} + .${typographyClasses.root}`]: {
-          ...getTypography("pc.label.medium"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.medium"),
-          },
+          ...responsiveTypography("label.medium")({ theme: theme as Theme }),
         },
 
         // * large 클래스 제공 안함
         [`&.MuiCheckbox-sizeLarge + .${typographyClasses.root}`]: {
-          ...getTypography("pc.label.large"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.large"),
-          },
+          ...responsiveTypography("label.large")({ theme: theme as Theme }),
         },
       },
 
@@ -45,20 +38,12 @@ export const MuiFormControlLabel: Components["MuiFormControlLabel"] = {
       },
 
       [`& .${radioClasses.root} + .${typographyClasses.root}`]: {
-        ...getTypography("pc.label.medium"),
-
-        [(theme as Theme).breakpoints.down("medium")]: {
-          ...getTypography("mobile.label.medium"),
-        },
+        ...responsiveTypography("label.medium")({ theme: theme as Theme }),
       },
 
       [`& .${radioClasses.root}.MuiRadio-sizeLarge + .${typographyClasses.root}`]:
         {
-          ...getTypography("pc.label.large"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.large"),
-          },
+          ...responsiveTypography("label.large")({ theme: theme as Theme }),
         },
 
       // * 스위치
@@ -70,19 +55,11 @@ export const MuiFormControlLabel: Components["MuiFormControlLabel"] = {
         marginRight: "8px",
 
         [`&.${switchClasses.sizeMedium} + .${typographyClasses.root}`]: {
-          ...getTypography("pc.label.medium"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.medium"),
-          },
+          ...responsiveTypography("label.medium")({ theme: theme as Theme }),
         },
 
         [`&.MuiSwitch-sizeLarge + .${typographyClasses.root}`]: {
-          ...getTypography("pc.label.large"),
-
-          [(theme as Theme).breakpoints.down("medium")]: {
-            ...getTypography("mobile.label.large"),
-          },
+          ...responsiveTypography("label.large")({ theme: theme as Theme }),
         },
       },
 

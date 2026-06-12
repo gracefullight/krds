@@ -157,129 +157,44 @@ export function createKrdsTheme(options: ThemeOptions = {}) {
     ),
   );
 
-  krdsTheme.typography = toMerged(krdsTheme.typography, {
-    "display-large": {
-      ...getTypography("pc.display.large"),
+  const TYPOGRAPHY_VARIANTS = [
+    "display.large",
+    "display.medium",
+    "display.small",
+    "heading.xlarge",
+    "heading.large",
+    "heading.medium",
+    "heading.small",
+    "heading.xsmall",
+    "heading.xxsmall",
+    "body.large",
+    "body.large-bold",
+    "body.medium",
+    "body.medium-bold",
+    "body.small",
+    "body.small-bold",
+    "body.xsmall",
+    "body.xsmall-bold",
+  ] as const;
 
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.display.large"),
-      },
-    },
-    "display-medium": {
-      ...getTypography("pc.display.medium"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.display.medium"),
-      },
-    },
-    "display-small": {
-      ...getTypography("pc.display.small"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.display.small"),
-      },
-    },
-
-    "heading-xlarge": {
-      ...getTypography("pc.heading.xlarge"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.xlarge"),
-      },
-    },
-    "heading-large": {
-      ...getTypography("pc.heading.large"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.large"),
-      },
-    },
-    "heading-medium": {
-      ...getTypography("pc.heading.medium"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.medium"),
-      },
-    },
-    "heading-small": {
-      ...getTypography("pc.heading.small"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.small"),
-      },
-    },
-    "heading-xsmall": {
-      ...getTypography("pc.heading.xsmall"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.xsmall"),
-      },
-    },
-    "heading-xxsmall": {
-      ...getTypography("pc.heading.xxsmall"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.heading.xxsmall"),
-      },
-    },
-
-    "body-large": {
-      ...getTypography("pc.body.large"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.large"),
-      },
-    },
-    "body-large-bold": {
-      ...getTypography("pc.body.large-bold"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.large-bold"),
-      },
-    },
-    "body-medium": {
-      ...getTypography("pc.body.medium"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.medium"),
-      },
-    },
-    "body-medium-bold": {
-      ...getTypography("pc.body.medium-bold"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.medium-bold"),
-      },
-    },
-    "body-small": {
-      ...getTypography("pc.body.small"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.small"),
-      },
-    },
-    "body-small-bold": {
-      ...getTypography("pc.body.small-bold"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.small-bold"),
-      },
-    },
-    "body-xsmall": {
-      ...getTypography("pc.body.xsmall"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.xsmall"),
-      },
-    },
-    "body-xsmall-bold": {
-      ...getTypography("pc.body.xsmall-bold"),
-
-      [krdsTheme.breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.xsmall-bold"),
-      },
-    },
-  });
+  krdsTheme.typography = toMerged(
+    krdsTheme.typography,
+    Object.fromEntries(
+      TYPOGRAPHY_VARIANTS.map((variant) => [
+        variant.replace(".", "-"),
+        {
+          ...getTypography(
+            `pc.${variant}` as Parameters<typeof getTypography>[0],
+          ),
+          [krdsTheme.breakpoints.down("medium")]: {
+            ...getTypography(
+              `mobile.${variant}` as Parameters<typeof getTypography>[0],
+            ),
+          },
+        },
+      ]),
+    ),
+  );
 
   return krdsTheme;
 }

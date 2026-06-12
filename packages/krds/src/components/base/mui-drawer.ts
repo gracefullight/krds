@@ -1,10 +1,7 @@
 import type { Components, Theme } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
+import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import { dialogTitleClasses, iconButtonClasses } from "@mui/material";
 
 declare module "@mui/material/Drawer" {}
@@ -18,10 +15,7 @@ export const MuiDrawer: Components["MuiDrawer"] = {
     paper: ({ theme }) => ({
       baxShadow: "none",
 
-      ...getTypography("pc.body.medium"),
-      [(theme as Theme).breakpoints.down("medium")]: {
-        ...getTypography("mobile.body.medium"),
-      },
+      ...responsiveTypography("body.medium")({ theme: theme as Theme }),
 
       [`& .${dialogTitleClasses.root}`]: {
         padding: "0 40px 16px 0",

@@ -22,7 +22,7 @@ export function SystemSuccess({
         rx="10"
         transform="matrix(1 0 0 -1 2 22)"
         fill="#228738"
-      />{" "}
+      />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
