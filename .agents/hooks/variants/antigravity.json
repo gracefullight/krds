@@ -1,10 +1,11 @@
 {
   "$schema": "./hook-variant.schema.json",
   "vendor": "antigravity",
-  "hookDir": ".gemini/antigravity-cli/hooks",
-  "settingsFile": ".gemini/antigravity-cli/settings.json",
+  "hookDir": ".agents/hooks/core",
+  "settingsFile": ".agents/hooks.json",
   "projectDirEnv": null,
   "runtime": "bun",
+  "homeOnly": true,
   "events": {
     "PreInvocation": [
       {
@@ -17,6 +18,10 @@
       },
       {
         "hook": "skill-injector.ts",
+        "timeout": 3
+      },
+      {
+        "hook": "serena-primer.ts",
         "timeout": 3
       }
     ],
@@ -32,8 +37,5 @@
   },
   "statusLine": {
     "hook": "hud.ts"
-  },
-  "extra": {
-    "homeOnly": true
   }
 }

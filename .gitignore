@@ -58,3 +58,6 @@ docs/plans/
 
 # local scratch
 tmp/
+
+.agents/backup/
+.migration-backup/
