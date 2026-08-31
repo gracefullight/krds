@@ -21,6 +21,15 @@ If it does not exist:
 
 **MUST complete before proceeding. Never skip context gathering.**
 
+### Redesign Mode Detection
+If the target is an existing site or app (not greenfield), load
+`resources/redesign-protocol.md` FIRST and classify the mode:
+Greenfield / Redesign-Preserve / Redesign-Overhaul. If ambiguous, ask
+once: "Preserve the existing brand, or start visually from scratch?"
+For Preserve mode, run the redesign audit (brand tokens, IA, SEO
+baseline, patterns to preserve/retire) and record it in
+`.design-context.md` before any proposal.
+
 ### Vendor Inspiration Detection
 After `.design-context.md` exists (either newly created or already present):
 1. Parse the `## Reference Sites` section (if any) and extract bare
@@ -106,6 +115,17 @@ If the request is already detailed: skip to Phase 4.
 
 ## Phase 4: PROPOSE (Multi-Concept)
 
+### Design Read (declare before proposing)
+Open Phase 4 with a one-line Design Read so the direction is inferred
+from the brief, not from a default aesthetic:
+
+> "Reading this as: \<page kind> for \<audience>, with a \<vibe>
+> language, leaning toward \<aesthetic family or design system>."
+
+If the read genuinely diverges into two directions, ask exactly ONE
+clarifying question (e.g. "closer to Linear-clean or Awwwards-
+experimental?"). If it can be inferred, declare it and proceed.
+
 ### Default: No vendor seed
 Present 2-3 distinct design directions. Each direction must include:
 
@@ -115,6 +135,11 @@ Present 2-3 distinct design directions. Each direction must include:
 4. **Motion strategy**: scroll-driven / hover-based / entrance-only / minimal
 5. **Component recommendations**: which libraries (shadcn base + Aceternity / React Bits accents)
 6. **Visual mood**: one-sentence description of the feel
+7. **Posture axes**: state each direction's position in plain words on
+   three axes — layout variance (symmetric ↔ asymmetric), motion
+   (static ↔ cinematic), density (airy ↔ packed). Trust-first /
+   public-sector / accessibility-critical briefs pull all three toward
+   the conservative end and OVERRIDE aesthetic preference.
 
 Present as a comparison table with pros/cons for each direction.
 
@@ -164,12 +189,16 @@ Based on the chosen direction:
    - Tailwind config extensions (`theme.extend.colors`)
    - shadcn/ui theme variables (if shadcn is in use)
 4. Generate component code if requested by the user
+5. For any page or component that needs imagery, logos, or product
+   previews, follow `resources/asset-strategy.md` (generation via
+   oma-image first → picsum seed → labeled placeholder + report).
+   Div-based fake screenshots are banned.
 
 ### Responsive-First Rule
 ALL generated designs MUST be responsive by default. Never produce desktop-only layouts.
 
 Minimum breakpoints to address:
-- Mobile (default): 320px-639px
+- Mobile (default): 320px-767px
 - Tablet (md): 768px+
 - Desktop (lg): 1024px+
 
@@ -220,6 +249,15 @@ Load `resources/checklist.md` and run all checks in order:
    - All spacing from 8px grid scale
    - Typography uses defined scale
 
+6. **Mechanical Checks** (checklist.md section 6 — countable, not judgment)
+   - Consistency locks: one accent, one radius system, one theme per page
+   - Layout counts: eyebrow <= ceil(sections/3), no repeated layout
+     family, zigzag cap 2, marquee max 1, bento N items → N cells
+   - Hero discipline: fits viewport, max 4 text elements, logo wall below
+   - CTA: no label wrap, one label per intent, AA contrast on every button
+   - Copy self-audit: re-read every visible string (anti-patterns.md
+     "Content & Copy")
+
 Fix violations automatically where possible, or report to user with recommendations.
 
 ---
@@ -236,3 +274,77 @@ Fix violations automatically where possible, or report to user with recommendati
 6. Inform the user:
    > "Design complete. DESIGN.md has been created.
    >  To implement, delegate to oma-frontend or run /orchestrate."
+
+---
+
+## Appendix: .design-context.md Example
+
+This is an example of what `.design-context.md` looks like after Phase 1
+(Setup). The file lives in the project root and captures project-specific
+design decisions.
+
+```markdown
+## Project
+- **Name**: Apex Revenue Platform
+- **Type**: B2B SaaS landing page + dashboard
+- **Languages**: English (primary), Korean (secondary)
+
+## Target Audience
+- **Role**: Sales leaders, revenue ops managers, growth teams
+- **Tech level**: Moderate; comfortable with dashboards, not developers
+- **Age range**: 28-45
+- **Context**: Evaluating tools during work hours, often on laptop
+
+## Brand Personality
+- Professional but not corporate
+- Confident and forward-looking
+- Data-driven, precise language
+- Avoids jargon and buzzwords
+
+## Aesthetic Direction
+- **Theme**: Dark premium (Apple-inspired)
+- **Mood**: Confident, spacious, sophisticated
+- **Surface treatment**: Glass morphism for UI chrome, solid for content areas
+- **Visual accents**: Subtle green (#22c55e) for CTAs and data highlights
+- **Texture**: Prefer noise/grain over gradients for visual interest
+
+## Typography
+- **Body**: Pretendard Variable (CJK support for Korean) + system-ui fallback
+- **Headings**: Instrument Serif italic for hero/display headings only
+- **Mono**: JetBrains Mono for data tables and code snippets
+- **Justification**: CJK support required for Korean localization
+
+## Color Direction
+- **Background**: Deep near-black (#0a0a0a)
+- **Text**: Warm off-white (#f5f0eb), not pure white
+- **Primary accent**: Signal Green (#22c55e) for CTAs, success states
+- **Avoid**: Purple gradients, rainbow effects, mesh gradients
+- **Borders**: White at 10% opacity (rgba(255,255,255,0.1))
+
+## Accessibility
+- **Level**: WCAG AA minimum
+- **Motion**: prefers-reduced-motion support required
+- **Contrast**: 4.5:1 for normal text, 3:1 for large text
+- **Touch targets**: 44x44pt minimum on mobile
+
+## Reference Sites
+- [linear.app](https://linear.app): clean dark UI, minimal, professional
+- [vercel.com](https://vercel.com): developer-premium aesthetic, great typography
+- [stripe.com](https://stripe.com): strong hierarchy, purposeful animation
+
+## Component Preferences
+- **Base**: shadcn/ui for all foundational components
+- **Effects**: Aceternity UI for hero parallax, React Bits for text animations
+- **Animation**: motion/react for transitions, GSAP for scroll-triggered reveals
+```
+
+> **Note**: every domain in the `## Reference Sites` section is
+> automatically matched against the `getdesign` vendor catalog during
+> Phase 1. All three entries above resolve to community templates
+> (`linear.app`, `vercel`, `stripe`) and will be fetched as Phase 2
+> seeds. To opt a URL out of vendor matching, use a domain that is not
+> in the catalog (e.g., an internal design reference or a custom
+> portfolio URL). See `resources/getdesign-fetcher.md` for the matching
+> algorithm and the Seed Application Rules. Notably, Typography is
+> never adopted from the vendor seed, so the Pretendard Variable choice
+> in this file will still win on the Korean-localized project above.

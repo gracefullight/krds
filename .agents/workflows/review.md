@@ -11,7 +11,7 @@ disable-model-invocation: true
 - **You MUST use MCP tools throughout the workflow.**
   - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code analysis and review.
   - Use memory write tool to record review results.
-  - Memory path: configurable via `memoryConfig.basePath` (default: `.serena/memories`)
+  - Memory path: configurable via `memoryConfig.basePath` (default: `.agents/state/memories`)
   - Tool names: configurable via `memoryConfig.tools` in `.agents/mcp.json`
   - Do NOT use raw file reads or grep as substitutes.
 
@@ -24,7 +24,7 @@ The detected vendor determines how the QA agent is spawned (Step 7).
 
 ### L1 Decision Events
 
-Use the `oma_emit` helper documented in `.agents/skills/_shared/runtime/event-spec.md` before required L1 decision checkpoints. The helper wraps `oma state:emit`.
+Emit required L1 decisions by calling `oma state:emit` directly, as documented in `.agents/skills/_shared/runtime/event-spec.md`.
 
 ---
 
@@ -37,7 +37,6 @@ If a PR or branch is provided, diff against the base branch to scope the review.
 
 ## Step 2: Run Automated Security Checks
 
-// turbo
 Run available security tools: `npm audit` (Node.js), `bandit` (Python), or equivalent.
 Check for known vulnerabilities in dependencies. Flag any CRITICAL or HIGH findings.
 
@@ -101,7 +100,7 @@ Use memory write tool to record the final report.
 After severity classification is complete, emit and verify the required review decision:
 
 ```bash
-oma_emit "decision.made" '{"subject":"review.severity-classification","decision":"Use the classified finding severities for the QA report and follow-up routing.","rationale":"Findings have been reviewed and assigned CRITICAL/HIGH/MEDIUM/LOW severity with remediation context."}'
+oma state:emit "decision.made" '{"subject":"review.severity-classification","decision":"Use the classified finding severities for the QA report and follow-up routing.","rationale":"Findings have been reviewed and assigned CRITICAL/HIGH/MEDIUM/LOW severity with remediation context."}'
 oma state:verify --workflow review --checkpoint severity-classification
 ```
 
@@ -120,8 +119,10 @@ Request parallel subagent execution with the review scope and standards.
 
 ### If Gemini CLI or Antigravity or CLI Fallback
 ```bash
-oma agent:spawn qa-agent "Review files for security, performance, accessibility, and code quality. Follow .agents/skills/oma-qa/SKILL.md standards. Report as CRITICAL/HIGH/MEDIUM/LOW with file:line and remediation." session-id
+oma agent:spawn qa-agent "Review files for security, performance, accessibility, and code quality. Follow .agents/skills/oma-qa/SKILL.md standards. Report as CRITICAL/HIGH/MEDIUM/LOW with file:line and remediation." session-id -w {workspace}
 ```
+
+**Wait for the QA agent to complete and collect its findings before compiling the Step 7 report.** On the Claude-native path the background agent notifies on completion (or spawn synchronously); on the CLI path poll `result-qa*[-{sessionId}].md` in the memory base path.
 
 ---
 

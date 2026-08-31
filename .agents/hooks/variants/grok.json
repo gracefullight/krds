@@ -24,14 +24,34 @@
         "timeout": 3
       }
     ],
-    "PreToolUse": {
-      "hook": "test-filter.ts",
-      "matcher": "run_terminal_cmd",
-      "timeout": 5
-    },
-    "Stop": {
-      "hook": "persistent-mode.ts",
-      "timeout": 5
-    }
+    "PreToolUse": [
+      {
+        "hook": "scm-guard.ts",
+        "matcher": "Bash",
+        "timeout": 3
+      },
+      {
+        "hook": "test-filter.ts",
+        "matcher": "Bash",
+        "timeout": 5
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hook": "refactor-guard.ts",
+        "matcher": "hashline_edit|apply_patch|create_file|write_file|edit_file|str_replace",
+        "timeout": 5
+      }
+    ],
+    "Stop": [
+      {
+        "hook": "persistent-mode.ts",
+        "timeout": 5
+      },
+      {
+        "hook": "refactor-guard.ts",
+        "timeout": 5
+      }
+    ]
   }
 }

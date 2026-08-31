@@ -2,7 +2,7 @@
 /**
  * oh-my-agent — Serena Primer Hook (prompt kind)
  *
- * Works with: Claude Code, Codex CLI, Cursor, Gemini CLI, Qwen Code,
+ * Works with: Claude Code, Codex CLI, Cursor, Qwen Code,
  * Antigravity, Grok, Kiro.
  *
  * Serena ships per-vendor context prompts that say "prefer Serena's symbolic
@@ -23,15 +23,11 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import {
-  agyConversationId,
-  agyProjectDir,
-  isAgyInput,
-  readAgyPrompt,
-} from "./agy-input.ts";
-import { resolveGitRoot } from "./fs-utils.ts";
+import { agyConversationId, isAgyInput, readAgyPrompt } from "./agy-input.ts";
 import { makePromptOutput } from "./hook-output.ts";
+import { normalizePromptInput } from "./prompt-input.ts";
 import type { HandlerCtx, HandlerResult, HookInput, Vendor } from "./types.ts";
+import { getProjectDir, inferVendorFromScriptPath } from "./vendor-detect.ts";
 
 const SESSION_TTL_MS = 60 * 60 * 1000;
 
@@ -121,6 +117,8 @@ export function primerContext(): string {
     "- Code discovery / reading: `get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`.",
     "- Code edits: `replace_symbol_body`, `insert_after_symbol`, `insert_before_symbol`, `replace_content`.",
     "- Native grep/glob: only for initial filename/path discovery. Do not fall back to grep + Read for code navigation just because Serena's tools aren't loaded yet — load them.",
+    '- Result size: omit `max_answer_chars` on Serena tools (uses the configured default, typically 150000). Never pass small caps like `3000` on broad searches. If a call returns "The answer is too long (N characters)", retry with `max_answer_chars` > N or narrow path/glob — do not keep the low cap.',
+    "- Exception — MCP timeout: if a Serena MCP call times out or hangs (seen mainly in OpenCode Desktop's long-lived sidecar), stop retrying MCP for this session: use native search/read for code, and access `.serena/memories/` files directly (or `serena memories read|write` when Serena CLI ≥ 1.5 is installed) for memory work. A full app relaunch restores Serena MCP.",
   ].join("\n");
 }
 
@@ -140,30 +138,18 @@ export async function run(
   const { cwd: projectDir, sid: sessionId = "unknown" } = ctx;
 
   if (!isSerenaProject(projectDir)) return null;
-  if (!claimSession(projectDir, sessionId)) return null;
+  // Compaction keeps the session id, so the session-once claim would skip
+  // exactly the turn that just lost the primer from context — force re-inject.
+  const forced = input.source === "compact";
+  if (!claimSession(projectDir, sessionId) && !forced) return null;
 
   return { type: "context", additionalContext: primerContext() };
 }
 
 // ── Standalone entry (pi subprocess / direct bun invocation) ──
 
-function inferVendorFromScriptPath(): Vendor | null {
-  const path = import.meta.filename;
-  if (path.includes(`${join(".gemini", "antigravity-cli", "hooks")}`))
-    return "antigravity";
-  if (path.includes(`${join(".cursor", "hooks")}`)) return "cursor";
-  if (path.includes(`${join(".qwen", "hooks")}`)) return "qwen";
-  if (path.includes(`${join(".claude", "hooks")}`)) return "claude";
-  if (path.includes(`${join(".gemini", "hooks")}`)) return "gemini";
-  if (path.includes(`${join(".codex", "hooks")}`)) return "codex";
-  if (path.includes(`${join(".grok", "hooks")}`)) return "grok";
-  if (path.includes(`${join(".kiro", "hooks")}`)) return "kiro";
-  if (path.includes(`${join(".pi", "extensions")}`)) return "pi";
-  return null;
-}
-
 function detectVendor(input: Record<string, unknown>): Vendor {
-  const byScriptPath = inferVendorFromScriptPath();
+  const byScriptPath = inferVendorFromScriptPath(import.meta.filename);
   if (byScriptPath) return byScriptPath;
   if (isAgyInput(input)) return "antigravity";
   const event = input.hook_event_name as string | undefined;
@@ -177,7 +163,6 @@ function detectVendor(input: Record<string, unknown>): Vendor {
     return "kiro";
   }
   if (event === "PreInvocation") return "antigravity";
-  if (event === "BeforeAgent") return "gemini";
   if (event === "beforeSubmitPrompt") return "cursor";
   if (
     event === "UserPromptSubmit" &&
@@ -187,45 +172,6 @@ function detectVendor(input: Record<string, unknown>): Vendor {
     return "codex";
   if (process.env.QWEN_PROJECT_DIR) return "qwen";
   return "claude";
-}
-
-function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
-  let dir: string;
-  switch (vendor) {
-    case "codex":
-    case "cursor":
-      dir = (input.cwd as string) || process.cwd();
-      break;
-    case "gemini":
-      dir = process.env.GEMINI_PROJECT_DIR || process.cwd();
-      break;
-    case "antigravity":
-      dir =
-        agyProjectDir(input) ||
-        (input.cwd as string) ||
-        process.env.ANTIGRAVITY_PROJECT_DIR ||
-        process.env.AGY_PROJECT_DIR ||
-        process.env.GEMINI_PROJECT_DIR ||
-        process.cwd();
-      break;
-    case "qwen":
-      dir = process.env.QWEN_PROJECT_DIR || process.cwd();
-      break;
-    case "grok":
-      dir =
-        process.env.GROK_WORKSPACE_ROOT ||
-        (input.cwd as string) ||
-        process.cwd();
-      break;
-    case "kiro":
-      dir =
-        process.env.KIRO_PROJECT_DIR || (input.cwd as string) || process.cwd();
-      break;
-    default:
-      dir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-      break;
-  }
-  return resolveGitRoot(dir);
 }
 
 function getSessionId(input: Record<string, unknown>): string {
@@ -249,7 +195,7 @@ async function main() {
   const vendor = detectVendor(input);
   const projectDir = getProjectDir(vendor, input);
   const sessionId = getSessionId(input);
-  let prompt = (input.prompt as string) ?? "";
+  let prompt = normalizePromptInput(input.prompt);
 
   // agy's PreInvocation stdin carries no `prompt`; recover it and only act on
   // the first invocation of a turn.

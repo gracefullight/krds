@@ -10,22 +10,14 @@
       ]
     },
     "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ]
+      "serverUrl": "https://mcp.context7.com/mcp"
     },
     "serena": {
-      "command": "serena",
+      "command": "oma",
       "args": [
-        "start-mcp-server",
+        "bridge",
         "--context",
-        "claude-code",
-        "--project",
-        ".",
-        "--open-web-dashboard",
-        "false"
+        "oma"
       ],
       "env": {
         "SERENA_LOG_LEVEL": "info"
