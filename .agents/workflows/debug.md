@@ -11,7 +11,7 @@ disable-model-invocation: true
 - **You MUST use MCP tools throughout the workflow.**
   - Use code analysis tools (`find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for bug investigation, NOT raw file reads or grep.
   - Use memory write tool to record debugging results.
-  - Memory path: configurable via `memoryConfig.basePath` (default: `.serena/memories`)
+  - Memory path: configurable via `memoryConfig.basePath` (default: `.agents/state/memories`)
   - Tool names: configurable via `memoryConfig.tools` in `.agents/mcp.json`
   - MCP tools are the primary interface for all code exploration.
 
@@ -25,7 +25,7 @@ Steps 1-5 execute inline for all vendors. Step 6 (similar pattern scanning) may 
 
 ### L1 Decision Events
 
-Use the `oma_emit` helper documented in `.agents/skills/_shared/runtime/event-spec.md` before required L1 decision checkpoints. The helper wraps `oma state:emit`.
+Emit required L1 decisions by calling `oma state:emit` directly, as documented in `.agents/skills/_shared/runtime/event-spec.md`.
 
 ### Subagent Spawn Criteria
 
@@ -75,7 +75,8 @@ If an error message is provided, proceed immediately.
 
 ## Step 2: Reproduce the Bug
 
-// turbo
+Run the smallest available failing test, runtime command, or log query that exercises the reported behavior and capture the observed failure signal. If the environment cannot reproduce it, follow `.agents/skills/oma-debug/resources/error-playbook.md` § "Cannot Reproduce the Bug" and record that limitation before continuing.
+
 Use MCP `search_for_pattern` with the error message or stack trace to locate the error in the codebase.
 Use `find_symbol` to identify the exact function and file. Do NOT grep or read files manually.
 
@@ -94,7 +95,7 @@ Identify the root cause, not just the symptom. Check:
 When the root cause is confirmed, emit and verify the required diagnosis decision:
 
 ```bash
-oma_emit "decision.made" '{"subject":"debug.root-cause","decision":"Treat the confirmed root cause as the basis for the minimal fix.","rationale":"The diagnosis traced the failure path and distinguished the root cause from symptoms."}'
+oma state:emit "decision.made" '{"subject":"debug.root-cause","decision":"Treat the confirmed root cause as the basis for the minimal fix.","rationale":"The diagnosis traced the failure path and distinguished the root cause from symptoms."}'
 oma state:verify --workflow debug --checkpoint root-cause
 ```
 
@@ -111,7 +112,6 @@ Present the root cause and proposed fix to the user.
 
 ## Step 5: Apply Fix and Write Regression Test
 
-// turbo
 1. Implement the minimal fix.
 2. Write a regression test that reproduces the original bug and verifies the fix.
 3. The test must fail without the fix and pass with it.
@@ -120,7 +120,6 @@ Present the root cause and proposed fix to the user.
 
 ## Step 6: Scan for Similar Patterns
 
-// turbo
 Use MCP `search_for_pattern` to search the codebase for the same pattern that caused the bug.
 Report any other locations that may have the same vulnerability. Fix them if confirmed.
 

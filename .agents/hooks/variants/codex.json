@@ -24,21 +24,34 @@
         "timeout": 3
       }
     ],
-    "PreToolUse": {
-      "hook": "test-filter.ts",
-      "matcher": "Bash",
-      "timeout": 5
-    },
-    "Stop": {
-      "hook": "persistent-mode.ts",
-      "timeout": 5
-    }
-  },
-  "featureFlags": {
-    "file": ".codex/config.toml",
-    "section": "features",
-    "flags": {
-      "hooks": true
-    }
+    "PreToolUse": [
+      {
+        "hook": "scm-guard.ts",
+        "matcher": "Bash",
+        "timeout": 3
+      },
+      {
+        "hook": "test-filter.ts",
+        "matcher": "Bash",
+        "timeout": 5
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hook": "refactor-guard.ts",
+        "matcher": "apply_patch|Edit|Write",
+        "timeout": 5
+      }
+    ],
+    "Stop": [
+      {
+        "hook": "persistent-mode.ts",
+        "timeout": 5
+      },
+      {
+        "hook": "refactor-guard.ts",
+        "timeout": 5
+      }
+    ]
   }
 }

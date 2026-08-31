@@ -2,6 +2,8 @@
 
 Each phase must pass its gate before proceeding to the next.
 
+The "Owner" of each gate coordinates the phase and records the verdict; it does **not** review its own phase inline. The review-type criteria below (completeness, alignment, safety, reusability, consistency, quality, cascade, final) are assessed by fresh, context-isolated reviewer subagents per the **Cross-Context Review (CCR) Dispatch** section of `ultrawork.md` and the CCR Mandate in `multi-review-protocol.md`. On a repeated gate failure, re-review with a fresh reviewer context — adding more same-context passes does not recover the gap.
+
 ---
 
 ## PLAN_GATE
@@ -11,6 +13,7 @@ Each phase must pass its gate before proceeding to the next.
 
 ### Criteria
 - [ ] Plan documented with acceptance criteria
+- [ ] Where set, `test_approach` is valid (`tdd|test_after|not_applicable`); every `not_applicable` carries `test_approach_rationale` + `alternative_verification`; refactor tasks are never `tdd` (see `_shared/core/test-approach.md`)
 - [ ] Assumptions explicitly listed
 - [ ] Alternatives considered for architecture decisions (min 2)
 - [ ] Over-engineering review completed
@@ -34,6 +37,7 @@ Revise plan, do not proceed to IMPL
 ### Criteria
 - [ ] Code compiles/builds successfully
 - [ ] Tests pass
+- [ ] Tasks marked `test_approach: tdd` have a `TDD_EVIDENCE` block (focused test command, RED failure, GREEN pass) in the result — checked **only** for `tdd` tasks; `oma verify <agent>` automates this
 - [ ] Only planned files modified
 - [ ] No unrequested features added
 - [ ] Diff reviewed for scope creep
@@ -69,7 +73,7 @@ Return to IMPL with findings
 
 ## REFINE_GATE
 
-**Owner**: Implementation + Debug Agents
+**Owner**: Implementation + Refactor Agents
 **Trigger**: After Steps 9-13
 
 ### Criteria
@@ -96,7 +100,7 @@ Address issues, re-verify
 ### Criteria
 - [ ] Lint passes
 - [ ] Type check passes
-- [ ] Test coverage >= 80%
+- [ ] Test coverage >= 80% (hard floor — no task's `test_approach`, including `not_applicable`, waives or lowers it)
 - [ ] UX flows verified
 - [ ] No hardcoded secrets
 - [ ] Migrations safe

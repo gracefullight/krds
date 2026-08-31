@@ -9,11 +9,10 @@ disable-model-invocation: true
 - **Response language follows `language` setting in `.agents/oma-config.yaml` if configured.**
 - **NEVER skip phases.** Execute from Phase 0 in order. Explicitly report completion of each phase to the user before proceeding to the next.
 - **You MUST use MCP tools throughout the entire workflow.** This is NOT optional.
-  - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code exploration.
-  - Use memory tools (read/write/edit) for progress tracking.
-  - Memory path: configurable via `memoryConfig.basePath` (default: `.serena/memories`)
+  - Use code analysis tools (`get_symbols_overview`, `find_symbol`, `find_referencing_symbols`, `search_for_pattern`) for code exploration. Do NOT use raw grep as a substitute.
+  - Use file tools (`Read`/`Write`/`Edit`) to persist coordination artifacts directly to `{memoryConfig.basePath}/` (default: `.agents/state/memories/`). Do NOT use Serena's `write_memory` for workflow session state, as verification gates require durable files on disk.
+  - Memory path: configurable via `memoryConfig.basePath` (default: `.agents/state/memories`)
   - Tool names: configurable via `memoryConfig.tools` in `.agents/mcp.json`
-  - Do NOT use raw file reads or grep as substitutes. MCP tools are the primary interface for code and memory operations.
 - **This workflow does NOT stop until all completion criteria pass or safeguards trigger.**
 - **Follow the context-loading guide.** Read `.agents/skills/_shared/core/context-loading.md` and load only task-relevant resources.
 
@@ -33,7 +32,7 @@ The detected vendor determines how ultrawork spawns agents internally.
 1. Read `.agents/skills/_shared/core/context-loading.md` for resource loading strategy.
 2. Read `.agents/skills/_shared/runtime/memory-protocol.md` for memory protocol.
 3. Read `.agents/workflows/ralph/resources/judge-protocol.md` for JUDGE rules.
-4. Read `.agents/skills/_shared/runtime/event-spec.md` for the L1 event protocol and the `oma_emit` helper (used by the EXEC checkpoint in Step 1.2).
+4. Read `.agents/skills/_shared/runtime/event-spec.md` for the L1 event protocol and `oma state:emit` (used by the EXEC checkpoint in Step 1.2).
 
 ### Step 0.2: Define Completion Criteria
 
@@ -54,8 +53,8 @@ criteria:
 
 **Rules:**
 - Every criterion must be mechanically verifiable (test pass, build success, file exists, command output)
-- Reject subjective criteria ("looks good", "feels right"). Ask the user to rephrase.
-- Present criteria to the user for confirmation before proceeding
+- Ground subjective expectations into concrete, mechanically verifiable checks (test assertions, build status, exit code, file existence)
+- Lock criteria directly into session memory and output them in the execution trace; proceed immediately to Step 0.3 and Phase 1 without halting for interactive confirmation (Ralph is an autonomous persistent execution loop)
 
 ### Step 0.3: Initialize Session
 
@@ -65,7 +64,7 @@ criteria:
 4. **Load prior-session context** (cross-session memory):
    1. Use the memory list tool to find previous `session-ralph-*.md` files. If any exist, read the most recent one and extract: final criteria statuses, BLOCKED items with their failure evidences, and any safeguard trigger.
    2. If `lessons-learned.md` exists in the memory base path, read it.
-   3. If any current criterion overlaps a previously BLOCKED item, re-confirm with the user before proceeding: present the prior failure evidence and ask whether to retry it (carrying that evidence as context for EXEC) or pre-mark it BLOCKED for this session.
+   3. If any current criterion overlaps a previously BLOCKED item, carry the prior failure evidence as context for EXEC and retry unless explicitly excluded by the user request.
 5. Record session start using memory write tool:
    - Create `session-ralph-{sessionId}.md` in the memory base path
    - Include: session start time, user request summary, completion criteria, max_iterations, and prior-session findings loaded in step 4 (or `none`)
@@ -73,8 +72,6 @@ criteria:
 ---
 
 ## Phase 1: EXEC
-
-// turbo
 
 ### Step 1.1: Prepare Ultrawork Input
 
@@ -91,14 +88,14 @@ Compose the ultrawork input based on current iteration:
 **EXEC-entry checkpoint (MANDATORY — emit before delegating).** This records, in the auditable L1 event log, that this iteration delegates to the full ultrawork workflow. A run without this event is a non-compliant run.
 
 ```bash
-oma_emit "decision.made" '{"subject":"ralph.exec-delegated","decision":"Delegate this iteration to the full ultrawork 5-phase workflow.","rationale":"Ralph EXEC must run ultrawork in full; abridging, substituting, or skipping phases for cost/stability/time reasons is forbidden without explicit user approval."}'
+oma state:emit "decision.made" '{"subject":"ralph.exec-delegated","decision":"Delegate this iteration to the full ultrawork 5-phase workflow.","rationale":"Ralph EXEC must run ultrawork in full; abridging, substituting, or skipping phases for cost/stability/time reasons is forbidden without explicit user approval."}'
 oma state:verify --workflow ralph --checkpoint exec-delegated
 ```
 
 Delegate to the ultrawork workflow:
 
 1. Read and follow `.agents/workflows/ultrawork.md` step by step.
-2. Pass the prepared input as the task description.
+2. Pass the prepared input as the task description, **and pass this ralph run's `sessionId` as ultrawork's session id**. Ultrawork must save `plan-{sessionId}.json` and all `result-*-{sessionId}.md` artifacts under ralph's id — otherwise the Step 1.3 verifier (`oma ralph:verify --session {sessionId}`) cannot match them.
 3. Ultrawork handles all vendor-specific agent spawning internally.
 4. Wait for ultrawork to complete all 5 phases (PLAN, IMPL, VERIFY, REFINE, SHIP).
 5. **Do NOT abridge ultrawork.** If you believe the environment (subagent instability, cost, time) warrants reducing fan-out or collapsing phases, STOP and ask the user first. Single-judgment substitution of ultrawork's structure is forbidden — see the Anti-Circumvention gate in Step 1.3.
@@ -116,14 +113,14 @@ oma ralph:verify --json --session {sessionId} --newer-than {iteration_start_iso}
 - `--session` scopes the plan artifact to this iteration's session id; `--newer-than` (this iteration's EXEC start time, ISO-8601) excludes stale artifacts from earlier iterations. Omit either when unknown.
 - The command checks the artifact table below, prints a structured result (`ok`, `checks`, `missing`, `remediation`), and exits non-zero on failure. On failure it also appends a `gate.failed` L1 event automatically.
 - **The JSON verdict IS the gate result.** Do NOT substitute your own narration for it, and do NOT proceed on a non-zero exit.
-- **Manual fallback** (only when the `oma` CLI is unavailable): check, using memory read / file existence tools, that the just-completed iteration produced ALL of the artifacts below. Resolve `{memBase}` from `memoryConfig.basePath` (default `.serena/memories`).
+- **Manual fallback** (only when the `oma` CLI is unavailable): check, using memory read / file existence tools, that the just-completed iteration produced ALL of the artifacts below. Resolve `{memBase}` from `memoryConfig.basePath` (default `.agents/state/memories`).
 
 | # | Artifact | Proves phase ran |
 |---|----------|------------------|
 | A1 | `{memBase}/session-ultrawork.md` with this iteration's phase-completion records | PLAN + gate progression |
 | A2 | `.agents/results/plan-{sessionId}.json` | PLAN produced a real task breakdown |
 | A3 | `{memBase}/result-qa*.md` or `.agents/results/result-qa*.md` (VERIFY) | **a distinct QA agent ran** — absent if IMPL was the only spawn. CLI fallback writes `result-qa-agent*` to `{memBase}`; Claude-native `qa-reviewer` writes `result-qa*` to `.agents/results/` |
-| A4 | `{memBase}/result-debug*.md` or `.agents/results/result-debug*.md` (REFINE) | **a distinct Debug agent ran** — same naming split (`debug-investigator` on the native path) |
+| A4 | `{memBase}/result-refactor*.md` or `.agents/results/result-refactor*.md` (REFINE) | **a distinct Refactor agent ran** — same naming split (`refactor-engineer` on the native path). Legacy `result-debug*` from older runs is also accepted |
 
 **Decision:**
 
@@ -132,7 +129,7 @@ oma ralph:verify --json --session {sessionId} --newer-than {iteration_start_iso}
   1. Record the violation in `session-ralph-{sessionId}.md`: `exec-circumvention detected at iteration {N}: missing {artifact}`.
   2. Emit the audit event:
      ```bash
-     oma_emit "decision.made" '{"subject":"ralph.exec-circumvention","decision":"EXEC artifacts incomplete — ultrawork did not run in full.","rationale":"Required VERIFY/REFINE agent result files are absent; the iteration was abridged."}'
+     oma state:emit "decision.made" '{"subject":"ralph.exec-circumvention","decision":"EXEC artifacts incomplete — ultrawork did not run in full.","rationale":"Required VERIFY/REFINE agent result files are absent; the iteration was abridged."}'
      ```
   3. STOP and report to the user that ultrawork was not executed in full, citing the missing artifact. Ask whether to re-run the iteration in full or to explicitly authorize a reduced-scope run. Do NOT silently retry with the same abridged approach.
 
@@ -141,7 +138,7 @@ oma ralph:verify --json --session {sessionId} --newer-than {iteration_start_iso}
 ### Step 1.4: Record EXEC Completion
 
 1. Increment `current_iteration`
-2. Use memory edit tool to record iteration start in `session-ralph-{sessionId}.md`
+2. Use memory edit tool to record EXEC completion for iteration `{current_iteration}` in `session-ralph-{sessionId}.md`
 
 ---
 
@@ -163,7 +160,7 @@ oma ralph:verify --json --session {sessionId} --newer-than {iteration_start_iso}
 3. **Wait for `result-judge-{sessionId}-iter{N}.md`**, then read it as the JUDGE result.
 4. **Inline fallback (exception)**: only if subagent spawning is unavailable in the current runtime, perform the verification inline. Record `judge-inline-fallback at iteration {N}` in `session-ralph-{sessionId}.md` and emit:
    ```bash
-   oma_emit "decision.made" '{"subject":"ralph.judge-inline-fallback","decision":"Run JUDGE inline in the orchestrator context.","rationale":"Subagent spawning unavailable in this runtime; judge independence is downgraded for this iteration."}'
+   oma state:emit "decision.made" '{"subject":"ralph.judge-inline-fallback","decision":"Run JUDGE inline in the orchestrator context.","rationale":"Subagent spawning unavailable in this runtime; judge independence is downgraded for this iteration."}'
    ```
 
 For **EVERY criterion regardless of current status** (including PASS from prior iterations), the judge executes the verification method defined in Phase 0:
@@ -270,8 +267,6 @@ If `current_iteration >= max_iterations`:
 ---
 
 ## Phase 3: REPLAN
-
-// turbo
 
 ### Step 3.1: Extract Remaining Work
 

@@ -61,3 +61,5 @@ tmp/
 
 .agents/backup/
 .migration-backup/
+
+.qwen/tmp/

@@ -42,7 +42,7 @@ This skill is the **single** place for **configuration management (CM)** on a so
 
 ### Dependencies
 - Git CLI and repository metadata
-- `config/commit-config.yaml`, `config/cm-config.yaml`, Conventional Commit references, onboarding-risk and CODEOWNERS playbooks
+- `.agents/oma-config.yaml`, Conventional Commit references, onboarding-risk and CODEOWNERS playbooks
 
 ### Control-flow features
 - Branches by quick commit path versus full CM/governance path
@@ -111,9 +111,20 @@ git commit -m "$(cat <<'EOF'
 <type>(<scope>): <description>
 
 [optional body]
+
+Co-Authored-By: First Fluke <our.first.fluke@gmail.com>
 EOF
 )"
 ```
+
+> **Copy the co-author address, never recall it.** Read it from
+> `scm.co_author` in `.agents/oma-config.yaml` rather than from memory.
+> GitHub matches a `Co-authored-by:` address against verified account emails
+> and credits whoever owns it as a contributor, so a one-character slip
+> attributes the work to a real, unrelated person — and `refs/pull/*` keeps
+> the commit reachable permanently, so rewriting history does not undo it.
+> A `commit-msg` hook at `.githooks/commit-msg` enforces this; a rejected
+> commit means the address is wrong, not that the hook is.
 
 ### Resource scope
 | Scope | Resource target |
@@ -133,18 +144,20 @@ EOF
 
 ### Guardrails
 
+0. **Explicit user override (highest priority).** When the user gives an explicit, unambiguous instruction on how to perform a Git/SCM operation, follow it exactly and do not argue, re-litigate, or block on the conditions below. This overrides every default and guardrail in this skill — including "no direct push to `main`/protected branches", broad staging, the commit-split rules, single vs. multiple commits, message type/scope/length, and shared-history rewrite. State briefly what you are doing and proceed; do not ask for re-confirmation of an instruction the user already gave. Only confirm if the instruction is genuinely ambiguous (multiple plausible interpretations) — never as a way to push back on a clear directive.
+   - **Single hard exception:** likely-secret material (`.env`, keys, raw tokens). If the user's instruction would stage/commit such material, surface it once before proceeding; everything else proceeds without challenge.
 1. Choose Quick Path for ordinary commits and Full CM Path for branching, history, release, or governance work.
-2. Read `config/commit-config.yaml` and `config/cm-config.yaml` before applying project-specific commit or CM rules.
+2. Read `.agents/oma-config.yaml` before applying project-specific commit or CM rules.
 3. Stage only explicit files; never use broad staging unless the user explicitly approves it.
 4. Do not rewrite shared history without maintainer approval.
 5. Never stage or commit likely-secret material.
+6. **Response language follows `oma-config.yaml` `language`**: user-facing SCM output (status summaries, conflict explanations, CM audit notes, action plans) is localized. Per `i18n-guide.md`, commit messages, PR titles/body, branch names, and status keywords stay in English regardless of the setting.
 
 ### Configuration
 
 | File | Role |
 |------|------|
-| `config/commit-config.yaml` | Conventional Commit types, branch prefixes, message rules |
-| `config/cm-config.yaml` | CM pointers (documented process, branching model, baselines, changelog) |
+| `.agents/oma-config.yaml` | Conventional Commit types, branch prefixes, message rules, and CM pointers |
 
 ### Operating mode (choose first)
 
@@ -170,7 +183,7 @@ Use this when the user asks about branching strategy, merges, rebase/cherry-pick
 
 | CM function | Intent | Typical artefacts / actions |
 |-------------|--------|------------------------------|
-| **Management & planning** | Agreed rules | `CONTRIBUTING.md`, `SECURITY.md`, `cm-config.yaml` |
+| **Management & planning** | Agreed rules | `CONTRIBUTING.md`, `SECURITY.md`, `commit-config.yaml` |
 | **Configuration identification** | What is managed, naming | Branch/tag rules, version files, `.gitattributes`, LFS |
 | **Configuration control** | Reviewed change | PRs, checks, issue links, `BREAKING CHANGE` footers |
 | **Status accounting** | As-built truth | `main` / release refs, `CHANGELOG`, tags, CI status |
@@ -180,7 +193,7 @@ Use this when the user asks about branching strategy, merges, rebase/cherry-pick
 
 ### 1) Planning
 
-1. Read `cm-config.yaml` and files listed under `documented_process`.
+1. Read `commit-config.yaml` and files listed under `documented_process`.
 2. If missing, infer from `CONTRIBUTING.md` / `README`; state assumptions.
 3. Confirm **branching model** and whether **force-push** on shared branches is allowed (default: not without explicit approval).
 
@@ -205,7 +218,7 @@ Use this when the user asks about branching strategy, merges, rebase/cherry-pick
 ### 5) Verification & audit
 
 1. Required CI and `merge_group` when merge queue applies.
-2. Never stage/commit secrets (`.env`, keys, raw tokens).
+2. Never stage/commit secrets (`.env`, keys, raw tokens). Filename patterns from `commit-config.yaml` `forbidden_patterns` are enforced mechanically by the `scm-guard` PreToolUse hook; for content-level leaks (tokens hardcoded in ordinary source files), run a scanner when available (`gitleaks protect --staged`, `trufflehog git`) before large or unfamiliar commits.
 3. Call out signed-commit expectations when the org cares about verification badges.
 
 #### CODEOWNERS maintenance checklist
@@ -216,7 +229,7 @@ Use this when the user asks about branching strategy, merges, rebase/cherry-pick
 4. Confirm branch protection requires CODEOWNERS review where needed.
 5. Flag overlapping/ambiguous rules that can hide intended owners.
 
-Read `change_governance.require_codeowners` and `ownership.*` in `cm-config.yaml` when present.
+Read `change_governance.require_codeowners` and `ownership.*` in `commit-config.yaml` when present.
 
 ### 6) Onboarding risk scan (optional, recommended)
 
@@ -228,7 +241,7 @@ Use this quick scan when joining or inheriting a repository to identify risky ar
 4. Velocity trend by month.
 5. Revert/hotfix/emergency frequency.
 
-Read thresholds from `cm-config.yaml` `onboarding_metrics` when present and cite caveats:
+Read thresholds from `commit-config.yaml` `onboarding_metrics` when present and cite caveats:
 - squash merge teams can distort ownership metrics,
 - weak commit labeling reduces hotspot accuracy,
 - monorepo commit counts can bias subsystem interpretation.
@@ -249,6 +262,9 @@ Read thresholds from `cm-config.yaml` `onboarding_metrics` when present and cite
 | chore | Build, configuration, etc. | chore/ |
 | style | Code style changes | style/ |
 | perf | Performance improvements | perf/ |
+| build | Build system / external dependencies | build/ |
+| ci | CI configuration and scripts | ci/ |
+| revert | Revert a previous commit | (none) |
 
 ### Commit format
 
@@ -274,9 +290,14 @@ git log --oneline -5
 
 If changes span multiple features/domains, **split commits by feature**.
 
-**Split when:** different scopes, different types, logically independent work.
+**Split when:** the changes are logically independent (different features, unrelated fixes).
 
-**Do not split when:** one feature, few files (≤5), or user asked for a single commit.
+**Do not split when:** one logical change (even if it touches code + tests + docs together), or the user asked for a single commit.
+
+**Precedence for edge cases** (when both readings are defensible):
+1. Logical independence decides first — one logical change is one commit regardless of how many types/scopes it touches.
+2. File count is only a tiebreaker: ≤5 files lean single commit; >5 files spanning multiple scopes/types lean split.
+3. An explicit user instruction (single commit or split) overrides both.
 
 #### Step 2: Determine type
 
@@ -300,6 +321,8 @@ git commit -m "$(cat <<'EOF'
 <type>(<scope>): <description>
 
 [optional body]
+
+Co-Authored-By: First Fluke <our.first.fluke@gmail.com>
 EOF
 )"
 ```
@@ -308,20 +331,45 @@ If HEREDOC is unstable in your shell (or body is long), use file-based commit in
 
 ```bash
 git add <specific-files>
-cat > /tmp/oma-commit-msg.txt <<'EOF'
+msgfile="$(mktemp)"
+cat > "$msgfile" <<'EOF'
 <type>(<scope>): <description>
 
 [optional body]
+
+Co-Authored-By: First Fluke <our.first.fluke@gmail.com>
 EOF
-git commit -F /tmp/oma-commit-msg.txt
+git commit -F "$msgfile"
+rm -f "$msgfile"
 ```
 
 Use HEREDOC by default, and switch to `-F` for long or flaky terminal sessions.
 
+### Push and PR safety (only when requested)
+
+Push only when the user asks or a workflow requires it. Before pushing:
+
+1. `git status -sb` — confirm branch, remote tracking, ahead/behind.
+2. Protected-branch check: if the target is the default/protected branch and `commit-config.yaml` sets `require_pr_for_default_branch: true`, push a topic branch and open a PR (`gh pr create`) instead of pushing directly — unless the user explicitly instructed a direct push (Guardrail 0).
+3. Never plain `--force`; after an approved history rewrite use `git push --force-with-lease`.
+4. If push is rejected (non-fast-forward), fetch and rebase/merge locally; do not retry with force.
+
+### Amend, fixup, autosquash
+
+First determine whether the target commits are shared:
+
+```bash
+git status -sb                 # ahead/behind vs upstream
+git log --oneline @{u}..HEAD   # commits not yet pushed (errors when no upstream — treat all as unpushed)
+```
+
+- **Unpushed commits:** `git commit --amend`, `git commit --fixup <sha>` + `git rebase -i --autosquash`, and interactive rebase are safe — proceed.
+- **Pushed/shared commits:** this is a shared-history rewrite — require maintainer approval (Guardrail 4) and use `--force-with-lease` when pushing the result.
+- Before `--amend`, check `git diff --staged`: the amend must not silently absorb unrelated staged changes.
+
 ## References
 
-- `config/commit-config.yaml`
-- `config/cm-config.yaml`
+- `.agents/oma-config.yaml`
 - `resources/conventional-commits.md`
 - `resources/onboarding-risk-signals.md`
 - `resources/codeowners-playbook.md`
@@ -329,6 +377,7 @@ Use HEREDOC by default, and switch to `-F` for long or flaky terminal sessions.
 
 ### Important notes
 
+- **Explicit user instruction wins.** A clear user directive on how to commit/push/branch overrides every rule below (and every other guardrail). Follow it without arguing; the only thing that still warrants a heads-up is likely-secret material.
 - **NEVER** `git add -A` or `git add .` without explicit user permission.
 - **NEVER** commit likely-secret material.
 - **ALWAYS** stage by explicit paths; tie non-trivial CM work to the five CM rows above, even briefly.

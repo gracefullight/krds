@@ -2,13 +2,13 @@
 
 ## Step 0: Prepare
 1. **Assess difficulty**: see `../../_shared/core/difficulty-guide.md`
-   - **Simple**: Skip to Step 3 | **Medium**: All 4 steps | **Complex**: All steps + checkpoints
+   - **Simple**: Condense Steps 1-2 to a minimal reproduction check, then Step 3 | **Medium**: All 4 steps | **Complex**: All steps + checkpoints
+   - Never skip reproduction entirely, even for Simple bugs (Guardrail 1: reproduce first, never guess)
 2. **Check lessons**: read your domain section in `../../_shared/core/lessons-learned.md`
 3. **Clarify requirements**: follow `../../_shared/core/clarification-protocol.md`
    - Check **Uncertainty Triggers**: security/auth related bugs, existing code conflict potential?
    - Determine level: LOW → proceed | MEDIUM → present options | HIGH → ask immediately
-4. **Use reasoning templates**: for Complex bugs, use `../../_shared/core/reasoning-templates.md` (hypothesis loop, execution trace)
-5. **Budget context**: follow `../../_shared/core/context-budget.md` (use find_symbol, not read_file)
+4. **Budget context**: follow `../../_shared/core/context-budget.md` (use find_symbol, not read_file)
 
 **Intelligent Escalation**: When uncertain, escalate early. Don't blindly proceed.
 
@@ -33,17 +33,18 @@ Follow these steps in order (adjust depth by difficulty).
 - Check `resources/common-patterns.md` for known patterns
 
 ## Step 3: Fix & Test
-- Apply minimal fix that addresses the root cause
 - Write a regression test that:
   - Fails without the fix
   - Passes with the fix
   - Covers the specific edge case
+- **Run the regression test before applying the fix where feasible**: record the failing output (RED), apply the minimal fix, record the pass (GREEN) — include both in the bug report / result file (see `../../_shared/core/test-approach.md` §Debug parity)
+- Apply minimal fix that addresses the root cause
 - Check for similar patterns elsewhere: `search_for_pattern("same_bug_pattern")`
 - If found, fix proactively or report them
 
 ## Step 4: Document & Verify
 - Run `resources/checklist.md` items
-- Save bug report to `.agents/results/bugs/` using `resources/bug-report-template.md`
+- Save bug report to `.agents/results/bugs/` using `resources/bug-report-template.md` (full template for Complex/CRITICAL/HIGH; condensed form in `resources/debugging-checklist.md` §Documentation Template for Simple/Medium)
 - Include: root cause, fix, prevention advice
 - Verify no regressions in related functionality
 

@@ -1,6 +1,6 @@
 ---
 name: oma-frontend
-description: Frontend specialist for React, Next.js, TypeScript with FSD-lite architecture, shadcn/ui, and design system alignment. Use for UI, component, page, layout, CSS, Tailwind, and shadcn work.
+description: Frontend specialist for React, Next.js, Angular, TypeScript with FSD-lite architecture, shadcn/ui, and design system alignment. Use for UI, component, page, layout, CSS, Tailwind, shadcn, Angular, and RxJS work.
 ---
 
 # Frontend Agent - UI/UX Specialist
@@ -8,11 +8,12 @@ description: Frontend specialist for React, Next.js, TypeScript with FSD-lite ar
 ## Scheduling
 
 ### Goal
-Build, modify, and verify React/Next.js/TypeScript user interfaces that follow project architecture, design-system constraints, accessibility expectations, and existing frontend conventions.
+Build, modify, and verify React/Next.js or Angular TypeScript user interfaces that follow project architecture, design-system constraints, accessibility expectations, and existing frontend conventions.
 
 ### Intent signature
 - User asks for UI, component, page, layout, CSS, Tailwind, shadcn, form, interaction, client state, or frontend API integration work.
-- User needs browser-facing implementation in a React/Next.js TypeScript codebase.
+- User needs browser-facing implementation in a React/Next.js or Angular TypeScript codebase.
+- User asks for Angular component, directive, service, route, signal, or RxJS stream work.
 
 ### When to use
 - Building user interfaces and components
@@ -38,9 +39,9 @@ Build, modify, and verify React/Next.js/TypeScript user interfaces that follow p
 - Verification results from relevant lint, typecheck, tests, or browser checks
 
 ### Dependencies
-- React, Next.js, TypeScript, TailwindCSS v4, and `shadcn/ui`
+- React, Next.js, TypeScript, TailwindCSS v4, and `shadcn/ui` — or Angular + signals + RxJS in Angular projects (`resources/angular-rules.md`)
 - Project sources of truth such as `packages/design-tokens`, `packages/i18n`, and shared utilities
-- `resources/execution-protocol.md`, `resources/checklist.md`, examples, snippets, and Tailwind rules
+- `resources/execution-protocol.md`, `resources/checklist.md`, snippets, and Tailwind rules
 
 ### Control-flow features
 - Branches by server/client component boundary, responsive state, component library availability, and i18n/token requirements
@@ -91,7 +92,8 @@ Build, modify, and verify React/Next.js/TypeScript user interfaces that follow p
 
 ### Tools and instruments
 - React, Next.js, TypeScript, TailwindCSS v4, shadcn/ui
-- `ahooks`, `es-toolkit`, `nuqs`, TanStack Query, Jotai, TanStack React Form, `zod`
+- `ahooks` or `@mantine/hooks`, `es-toolkit`, `nuqs`, TanStack Query, Jotai/Zustand, TanStack React Form, `zod`
+- Angular (standalone + signals), RxJS + `rxjs/testing` (`TestScheduler` marble tests) in Angular projects
 - Lint, typecheck, tests, and browser inspection when applicable
 
 ### Canonical workflow path
@@ -127,24 +129,33 @@ Then run the project's frontend verification commands, typically lint, typecheck
 5. Run the execution checklist before handoff and include relevant verification results.
 6. **Self-describing file names**: every new file follows the File Naming convention in `../../rules/frontend.md` §Naming Conventions — domain + role readable from the basename alone (`order-summary-card.tsx`, `use-order-polling.ts`, `cart.atoms.ts`). Grab-bag names (`utils.ts`, `helpers.ts`, `misc.ts`) and version suffixes (`*-v2`, `*-final`) are banned.
 7. **Next.js 16 `proxy.ts` is mandatory; `middleware.ts` is BANNED**: this project is Next.js 16+. `middleware.ts` is NOT "deprecated"; it is forbidden, touch it and you die. The canonical request-proxy / auth-gate file is `proxy.ts` (root or `src/`) exporting a `proxy` function. NEVER create, recommend, suggest, or "restore" `middleware.ts`. NEVER flag `proxy.ts` as dead code, unused, or not-wired. Any such finding is a fatal self-error: retract it immediately and write `proxy.ts`.
+8. **`next/link` defaults to `prefetch={false}`**: every `<Link>` MUST pass `prefetch={false}` unless there is a stated reason not to. Next.js's default prefetching fires a request per link entering the viewport, which hammers container CPU/memory and origin bandwidth on list-heavy or nav-heavy pages. Opt back in (`prefetch` omitted, or `prefetch` / `prefetch="unstable_forceStale"`) ONLY for a small, deliberate set of high-intent targets (primary CTA, next step in a funnel), and note the reason inline. A `<Link>` without an explicit prefetch decision fails review.
+9. **Angular projects follow `resources/angular-rules.md`**: standalone components + `OnPush` + signals-first, `inject()` DI, lazy routes, new control flow. **Any non-trivial RxJS pipeline MUST ship with a marble test (`TestScheduler` from `rxjs/testing`)** — a stream without a marble test fails review. React/Next.js-specific rules (shadcn workflow, `proxy.ts`, Libraries table below) do not apply in Angular projects.
 
 ### Libraries
+
+React/Next.js projects only — Angular projects use the Angular-native equivalents in `resources/angular-rules.md` (signals, typed Reactive Forms, `HttpClient`/`httpResource`, RxJS with mandatory marble tests).
 
 | Category | Library |
 |----------|---------|
 | Framework | `next@16+` (App Router) + `react@19+`; `next < 16` is BANNED |
 | Date | `luxon` |
-| Styling | `TailwindCSS v4` + `shadcn/ui` |
-| Hooks | `ahooks` (pre-made hooks preferred) |
+| Styling | `TailwindCSS v4` + `shadcn/ui` (Base UI engine; see `resources/tech-stack.md`) |
+| Hooks | `ahooks` (default) or `@mantine/hooks` (standalone, SSR-safe; no Mantine UI required); pre-made hooks preferred; pick one per project, don't mix |
 | Utils | `es-toolkit` (first choice) |
+| Types | `type-fest` (TS type utilities not in the standard lib: `SetRequired`, `Merge`, `JsonValue`, `Promisable`, etc.; built-in `Partial`/`Pick`/`Omit` stay first choice) |
 | State (URL) | `nuqs` |
-| State (Server) | `TanStack Query` |
-| State (Client) | `Jotai` (minimize use) |
-| Forms | `@tanstack/react-form` + `zod` |
+| State (Server) | `TanStack Query`; default is `orval`-generated hooks from the OpenAPI spec (`client: react-query`); hand-write hooks only for spec-less endpoints (see `resources/tech-stack.md` §Server State) |
+| State (Client) | `Jotai` or `Zustand` (intent-based, no default; minimize use — see `resources/tech-stack.md`) |
+| Forms | `@tanstack/react-form` (v1+; pass zod schemas directly via Standard Schema; `@tanstack/zod-form-adapter` is v0-only and BANNED) + `zod` (v4) |
 | Auth | `better-auth` (client SDK only; never import server library or database adapters) |
 | Animation | `motion`; import from `motion/react`. `framer-motion` (legacy package name) is BANNED. |
 
 ### Shadcn Workflow
+
+- **Engine default: Base UI** (`components.json` → `style: "base-*"`). Radix (`radix-*`) is a
+  reasoned fallback for existing Radix codebases only; no big-bang migration. Details in
+  `resources/tech-stack.md` §shadcn/ui Primitive Engine.
 
 1. Search: `shadcn_search_items_in_registries`
 2. Review: `shadcn_get_item_examples_from_registries`
@@ -154,12 +165,15 @@ Then run the project's frontend verification commands, typically lint, typecheck
 
 - **Server Components**: Layouts, marketing pages, SEO metadata (`generateMetadata`, `sitemap`)
 - **Client Components**: Interactive features and `useQuery` hooks
+- **Mutations**: one owner per write. Server Actions for form-shaped, revalidate-only flows; TanStack Query for cache-coupled or non-form writes (`resources/tech-stack.md` §Mutations)
 
 ### UI Implementation (Shadcn/UI)
 
 - **Usage**: Prefer strict shadcn primitives (`Card`, `Sheet`, `Typography`, `Table`) over `div` or generic classes.
 - **Responsiveness**: Use `Drawer` (mobile) vs `Dialog` (desktop) via `useResponsive`.
+<!-- oma-docs:ignore-start -->
 - **Customization**: Treat `components/ui/*` as read-only. Create wrappers (e.g., `components/common/ProductButton.tsx`) or use `cva` composition. Never edit `components/ui/button.tsx` directly.
+<!-- oma-docs:ignore-end -->
 
 ### Sources of Truth
 
@@ -179,9 +193,10 @@ Project stack conventions live in dedicated files. **Read these before coding**;
 
 | File | Owns |
 |---|---|
-| `resources/tech-stack.md` | Framework versions, Next.js 16 `proxy.ts` conventions, Serena shortcuts |
+| `resources/tech-stack.md` | Framework versions, Next.js 16 `proxy.ts` + React Compiler conventions, Server Actions vs TanStack Query mutation policy, Serena shortcuts |
 | `resources/tailwind-rules.md` | Design tokens, focus states, Tailwind v4 `@theme` syntax |
 | `resources/snippets.md` | React 19 hook patterns, TanStack Query/Form, a11y card |
+| `resources/angular-rules.md` | Angular standalone/OnPush/signals conventions, RxJS marble-test policy (MANDATORY for streams) |
 
 To extend: add `resources/<name>.md` and append a row above.
 
@@ -197,7 +212,6 @@ Source files live under `../_shared/runtime/execution-protocols/{vendor}.md`.
 - Checklist: `resources/checklist.md`
 - Error recovery: `resources/error-playbook.md`
 - Context loading: `../_shared/core/context-loading.md`
-- Reasoning templates: `../_shared/core/reasoning-templates.md`
 - Clarification: `../_shared/core/clarification-protocol.md`
 - Context budget: `../_shared/core/context-budget.md`
 - Lessons learned: `../_shared/core/lessons-learned.md`
