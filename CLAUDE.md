@@ -90,3 +90,5 @@ Read the relevant file from `.agents/rules/` when working on matching code.
 | quality | `.agents/rules/quality.md` | on request |
 
 <!-- OMA:END -->
+
+@AGENTS.md
