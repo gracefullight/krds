@@ -1,6 +1,6 @@
-# Porter's 5 Forces — Analyst Prompt
+# Porter's Five Forces — Analyst Prompt
 
-You are filling the `## Porter's 5 Forces` section of an `oma market` brief.
+You are filling the `## Porter's Five Forces` section of an `oma market` brief.
 This framework applies when the topic is competitive positioning of a
 named subject (default for `intent=competitor`).
 
@@ -39,8 +39,10 @@ same need.
 
 - "I replaced X with Y" / "we don't need X anymore because Z"
   → High substitute threat.
-- No alternative discussion / users defend why this category is unique
-  → Low substitute threat.
+- Verified switching barriers or comparisons showing that substitutes do not
+  satisfy the same need → Low substitute threat, within the observed scope.
+- No discussion of alternatives → insufficient signal; absence of discussion
+  does not establish low threat.
 
 ### Industry rivalry
 
@@ -63,16 +65,16 @@ Cluster signals: intensity of competition within the category.
 ## Output skeleton
 
 ```markdown
-**Threat of new entrants** — Verdict: Low | Moderate | High
+**Threat of new entrants** - Verdict: Low | Moderate | High
 - [name](url) - signal summary. (C#)
 
-**Bargaining power of suppliers** — Verdict: ...
+**Bargaining power of suppliers** - Verdict: ...
 
-**Bargaining power of buyers** — Verdict: ...
+**Bargaining power of buyers** - Verdict: ...
 
-**Threat of substitutes** — Verdict: ...
+**Threat of substitutes** - Verdict: ...
 
-**Industry rivalry** — Verdict: ...
+**Industry rivalry** - Verdict: ...
 
 **Strategic implication**: 1-2 sentences. Where does the subject have
 the most room to defend or grow?

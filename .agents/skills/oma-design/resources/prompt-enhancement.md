@@ -52,92 +52,46 @@ SECTION: [Name]
 
 ## Example Enhancement
 
-### User Input
-> "Make a landing page for my SaaS product"
+User input: "Make a landing page for my SaaS product."
 
-### Enhanced Output
+Use the supplied product description, brand, and existing project stack. Resolve missing
+product facts before writing claims. This outline demonstrates layout choices, not a
+required list of sections or dependencies.
 
-```
+```text
 SECTION: Hero
-- Layout: centered, full viewport height, max-w-5xl
-- Background: subtle animated gradient (brand colors) or solid dark
-- Content:
-  - Badge: glass pill with announcement text ("New: Feature X launched")
-  - Heading: display font, clamp(2rem, 5.5rem), tight leading (0.9)
-  - Subtext: body font, muted color, max-w-md, font-light
-  - CTA: primary button (solid) + secondary button (glass outline)
-- Motion: heading BlurText word reveal, subtext fade-in at 0.8s delay
-- Responsive: heading scales down 2 steps, buttons stack vertically
+- Layout: clear heading, supporting paragraph, primary action; max-width suited to copy
+- Background: existing brand surface with measured text contrast
+- Content: verified product benefit and functional CTA; omit an announcement if none exists
+- Typography: heading clamp(2rem, 6vw, 5.5rem); body at least 16px on mobile
+- Motion: optional brief fade; content remains visible with reduced motion or JS disabled
+- Responsive: maintain reading order; actions may stack on narrow screens
 
-SECTION: Social Proof
-- Layout: horizontal bar below hero, centered
-- Background: transparent (same as hero)
-- Content:
-  - Badge: glass pill "Trusted by teams at..."
-  - Logos/names: infinite marquee scroll, 5-8 partner names
-- Motion: continuous marquee, pauses on hover
-- Responsive: reduce gap, smaller text
+SECTION: Relevant product features
+- Layout: comparable features share one pattern; use a list or grid based on content
+- Content: only features supplied in the brief; preserve qualifiers and limits
+- Visual: actual screenshot when useful and available; otherwise omit or label a placeholder
+- Icons: reuse the project's selected family if needed; no new library by default
+- Surface: normal project surfaces; reserve glass or other effects for a justified accent
+- Responsive: readable text and touch targets without horizontal overflow
 
-SECTION: Features (Chess Layout)
-- Layout: alternating text/image rows, py-24 px-6 md:px-16 lg:px-24
-- Background: solid dark
-- Content per row:
-  - H3 heading + paragraph + CTA button
-  - Image/video/GIF in glass rounded container
-  - Row 1: text left, image right
-  - Row 2: image left, text right (lg:flex-row-reverse)
-- Motion: fade-in on scroll intersection
-- Responsive: stack vertically on mobile (image above text)
+SECTION: Evidence (only when provided)
+- Content: approved customer names/logos, metrics, or attributed testimonials
+- Do not invent partner companies, adoption figures, quotations, or endorsements
+- Omit this section when no evidence is supplied
 
-SECTION: Features (Grid)
-- Layout: 3-4 column card grid, gap-6
-- Content per card:
-  - Icon in glass circle (w-10 h-10)
-  - Title: heading font, text-lg
-  - Description: body font, muted, text-sm
-- Motion: staggered entrance on scroll
-- Responsive: 1 col mobile → 2 col tablet → 3-4 col desktop
-
-SECTION: Stats
-- Layout: glass card, 4-column grid, centered
-- Background: desaturated video or solid with texture
-- Content:
-  - 3-4 large display numbers + small labels
-  - Values: display font, text-5xl
-  - Labels: body font, muted, text-sm
-- Motion: number count-up on scroll intersection
-- Responsive: 2x2 grid on mobile
-
-SECTION: Testimonials
-- Layout: 3-column grid
-- Content per card:
-  - Glass surface card, p-8
-  - Quote: italic, muted white (text-white/80)
-  - Avatar + Name + Role
-- Motion: none or subtle fade-in
-- Responsive: 1 col stack on mobile
-
-SECTION: CTA
-- Layout: centered, py-32
-- Background: gradient overlay or video
-- Content:
-  - Large heading: display font, text-6xl
-  - Subtext: body font, muted
-  - Two buttons: primary (solid) + secondary (glass)
-- Responsive: heading scales down, buttons stack
-
-SECTION: Footer
-- Layout: multi-column links grid + copyright bar
-- Content:
-  - 4 columns: Product, Company, Resources, Legal
-  - Bottom bar: copyright + links (text-white/40 text-xs)
-  - Border-top: border-white/10
-- Responsive: stack into 2 columns on mobile, 1 on small mobile
+SECTION: CTA and footer
+- Content: one label per action; include supplied contact/legal destinations
+- Layout: preserve visible focus and adequate contrast in both themes
 ```
+
+Any demo-only company, metric, or quote must be labeled as a placeholder and replaced
+before production delivery. Add motion/video dependencies only when the brief and project
+justify them. Keep the specification proportional to the requested page.
 
 ## Post-Enhancement
 
 After presenting the enhanced prompt:
-1. Ask the user for confirmation or adjustments
+1. Resolve only material unanswered choices; proceed under existing authorization when the brief is sufficient
 2. Apply feedback
 3. Proceed to Phase 4 (Propose) with the refined specification

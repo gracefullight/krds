@@ -1,6 +1,6 @@
 ---
 otel_spec: "1.x (stable API/SDK)"
-otel_semconv: "1.27.0 (2024-11); no stable WAF-specific semconv group; custom `waf.*` attributes used below"
+otel_semconv: "1.43.0 (2026-07); no stable WAF-specific semconv group; custom `waf.*` attributes used below"
 tools:
   - "ModSecurity v3 (libmodsecurity3): mature; OWASP CRS 4.x"
   - "Coraza v3.x: OWASP-led, Go-native; Envoy/Caddy/HAProxy integrations"
@@ -64,7 +64,7 @@ Every WAF rule evaluation emitted as a span event or structured log record MUST 
 | `service.version` | semconv (stable) | Application-side release pivot |
 | `tenant.id` | W3C Baggage | Per-tenant WAF rule scoping in multi-tenant SaaS |
 
-Note on stability: there is no OTel `waf.*` semconv group as of 2026-Q2 (semconv 1.27.0). The attribute names above are this skill's convention; they share the dot-namespace style with stable groups. If `waf.*` is later standardized, treat the above as a migration source.
+Note on stability: there is no OTel `waf.*` semconv group as of 2026-Q2 (semconv 1.43.0). The attribute names above are this skill's convention; they share the dot-namespace style with stable groups. If `waf.*` is later standardized, treat the above as a migration source.
 
 ---
 
@@ -171,8 +171,8 @@ WAF events carry security significance and must be retained per the audit signal
 | All `block` actions | 1 year | Hot or warm; queryable for FP investigation |
 | All `log` (detect-only) actions | 90 days | Hot |
 | `allow` actions | Sampled at 1% (tail-keep on flagged categories) | Hot |
-| Authenticated bypass attempts (rule match + valid session) | 7 years | WORM |
-| Rule-set version change events | 7 years | WORM; tied to release-marker stream |
+| Authenticated bypass attempts (rule match + valid session) | Approved purpose/legal schedule | Access control and tamper protection; WORM if required |
+| Rule-set version change events | Approved change-evidence schedule | Tamper protection; tied to release-marker stream |
 
 Cross-ref `../../signals/audit.md §retention matrix` for the unified retention policy.
 

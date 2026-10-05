@@ -1,13 +1,16 @@
-# Knows Sidecar Spec: Generation Rules (v0.9.0)
+# Knows Sidecar: Local Production Compatibility Rules (v0.9.0)
 
-This is the v0.9.0 record shape verified against `knows.academy` production sidecars
-(JSON Schema id: `https://knows.dev/schema/record-0.9.json`, profile `paper@1`).
-For the upstream natural-language description see `upstream-spec-cache.md`.
+These generation rules describe observed `knows.academy` production shapes and
+the narrower local `oma scholar lint` contract. They are not a complete
+canonical JSON Schema validator. `upstream-spec-cache.md` records the upstream
+snapshot, which also permits author objects, imported provenance, and normative
+modality. Preserve those shapes in imported records and report local-lint
+incompatibilities instead of erasing information. Set `$schema` only after
+validation against that exact schema; a clean local lint is insufficient.
 
-## Top-level Structure (paper@1 profile)
+## Local Generation Structure (paper@1 production compatibility)
 
 ```yaml
-$schema: "https://knows.dev/schema/record-0.9.json"
 knows_version: "0.9.0"
 record_id: "knows:generated/{slug}/1.0.0"   # only for published records; omit for local drafts
 profile: "paper@1"
@@ -157,6 +160,19 @@ freshness:
   object_ref: ev:... | stmt:... | art:...
 ```
 
+### Cross-record references (review@1)
+
+Review sidecars link back to the reviewed paper's record using the
+`record_id#local_id` grammar; `oma scholar lint` recognizes these and does not
+flag them as dangling:
+
+```yaml
+- id: rel:generalization-challenges-main-claim
+  predicate: challenged_by
+  subject_ref: "knows:examples/resnet/1.0.0#stmt:main-contribution"
+  object_ref: "stmt:missing-ablation-study"
+```
+
 ## Field Naming (copy exactly)
 
 | Concept | Correct field | Wrong |
@@ -170,7 +186,7 @@ freshness:
 | Provenance attribution | `provenance.actor` (single object) | `provenance.actors` (array) |
 | Confidence | object with `claim_strength` + `extraction_fidelity` | bare string |
 
-## Value Constraints
+## Local Generation Values (Not the Complete Canonical Enums)
 
 | Field | Allowed values |
 |-------|----------------|
@@ -181,7 +197,7 @@ freshness:
 | `coverage.statements` | `exhaustive` \| `main_claims_only` \| `key_claims_and_limitations` \| `partial` |
 | `coverage.evidence` | `exhaustive` \| `key_evidence_only` \| `partial` |
 | `artifacts[].role` | `subject` \| `supporting` \| `cited` |
-| `statement.status` | `asserted` (the only value observed across 252 production statements) |
+| `statement.status` | `asserted` \| `retracted` \| `superseded` \| `under_review` (upstream enum; production shows only `asserted`) |
 | `statement.modality` | `descriptive` \| `empirical` \| `theoretical` |
 | `statement_type` | `claim` \| `method` \| `limitation` \| `assumption` \| `definition` \| `question` |
 | `evidence_type` | `table_result` \| `figure` \| `proof` \| `observation` \| `experiment_run` \| `case_study` \| `citation_backed` |
@@ -214,6 +230,10 @@ authors: ["A. Author"]
 ```
 
 Applies to: `doi`, `venue`, `year`, ORCIDs, GitHub URLs, dataset URLs.
+
+Exception: backfilling `doi`/`venue`/`year` from **OpenAlex metadata enrichment**
+(Generate Step 4) is allowed — that is a curated external source, not fabrication.
+Verify paper identity before using catalog metadata; title-search rank alone is insufficient. Omit ambiguous fields.
 
 ## ID Format
 
@@ -251,12 +271,18 @@ Verified frequencies across 330 relations in 15 production sidecars:
 | `implements` | method → repository | code implementation |
 | `defines` | statement → definition | term introduction |
 
-Less common predicates valid per upstream natural-language doc (not yet observed):
+The upstream `knows.md` (2026-07-17 snapshot) closes the predicate set at 12:
 
 ```
-extends, contradicts, critiques, generalizes,
-specializes, introduces, refutes, replicates
+supported_by, challenged_by, depends_on, limited_by, cites, uses,
+evaluates_on, implements, documents, same_as, supersedes, retracts
 ```
+
+`cites` relations may carry an optional `citation_intent` from:
+`supports | extends | uses_method | compares_to | contradicts | reviews | cites_data | background | other`.
+Notions like "extends" or "contradicts" are citation intents, **not** predicates.
+Production-observed extras (`used_by`, `defines`) remain accepted by our lint
+(spec drift — see `upstream-spec-cache.md`).
 
 ```yaml
 # Wrong tense (warning)
@@ -273,7 +299,10 @@ predicate: challenged_by
 
 ## Relation Wiring (CRITICAL)
 
-Average **≥1.5 relations per statement**. Minimum patterns:
+The average-ratio target **1.5** is a lint diagnostic. Add only source-supported
+relations appropriate to each statement type; do not invent links to satisfy
+a quota. Source-anchored questions or definitions need not assert empirical
+support. Common patterns:
 
 | Subject | Predicate | Object |
 |---------|-----------|--------|
@@ -281,7 +310,7 @@ Average **≥1.5 relations per statement**. Minimum patterns:
 | Claim | `depends_on` | Assumption (statement) |
 | Method (statement_type=method) | `implements` | Repository (artifact) |
 | Method | `uses` | Model/Dataset (artifact) |
-| Limitation | `limited_by` | Specific cause (statement/evidence) |
+| Claim | `limited_by` | Limitation (statement) |
 
 ## Common Mistakes Cheatsheet
 

@@ -1,6 +1,6 @@
 ---
 otel_spec: "1.x (stable API/SDK)"
-otel_semconv: "1.27.0 (2024-11)"
+otel_semconv: "1.43.0 (2026-07)"
 notes:
   - "OTel mobile semconv still experimental; vendor-native SDKs dominate in 2026"
 ---
@@ -135,9 +135,9 @@ Mobile device CPU and network activity contribute to device-level energy consump
 | Metered data awareness | Detect cellular vs. Wi-Fi; warn or throttle SDK sends on cellular by default (opt-in to always-on) |
 | Request coalescing | Combine multiple queued spans into a single OTLP export request per flush cycle |
 | Certificate pinning | Implement mTLS or certificate pinning for telemetry endpoints beyond mesh-level TLS; use platform SecTrustEvaluate / TrustManager accordingly |
-| PII leakage via URL | Strip query parameters containing tokens, emails, or IDs before recording `http.url` in spans |
+| PII leakage via URL | Strip query parameters containing tokens, emails, or IDs before recording `url.full` in spans |
 
-Network request spans follow OTel HTTP client semconv (`http.request.method`, `server.address`, `http.response.status_code`, `network.protocol.name`). These are Stable semconv as of 1.27.0.
+Network request spans follow OTel HTTP client semconv (`http.request.method`, `server.address`, `http.response.status_code`, `network.protocol.name`). These are Stable semconv as of 1.43.0.
 
 ---
 
@@ -227,7 +227,7 @@ W3C Trace Context reference: `../../standards.md §W3C Trace Context`.
 | Warm start time | App resumed from background to interactive | < 1 s |
 | Hot start time | Activity recreated (Android) | < 500 ms |
 | Frame rendering | Frame drop rate (jank) | iOS ≥ 60 fps (`CADisplayLink`); Android `FrameMetricsAggregator` Jank < 0.1% |
-| ANR rate | Application Not Responding (main thread blocked > 5 s) | Android-specific; < 0.47% (Play Console threshold) |
+| User-perceived ANR rate | Daily active users with a user-perceived ANR / daily active users | Android Play overall threshold: 0.47%; custom session stall rates have a different denominator |
 | iOS Hang rate | Non-responsive main thread > 250 ms | < 0.1% (MetricKit `MXHangDiagnostic`) |
 | Network latency | Per-request round-trip time | Monitor p50/p95/p99 histograms; no universal target |
 | Crash-Free Session Rate | Sessions without a crash / total sessions | Cross-reference `crash-analytics.md §CFR` |

@@ -6,70 +6,90 @@ OPA policies, Sentinel rules, and infrastructure testing patterns.
 
 ### Required Tags Policy
 ```rego
-# required_tags.rego
+# policies/required_tags.rego — OPA >= 1.0
 package terraform.tags
 
-import future.keywords.if
-import future.keywords.in
+# Map-shaped tags only; ASG uses repeated tag blocks and needs a separate rule.
+# Extend this allowlist only after validating the exact provider plan schema.
+taggable := {"aws_instance", "aws_s3_bucket"}
 
-deny[msg] if {
-  resource := input.resource_changes[_]
-  resource.mode == "managed"
-  not resource.change.after.tags
-  msg := sprintf("Resource %s missing required tags", [resource.address])
-}
-
-deny[msg] if {
-  resource := input.resource_changes[_]
-  required_tags := {"Environment", "Project", "Owner"}
-  missing := required_tags - object.keys(resource.change.after.tags)
-  count(missing) > 0
-  msg := sprintf("Resource %s missing tags: %v", [resource.address, missing])
+deny contains msg if {
+    resource := input.resource_changes[_]
+    resource.mode == "managed"
+    resource.type in taggable
+    resource.change.after != null # ignore pure deletions
+    tags := object.get(resource.change.after, "tags", {})
+    required := {"Environment", "Project", "Owner", "CostCenter"}
+    missing := required - object.keys(tags)
+    count(missing) > 0
+    msg := sprintf("Resource %s missing tags: %v", [resource.address, missing])
 }
 ```
 
 ### Encryption Policy
 ```rego
-# encryption_required.rego
+# policies/encryption_required.rego
 package terraform.encryption
 
-deny[msg] if {
-  resource := input.resource_changes[_]
-  resource.type == "aws_s3_bucket"
-  not resource.change.after.server_side_encryption_configuration
-  msg := sprintf("S3 bucket %s must have encryption enabled", [resource.address])
+# Require the project's configured SSE-KMS algorithm on explicit encryption
+# resources. Bucket creation and existing remote configuration need separate
+# coverage; a change-only plan cannot prove the full estate is encrypted.
+deny contains msg if {
+    resource := input.resource_changes[_]
+    resource.type == "aws_s3_bucket_server_side_encryption_configuration"
+    resource.change.after != null
+    rule := resource.change.after.rule[_]
+    encryption := rule.apply_server_side_encryption_by_default[_]
+    encryption.sse_algorithm != "aws:kms"
+    msg := sprintf("%s must use aws:kms", [resource.address])
 }
 ```
+
+Also verify every bucket created by the module has a corresponding encryption
+resource (use module tests or the complete planned values/configuration). Unknown
+planned values need explicit handling; field presence in the deprecated inline
+bucket attribute is not proof of the required algorithm/key.
 
 ### Cost Control Policy
 ```rego
-# cost_control.rego
+# policies/cost_control.rego
 package terraform.cost
 
-deny[msg] if {
-  resource := input.resource_changes[_]
-  resource.type == "aws_instance"
-  instance_type := resource.change.after.instance_type
-  not startswith(instance_type, "t3.")
-  msg := sprintf("EC2 instance %s uses expensive type %s. Use t3.* for dev.", [resource.address, instance_type])
+deny contains msg if {
+    resource := input.resource_changes[_]
+    resource.type == "aws_instance"
+    resource.change.after != null
+    resource.change.after.tags.Environment == "dev"
+    instance_type := resource.change.after.instance_type
+    not startswith(instance_type, "t3.")
+    msg := sprintf("Dev EC2 %s uses disallowed type %s", [resource.address, instance_type])
 }
 ```
+
+### Combined Plan Decision
+```rego
+# policies/guardrails.rego
+package terraform.guardrails
+
+deny contains msg if { msg := data.terraform.tags.deny[_] }
+deny contains msg if { msg := data.terraform.encryption.deny[_] }
+deny contains msg if { msg := data.terraform.cost.deny[_] }
+```
+
+Run policy unit tests, then evaluate the actual plan. Evaluating a deny set without
+an exit-code flag does not gate CI. Query individual members with `--fail-defined`
+so an empty set passes and any violation fails.
 
 ## Sentinel (Terraform Cloud)
 
 ### Require Encryption
-```hcl
-# require_encryption.sentinel
-import "tfplan"
 
-main = rule {
-  all tfplan.resources.aws_s3_bucket as _, buckets {
-    all buckets as _, bucket {
-      bucket.applied.server_side_encryption_configuration is not null
-    }
-  }
-}
-```
+Use the current `tfplan/v2` or `tfconfig/v2` import and match
+`aws_s3_bucket_server_side_encryption_configuration` to the project's bucket
+resources. Check the required algorithm/key and deletion/unknown-value cases.
+Do not copy an inline `aws_s3_bucket.server_side_encryption_configuration`
+existence check as an encryption guarantee; validate this rule against fixtures
+from the exact provider/plan version before enabling a Sentinel gate.
 
 ### Restrict Instance Types
 ```hcl
@@ -86,6 +106,38 @@ main = rule {
   }
 }
 ```
+
+## Native `terraform test` (Terraform >= 1.6)
+
+Prefer the built-in HCL test framework for module tests before reaching for Terratest.
+
+```hcl
+# tests/vpc.tftest.hcl
+variables {
+  name       = "test-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+run "creates_vpc_with_expected_cidr" {
+  command = plan
+
+  assert {
+    condition     = google_compute_network.main.name == "test-vpc"
+    error_message = "VPC name does not match input"
+  }
+}
+
+run "apply_and_verify_outputs" {
+  command = apply
+
+  assert {
+    condition     = length(output.private_subnet_ids) == 2
+    error_message = "Expected 2 private subnets"
+  }
+}
+```
+
+Run with `terraform test`. `command = plan` runs assertion-only checks without creating resources; `command = apply` provisions real (or mocked, via `mock_provider`) resources and destroys them afterward.
 
 ## Terratest (Go)
 
@@ -219,12 +271,20 @@ jobs:
           directory: .
           framework: terraform
           
+      - name: Setup OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: v1.0.1
+
+      # Configure project-specific workload identity and backend credentials
+      # before this planning step. Never put secrets in the plan artifact.
       - name: Run OPA Tests
         run: |
+          terraform init -reconfigure
           terraform plan -out=tfplan
           terraform show -json tfplan > tfplan.json
           opa test policies/ --verbose
-          opa eval --data policies/required_tags.rego --input tfplan.json "data.terraform.tags.deny"
+          opa eval --fail-defined --data policies/ --input tfplan.json "data.terraform.guardrails.deny[_]"
 ```
 
 ### Validation Script
@@ -260,9 +320,12 @@ tflint
 # Plan and OPA check (if policies exist)
 if [ -d "policies" ]; then
   echo "  → Running OPA policy checks..."
+  # Requires explicitly configured backend/auth for this project.
+  terraform init -reconfigure
   terraform plan -out=tfplan
   terraform show -json tfplan > tfplan.json
   opa test policies/
+  opa eval --fail-defined --data policies/ --input tfplan.json "data.terraform.guardrails.deny[_]"
 fi
 
 echo "All validation passed!"
