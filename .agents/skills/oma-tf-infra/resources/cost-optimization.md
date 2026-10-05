@@ -47,14 +47,6 @@ resource "aws_db_instance" "main" {
 ### AWS Reserved Instances
 
 ```hcl
-# Data source for Reserved Instance offerings
-data "aws_ec2_instance_type_offerings" "available" {
-  filter {
-    name   = "instance-type"
-    values = ["t3.medium", "t3.large"]
-  }
-}
-
 # Note: Reserved Instances are purchased via Console or API, not Terraform
 # Use tags to track RI-eligible resources
 resource "aws_instance" "app" {
@@ -71,22 +63,30 @@ resource "aws_instance" "app" {
 ### GCP Committed Use Discounts (CUDs)
 
 ```hcl
-# Committed use discount for predictable workloads
-resource "google_compute_resource_policy" "cud" {
-  name   = "cud-policy"
+# Resource-based CUDs can be purchased directly via Terraform.
+# WARNING: commitments are binding contracts — they cannot be updated
+# or deleted once created. Review amounts carefully before apply.
+resource "google_compute_region_commitment" "cud" {
+  name   = "app-cud"
   region = var.region
+  plan   = "TWELVE_MONTH" # or THIRTY_SIX_MONTH
 
-  group_placement_policy {
-    availability_domain_count = 1
+  resources {
+    type   = "VCPU"
+    amount = "4"
+  }
+  resources {
+    type   = "MEMORY"
+    amount = "16"
   }
 }
 
-# Note: CUDs are purchased in console, tag resources for tracking
+# Tag commitment-covered resources for cost tracking
 resource "google_compute_instance" "app" {
   machine_type = "n2-standard-4"
-  
+
   labels = {
-    cud_eligible = "true"
+    cud_covered = "true"
   }
 }
 ```
@@ -117,14 +117,7 @@ resource "aws_launch_template" "spot" {
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.medium"
 
-  # Spot instance configuration
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      max_price = "0.05"  # Maximum spot price willing to pay
-      spot_instance_type = "one-time"
-    }
-  }
+  # Mixed policy controls On-Demand/Spot distribution; omit InstanceMarketOptions.
 }
 
 resource "aws_autoscaling_group" "spot" {
@@ -136,11 +129,6 @@ resource "aws_autoscaling_group" "spot" {
   min_size         = 1
   max_size         = 10
   desired_capacity = 3
-
-  launch_template {
-    id      = aws_launch_template.spot.id
-    version = "$Latest"
-  }
 
   # Mixed instances policy for spot diversification
   mixed_instances_policy {
@@ -156,7 +144,7 @@ resource "aws_autoscaling_group" "spot" {
         instance_type = "t3a.medium"
       }
       override {
-        instance_type = "m5.medium"
+        instance_type = "m5.large"
       }
     }
 
@@ -169,25 +157,28 @@ resource "aws_autoscaling_group" "spot" {
 }
 ```
 
-### GCP Preemptible VMs
+### GCP Spot VMs
 
 ```hcl
+# Spot VMs are the recommended successor to preemptible VMs (no 24h limit).
+# `preemptible = true` alone creates a legacy preemptible VM;
+# `provisioning_model = "SPOT"` is what makes it a Spot VM.
 resource "google_compute_instance" "worker" {
   name         = "worker"
   machine_type = "n2-standard-4"
   zone         = var.zone
 
   scheduling {
-    preemptible       = true
-    automatic_restart = false
+    preemptible                 = true
+    automatic_restart           = false
+    provisioning_model          = "SPOT"
+    instance_termination_action = "STOP"
   }
-
-  # Spot VM (newer term for preemptible)
-  resource_policies = [google_compute_resource_policy.spot.id]
 }
 
-resource "google_compute_resource_policy" "spot" {
-  name   = "spot-policy"
+# Separate cost lever: start/stop schedule for dev/test VMs (off-hours shutdown)
+resource "google_compute_resource_policy" "business_hours" {
+  name   = "business-hours-schedule"
   region = var.region
 
   instance_schedule_policy {
@@ -231,7 +222,7 @@ resource "aws_autoscaling_schedule" "scale_down_evening" {
   min_size               = 1
   max_size               = 1
   desired_capacity       = 1
-  recurrence             = "0 20 * * MON-FRI"  # 8 PM weekdays
+  recurrence             = "0 20 * * MON-THU"  # Friday is handled by weekend_shutdown
   autoscaling_group_name = aws_autoscaling_group.app.name
 }
 
@@ -484,7 +475,7 @@ locals {
   common_labels = {
     environment = var.environment
     project     = var.project_name
-    owner       = var.team_email
+    owner       = var.team_label # validated lowercase label ID, not an email
     cost-center = var.cost_center
     managed-by  = "terraform"
   }
@@ -497,7 +488,7 @@ resource "google_compute_instance" "app" {
   labels = local.common_labels
 }
 
-# Export billing data to BigQuery for analysis
+# Budget alerts (configure BigQuery billing export separately)
 resource "google_billing_budget" "monthly" {
   billing_account = var.billing_account
   display_name    = "Monthly Budget"
@@ -510,10 +501,10 @@ resource "google_billing_budget" "monthly" {
   }
 
   threshold_rules {
-    threshold_percent = 50
+    threshold_percent = 0.5
   }
   threshold_rules {
-    threshold_percent = 90
+    threshold_percent = 0.9
   }
 }
 ```
@@ -561,6 +552,15 @@ resource "azurerm_consumption_budget_resource_group" "monthly" {
 }
 ```
 
+## Cost Estimation Before Apply
+
+Use Infracost to turn `terraform plan` into a monthly cost estimate, locally or as a CI diff comment:
+
+```bash
+infracost breakdown --path .          # cost of current config
+infracost diff --path . --compare-to infracost-base.json  # cost delta for a change
+```
+
 ## Best Practices Summary
 
 1. **Use environment-based sizing** - Smaller instances for dev/staging
@@ -571,3 +571,4 @@ resource "azurerm_consumption_budget_resource_group" "monthly" {
 6. **Cost allocation tags** - Track and optimize spending
 7. **Right-sizing** - Use the smallest instance that meets performance needs
 8. **Auto-shutdown** - Stop dev/test resources when not in use
+9. **Estimate before apply** - Run Infracost (or provider pricing calculators) on every plan that adds resources

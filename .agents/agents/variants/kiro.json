@@ -3,7 +3,7 @@
   "vendor": "kiro",
   "destDir": ".kiro/agents",
   "modelDefault": "inherit",
-  "maxTurnsDefault": 20,
+  "maxTurnsDefault": 100,
   "toolsDefault": [
     "read",
     "write",
@@ -15,32 +15,14 @@
   ],
   "protocolPath": ".agents/skills/_shared/runtime/execution-protocols/kiro.md",
   "agents": {
-    "backend-engineer": {},
-    "frontend-engineer": {},
-    "db-engineer": {
-      "maxTurns": 15
-    },
-    "debug-investigator": {
-      "maxTurns": 15
-    },
     "architecture-reviewer": {
-      "tools": ["read", "grep", "glob", "code"],
-      "maxTurns": 15
+      "tools": ["read", "grep", "glob", "code"]
     },
-    "tf-infra-engineer": {
-      "maxTurns": 20
-    },
-    "mobile-engineer": {},
     "pm-planner": {
-      "tools": ["read", "grep", "glob", "shell"],
-      "maxTurns": 10
+      "tools": ["read", "grep", "glob", "shell"]
     },
     "qa-reviewer": {
-      "tools": ["read", "grep", "glob", "shell"],
-      "maxTurns": 15
-    },
-    "docs-curator": {
-      "maxTurns": 15
+      "tools": ["read", "grep", "glob", "shell"]
     }
   }
 }

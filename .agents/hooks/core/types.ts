@@ -1,5 +1,5 @@
 // Hook-runtime types shared across Claude Code, Codex CLI, Cursor,
-// Gemini CLI, and Qwen Code. Functions live in `fs-utils.ts` and
+// and the other host CLIs in VENDORS. Functions live in `fs-utils.ts` and
 // `hook-output.ts`; this file is types-only. The `Vendor` type is derived
 // from the `VENDORS` runtime constant in `constants.ts` so the two stay
 // in sync.
@@ -8,8 +8,8 @@
 // HandlerResult, HandlerCtx, HookHandler). It is self-contained — no imports
 // from `cli/` — so that both `cli/` and the `.agents/hooks/core/` standalone
 // scripts can import from here without creating a circular dependency.
-// `cli/commands/hook/types.ts` re-exports these symbols plus the transport
-// envelope types (HookRequest, HookResponse, HookTransport).
+// `cli/commands/hook/types.ts` re-exports these symbols plus the dispatch
+// envelope types (HookRequest, HookResponse).
 
 import type { VENDORS } from "./constants.ts";
 
@@ -28,11 +28,39 @@ export interface RawHookInput {
   hook_event_name?: string;
   cwd?: string;
   workspace_roots?: string[];
-  // Gemini: AfterAgent fields
+  // Stop/AfterAgent response text fields (used for re-trigger suppression).
   prompt_response?: string;
   stop_hook_active?: boolean;
   // Claude/Qwen: Stop fields
   stopReason?: string;
+}
+
+/**
+ * Optional goal contract for a persistent workflow (design-prime-agent-adoption
+ * Track B). Written by `oma goal set`; read by the persistent-mode Stop hook.
+ */
+export interface ModeGoal {
+  /** Human description of the objective. Informational only. */
+  description?: string;
+  budget?: {
+    /**
+     * Wall-clock budget in minutes, measured from `activatedAt`. When
+     * exceeded the Stop hook deactivates the workflow and allows an honest
+     * partial stop (machine verdict, not model discretion).
+     */
+    wallClockMinutes?: number;
+  };
+  completion?: {
+    /**
+     * Deterministic stop gate. MUST be an allowlist keyword ("typecheck" |
+     * "test" | "lint") that maps to an existing package.json script; the hook
+     * runs it as an argv array with no shell. Free-form strings are NEVER
+     * executed — this value lives in an agent-writable state file, so
+     * executing it verbatim would be an arbitrary-command-execution path
+     * that bypasses the PreToolUse permission layer.
+     */
+    gate?: string;
+  };
 }
 
 export interface ModeState {
@@ -40,6 +68,12 @@ export interface ModeState {
   sessionId: string;
   activatedAt: string;
   reinforcementCount: number;
+  /**
+   * L1 session id (`oma-…`) recorded at activation so the Stop hook can emit
+   * gate.passed / gate.failed events onto the same events.jsonl trail.
+   */
+  omaSid?: string;
+  goal?: ModeGoal;
 }
 
 // ---------------------------------------------------------------------------
@@ -54,11 +88,30 @@ export interface ModeState {
  * Discriminated on `kind`; produced by adapters.ts normalizeInput().
  */
 export type HookInput =
-  | { kind: "prompt"; prompt: string; cwd: string }
+  | {
+      kind: "prompt";
+      prompt: string;
+      cwd: string;
+      /**
+       * SessionStart trigger source (claude: startup|resume|clear|compact).
+       * `compact` lets session-once handlers (serena-primer, state-boundary)
+       * force re-injection: compaction keeps the session id, so their normal
+       * dedup would otherwise skip exactly the turn that lost the context.
+       */
+      source?: string;
+    }
   | {
       kind: "pre_tool";
       toolName: string;
       toolInput: Record<string, unknown>;
+      cwd: string;
+    }
+  | {
+      kind: "post_tool";
+      toolName: string;
+      toolInput: Record<string, unknown>;
+      /** Vendor tool result payload (claude: `tool_response`), when provided. */
+      toolResponse?: Record<string, unknown>;
       cwd: string;
     }
   | {
@@ -67,7 +120,7 @@ export type HookInput =
       /**
        * Assistant response / transcript text from the stop payload, if any.
        * Carries deactivation phrases ("workflow done") so persistent-mode can
-       * deactivate via the central `oma hook` path, matching the standalone path.
+       * deactivate via the central `oma hook run` path, matching the standalone path.
        */
       responseText?: string;
     };
@@ -85,11 +138,25 @@ export type HandlerResult =
   | { type: "mutate"; updatedInput: Record<string, unknown> }
   | { type: "block"; reason: string };
 
+/**
+ * Resolved project config (CUE + YAML + local overlay) as loaded by the CLI.
+ * Structural on purpose: this file stays free of `cli/` imports, and each
+ * handler validates only the keys it reads.
+ */
+export type HookConfig = Record<string, unknown>;
+
 /** Context passed to every handler alongside the normalized HookInput. */
 export interface HandlerCtx {
   vendor: Vendor;
+  /** Resolved OMA project root (config and state live under its `.agents/`). */
   cwd: string;
   sid?: string;
+  /**
+   * Project config loaded once by `oma hook run` from `<cwd>/.agents/`. Absent
+   * in standalone runs, when the project has no config, or when loading
+   * failed; handlers then fall back to their own YAML readers.
+   */
+  config?: HookConfig;
 }
 
 /** Interface every centralized handler must implement. */

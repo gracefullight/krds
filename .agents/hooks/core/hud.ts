@@ -2,44 +2,18 @@
 /**
  * oh-my-agent — HUD
  *
- * Lightweight status display. Two modes:
- *
- *   - Claude Code / agy (statusLine): stdin = vendor payload, stdout = ANSI
- *     text consumed by the native status-line renderer. Field names line up
- *     across both vendors; vendor-specific extras are best-effort.
- *   - Gemini CLI (SessionStart, AfterTool, AfterAgent hooks): stdin = Gemini
- *     hook payload, stdout = `{}` (protocol no-op), side effect = best-effort
- *     bottom-row bar written to /dev/tty.
- *
- * Vendor is inferred from the installed script path:
- *   `.gemini/hooks/` → gemini bar mode
- *   `.claude/hooks/` or `.gemini/antigravity-cli/hooks/` → claude statusline mode
+ * Lightweight status display for Claude Code / agy (statusLine): stdin =
+ * vendor payload, stdout = ANSI text consumed by the native status-line
+ * renderer. Field names line up across both vendors; vendor-specific extras
+ * are best-effort.
  *
  * Set `OMA_HUD_DEBUG=1` to dump the raw stdin payload to
  * `<hookDir>/../last-hud-input.json` for schema reverse-engineering.
  */
 
-import {
-  closeSync,
-  existsSync,
-  openSync,
-  readdirSync,
-  readFileSync,
-  writeFileSync,
-  writeSync,
-} from "node:fs";
-import { join, sep } from "node:path";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import type { ModeState } from "./types.ts";
-
-type HudVendor = "claude" | "gemini";
-
-function inferVendor(): HudVendor {
-  const path = import.meta.filename ?? "";
-  // Strict match on `/.gemini/hooks/` so agy (`/.gemini/antigravity-cli/hooks/`)
-  // falls through to claude — agy's StatusLine uses Claude's stdout protocol.
-  if (path.includes(`${sep}.gemini${sep}hooks${sep}`)) return "gemini";
-  return "claude";
-}
 
 // ── ANSI Colors ───────────────────────────────────────────────
 
@@ -65,6 +39,8 @@ interface RateLimit {
 
 interface StatuslineStdin {
   cwd?: string;
+  /** Claude / Qwen: the session the statusline is drawn for. */
+  session_id?: string;
   model?: { id?: string; display_name?: string };
   context_window?: {
     context_window_size?: number;
@@ -105,47 +81,41 @@ interface StatuslineStdin {
   terminal_width?: number;
 }
 
-interface GeminiHookInput {
-  hook_event_name?: string;
-  cwd?: string;
-  tool_name?: string;
-  tool_response?: { exit_code?: number; success?: boolean } | unknown;
-  prompt?: string;
-  prompt_response?: string;
-  source?: string;
-}
-
-function readStdin(): StatuslineStdin {
-  const raw = (() => {
+async function readStdin(
+  timeoutMs = STDIN_TIMEOUT_MS,
+): Promise<StatuslineStdin> {
+  // Some vendors (notably agy) spawn the statusline without closing the stdin
+  // pipe; a synchronous readFileSync(0) then blocks until the vendor's
+  // statusline timeout SIGKILLs the process. Read asynchronously and give up
+  // after timeoutMs, letting main() fall back to a payload-less line.
+  const read = (async () => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of process.stdin) {
+      chunks.push(chunk as Buffer);
+    }
+    const raw = Buffer.concat(chunks).toString("utf-8");
+    maybeDumpDebugPayload(raw);
     try {
-      return readFileSync(0, "utf-8");
+      return JSON.parse(raw) as StatuslineStdin;
     } catch {
-      return "";
+      return {};
     }
   })();
-  maybeDumpDebugPayload(raw);
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error("stdin timeout")), timeoutMs);
+  });
+
   try {
-    return JSON.parse(raw);
-  } catch {
-    return {};
+    return await Promise.race([read, timeout]);
+  } finally {
+    clearTimeout(timer);
   }
 }
 
-function readRaw(): unknown {
-  const raw = (() => {
-    try {
-      return readFileSync(0, "utf-8");
-    } catch {
-      return "";
-    }
-  })();
-  maybeDumpDebugPayload(raw);
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return {};
-  }
-}
+/** Max time to wait for the vendor to deliver (and close) the stdin payload. */
+const STDIN_TIMEOUT_MS = 800;
 
 /**
  * When `OMA_HUD_DEBUG=1`, capture the raw stdin payload to a sibling file so
@@ -168,26 +138,49 @@ function maybeDumpDebugPayload(raw: string): void {
 
 // ── Active Workflow Detection ─────────────────────────────────
 
-function getActiveWorkflow(projectDir: string): ModeState | null {
+const STALE_WORKFLOW_MS = 2 * 60 * 60 * 1000;
+
+/**
+ * The persistent workflow to show. With a session id (Claude/Qwen
+ * `session_id`, agy `conversation_id`) only that session's state file counts,
+ * so a concurrent session's workflow never appears here. Each file is judged
+ * on its own: one corrupt or half-written file cannot hide the others.
+ */
+export function getActiveWorkflow(
+  projectDir: string,
+  sessionId?: string,
+): ModeState | null {
   const stateDir = join(projectDir, ".agents", "state");
   if (!existsSync(stateDir)) return null;
 
+  let files: string[];
   try {
-    for (const file of readdirSync(stateDir)) {
-      if (!file.endsWith(".json") || !file.includes("-state-")) continue;
-      const content = readFileSync(join(stateDir, file), "utf-8");
-      const state: ModeState = JSON.parse(content);
-
-      // Skip stale (>2h)
-      const elapsed = Date.now() - new Date(state.activatedAt).getTime();
-      if (elapsed > 2 * 60 * 60 * 1000) continue;
-
-      return state;
-    }
+    files = readdirSync(stateDir);
   } catch {
-    // ignore
+    return null;
+  }
+  const sessionSuffix = sessionId ? `-state-${sessionId}.json` : null;
+  for (const file of files) {
+    if (!file.endsWith(".json") || !file.includes("-state-")) continue;
+    if (sessionSuffix && !file.endsWith(sessionSuffix)) continue;
+    let state: ModeState;
+    try {
+      state = JSON.parse(readFileSync(join(stateDir, file), "utf-8"));
+    } catch {
+      continue;
+    }
+    if (!state || typeof state.workflow !== "string") continue;
+    const activatedMs = new Date(state.activatedAt).getTime();
+    if (!Number.isFinite(activatedMs)) continue;
+    if (Date.now() - activatedMs > STALE_WORKFLOW_MS) continue;
+    return state;
   }
   return null;
+}
+
+function statuslineSessionId(input: StatuslineStdin): string | undefined {
+  const id = input.session_id ?? input.conversation_id;
+  return typeof id === "string" && id.trim() ? id : undefined;
 }
 
 // ── Model Name Shortener ──────────────────────────────────────
@@ -201,11 +194,20 @@ export function shortModel(model?: {
   // Claude: "Claude Opus 4.6 (1M context)" → "Opus 4.6"
   const claude = name.match(/(Opus|Sonnet|Haiku)[\s.]*([\d.]*)/i);
   if (claude) return `${claude[1]}${claude[2] ? ` ${claude[2]}` : ""}`;
-  // Gemini / agy: "Gemini 3.5 Flash (High)" → "Gemini 3.5 Flash"
+  // Gemini / agy: "Gemini 3.6 Flash (High)" → "Gemini 3.6 Flash"
   const gemini = name.match(
     /(Gemini)\s+([\d.]+)\s+(Pro|Flash|Ultra|Nano|Thinking)/i,
   );
   if (gemini) return `${gemini[1]} ${gemini[2]} ${gemini[3]}`;
+  // Gemini / agy slug: "antigravity/gemini-3.6-flash" → "Gemini 3.6 Flash"
+  const geminiSlug = name.match(
+    /gemini-([\d.]+)-(pro|flash|ultra|nano|thinking)/i,
+  );
+  if (geminiSlug) {
+    const type = geminiSlug[2] ?? "";
+    const capType = type.charAt(0).toUpperCase() + type.slice(1);
+    return `Gemini ${geminiSlug[1]} ${capType}`;
+  }
   return name.split("/").pop()?.slice(0, 20) || "";
 }
 
@@ -233,67 +235,6 @@ function formatTokens(n: number): string {
   if (n < 1000) return `${n}`;
   if (n < 1_000_000) return `${(n / 1000).toFixed(n < 10_000 ? 1 : 0)}k`;
   return `${(n / 1_000_000).toFixed(1)}M`;
-}
-
-// ── Gemini bar (DECSTBM-free best-effort bottom row) ──────────
-
-/**
- * Write `line` to the controlling TTY at the bottom row, then restore the
- * cursor so the host CLI's render is not visibly disturbed. Best-effort:
- * silently no-ops in environments without /dev/tty (CI, piped runs); when
- * the host CLI repaints, the bar is overwritten until the next event.
- * Intentionally avoids DECSTBM scroll-region changes so scrollback survives
- * a mid-write hook kill.
- */
-function paintBottomBar(line: string): void {
-  let fd: number | null = null;
-  try {
-    fd = openSync("/dev/tty", "w");
-    const SAVE = "\x1b7"; // DECSC: save cursor + attrs
-    const RESTORE = "\x1b8"; // DECRC: restore cursor + attrs
-    const TO_BOTTOM = "\x1b[999;1H"; // clamp to last row, col 1
-    const CLEAR_LINE = "\x1b[2K";
-    writeSync(fd, `${SAVE}${TO_BOTTOM}${CLEAR_LINE}\r${line}${RESTORE}`);
-  } catch {
-    // No tty available — silent.
-  } finally {
-    if (fd !== null) {
-      try {
-        closeSync(fd);
-      } catch {
-        // ignore close failures
-      }
-    }
-  }
-}
-
-export function buildGeminiBar(
-  input: GeminiHookInput,
-  projectDir: string,
-): string {
-  const parts: string[] = [bold(cyan("[OMA]"))];
-
-  const event = input.hook_event_name;
-  if (event) parts.push(dim(event));
-
-  const workflow = getActiveWorkflow(projectDir);
-  if (workflow) {
-    parts.push(yellow(`${workflow.workflow}:${workflow.reinforcementCount}`));
-  }
-
-  if (input.tool_name) {
-    const resp = input.tool_response as { exit_code?: number } | undefined;
-    const failed = typeof resp?.exit_code === "number" && resp.exit_code !== 0;
-    const label = `tool:${input.tool_name}`;
-    parts.push(failed ? red(label) : green(label));
-  }
-
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2, "0");
-  const mm = String(now.getMinutes()).padStart(2, "0");
-  parts.push(dim(`${hh}:${mm}`));
-
-  return parts.join(dim(" │ "));
 }
 
 // ── Claude / agy statusline ───────────────────────────────────
@@ -377,8 +318,8 @@ export function buildClaudeStatusline(input: StatuslineStdin): string {
     parts.push(dim("sandbox"));
   }
 
-  // 8. Active workflow
-  const workflow = getActiveWorkflow(projectDir);
+  // 8. Active workflow (this session's only, when the vendor says which)
+  const workflow = getActiveWorkflow(projectDir, statuslineSessionId(input));
   if (workflow) {
     parts.push(yellow(`${workflow.workflow}:${workflow.reinforcementCount}`));
   }
@@ -396,23 +337,19 @@ export function buildClaudeStatusline(input: StatuslineStdin): string {
 
 // ── Main ──────────────────────────────────────────────────────
 
-function main() {
-  const vendor = inferVendor();
-
-  if (vendor === "gemini") {
-    const raw = readRaw() as GeminiHookInput;
-    const projectDir =
-      process.env.GEMINI_PROJECT_DIR ||
-      process.env.ANTIGRAVITY_PROJECT_DIR ||
-      raw.cwd ||
-      process.cwd();
-    paintBottomBar(buildGeminiBar(raw, projectDir));
-    // Gemini hook protocol: empty object = no-op, do not influence the agent.
-    process.stdout.write("{}");
-    return;
+async function main() {
+  let out: string;
+  try {
+    out = buildClaudeStatusline(await readStdin());
+  } catch {
+    // stdin timed out — a payload-less line beats a killed statusline
+    out = buildClaudeStatusline({});
   }
-
-  process.stdout.write(buildClaudeStatusline(readStdin()));
+  // Exit explicitly: after a timeout the pending stdin read would otherwise
+  // keep the event loop (and the process) alive.
+  process.stdout.write(out, () => process.exit(0));
 }
 
-main();
+if (import.meta.main) {
+  void main();
+}

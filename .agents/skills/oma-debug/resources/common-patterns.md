@@ -208,9 +208,10 @@ useEffect(() => {
   <TodoItem key={todo.id} todo={todo} />
 ))}
 
-// If no ID, generate stable key
-{todos.map((todo, index) => (
-  <TodoItem key={`${todo.title}-${index}`} todo={todo} />
+// Without a server ID, assign clientId when the item is created and persist it.
+// Do not generate IDs during render.
+{todos.map(todo => (
+  <TodoItem key={todo.clientId} todo={todo} />
 ))}
 ```
 
@@ -433,7 +434,7 @@ user = User(email=email, password=password) # NEVER DO THIS!
 ```python
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
 
 # Hash before storing
 password_hash = pwd_context.hash(password)
@@ -710,11 +711,12 @@ flutter build apk --analyze-size
 
 | Bug Type | Best Agent | Reason |
 |----------|-----------|---------|
-| Frontend crash | debug-agent | Specializes in bug diagnosis |
-| Backend API error | debug-agent | Can trace through stack |
+| Frontend crash | debug-investigator | Specializes in bug diagnosis |
+| Backend API error | debug-investigator | Can trace through stack |
 | Complex multi-domain | oma-coordination | Coordinates multiple agents |
-| Security vulnerability | qa-agent | Security expertise |
-| Performance issue | qa-agent | Performance profiling tools |
+| Security vulnerability | qa-reviewer | Security expertise |
+| Performance bug (specific slowdown/regression) | debug-investigator | Root-cause diagnosis + fix (see §Performance Bugs) |
+| Performance audit (broad review) | qa-reviewer | Profiling and audit tooling |
 | New feature needed | Specialist agent | Not a bug, it's a feature |
 
 ---
@@ -730,5 +732,3 @@ flutter build apk --analyze-size
 7. **User testing** - Real users find real bugs
 
 ---
-
-**Remember**: The best bug is the one that never happens. Write defensive code, test thoroughly, and document lessons learned!

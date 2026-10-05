@@ -31,10 +31,15 @@ struct ExampleItem: Identifiable {
 }
 
 /// Protocol-backed so the view model is testable with a mock service.
+/// A real conformer is a Repository over the generated `swift-openapi-generator`
+/// `Client` fronted by a `ResponseCache` (read-through, stale-while-revalidate) —
+/// see variants/swift-ios/snippets.md §10 and variants/swift-ios/api-template.swift.
+/// Never hand-roll `URLRequest`/`JSONDecoder` for endpoints in the OpenAPI spec.
 protocol ExampleServiceProtocol {
     func fetchItems() async throws -> [ExampleItem]
 }
 
+@MainActor
 @Observable
 final class ExampleViewModel {
     // MARK: - State observed by the View
@@ -45,8 +50,9 @@ final class ExampleViewModel {
     // MARK: - Private
 
     private let service: ExampleServiceProtocol
-    /// Retained so it can be cancelled before re-triggering a load.
-    private var loadTask: Task<Void, Never>?
+    /// Retained so a new load or view disappearance can cancel active work.
+    /// Tests await load() directly.
+    private(set) var loadTask: Task<Void, Never>?
 
     init(service: ExampleServiceProtocol) {
         self.service = service
@@ -55,12 +61,12 @@ final class ExampleViewModel {
     // MARK: - Intents (called by the View)
 
     /// Starts (or restarts) data loading. Safe to call multiple times.
-    func load() {
+    func load() async {
         // Cancel any in-flight request before starting a fresh one.
         loadTask?.cancel()
         viewState = .loading
 
-        loadTask = Task { [weak self] in
+        let task = Task { [weak self] in
             guard let self else { return }
             do {
                 let items = try await service.fetchItems()
@@ -69,18 +75,24 @@ final class ExampleViewModel {
             } catch is CancellationError {
                 // Ignore — another load is replacing this one.
             } catch {
+                guard !Task.isCancelled else { return }
                 viewState = .error(error.localizedDescription)
             }
+        }
+        loadTask = task
+        await withTaskCancellationHandler {
+            await task.value
+        } onCancel: {
+            task.cancel()
         }
     }
 
     /// Convenience retry; identical to load() but named for the error-state button.
-    func retry() { load() }
+    func retry() async { await load() }
 
-    deinit {
-        // Ensure in-flight work is cleaned up when the VM is deallocated.
-        loadTask?.cancel()
-    }
+    /// Cancels button/retry loads too; awaited .task forwards caller cancellation.
+    func cancelLoad() { loadTask?.cancel() }
+
 }
 
 // MARK: - View
@@ -90,32 +102,35 @@ struct ExampleScreen: View {
     @State private var viewModel: ExampleViewModel
 
     init(service: ExampleServiceProtocol) {
-        // Wrap in State so @Observable tracking works correctly in SwiftUI.
+        // State owns the instance lifetime; Observation tracks accessed properties.
         _viewModel = State(wrappedValue: ExampleViewModel(service: service))
     }
 
     var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Example")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            viewModel.load()
-                        } label: {
-                            Label("Refresh", systemImage: "arrow.clockwise")
-                        }
-                        // Disable the button while a load is in progress.
-                        .disabled({
-                            if case .loading = viewModel.viewState { return true }
-                            return false
-                        }())
+        // The router owns the enclosing NavigationStack(path:); a feature view
+        // assumes it is already inside one and never wraps itself in a stack.
+        content
+            .navigationTitle("Example")
+            .toolbar {
+                // .topBarTrailing (iOS 17+) replaces .navigationBarTrailing, which
+                // is formally deprecated at iOS 27.
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task { await viewModel.load() }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
                     }
+                    // Disable the button while a load is in progress.
+                    .disabled({
+                        if case .loading = viewModel.viewState { return true }
+                        return false
+                    }())
                 }
-        }
-        // .task is preferred over .onAppear for async work:
-        // it creates a structured Task that is cancelled when the View disappears.
-        .task { viewModel.load() }
+            }
+            // .task is preferred over .onAppear for async work:
+            // it creates a structured Task that is cancelled when the View disappears.
+            .task { await viewModel.load() }
+            .onDisappear { viewModel.cancelLoad() }
     }
 
     // MARK: - Content switch
@@ -149,10 +164,11 @@ struct ExampleScreen: View {
     /// Shown when data is available.
     private func listView(_ items: [ExampleItem]) -> some View {
         List(items) { item in
-            NavigationLink {
-                // Replace with a real detail screen.
-                Text(item.title)
-            } label: {
+            // Value-based navigation: push a route value, not an inline destination.
+            // The route layer registers the destination for `ExampleItem.ID` via
+            // `swipeBackDestination(for:)` on the router's NavigationStack — see
+            // variants/swift-ios/snippets.md §9.
+            NavigationLink(value: item.id) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(item.title)
                         .font(.headline)
@@ -164,7 +180,7 @@ struct ExampleScreen: View {
             }
         }
         // Pull-to-refresh triggers a fresh load.
-        .refreshable { viewModel.load() }
+        .refreshable { await viewModel.load() }
     }
 
     /// Shown when the API returns an empty collection.
@@ -194,7 +210,7 @@ struct ExampleScreen: View {
                 .padding(.horizontal, 32)
 
             Button {
-                viewModel.retry()
+                Task { await viewModel.retry() }
             } label: {
                 Label("Try Again", systemImage: "arrow.clockwise")
                     .padding(.horizontal, 8)

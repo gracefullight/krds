@@ -2,7 +2,7 @@
 /**
  * oh-my-agent — Skill Injector Hook (UserPromptSubmit)
  *
- * Works with: Claude Code, Codex CLI, Gemini CLI, Cursor, Qwen Code.
+ * Works with: Claude Code, Codex CLI, Cursor, Qwen Code.
  *
  * Discovers `.agents/skills/<name>/` directories (requires `SKILL.md` to exist),
  * looks up multilingual triggers from `triggers.json` (`skills` section),
@@ -21,111 +21,20 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join } from "node:path";
-import {
-  agyConversationId,
-  agyProjectDir,
-  isAgyInput,
-  readAgyPrompt,
-} from "./agy-input.ts";
-import { resolveGitRoot, toPosixPath } from "./fs-utils.ts";
+import { agyConversationId, readAgyPrompt } from "./agy-input.ts";
+import { toPosixPath } from "./fs-utils.ts";
 import { makePromptOutput } from "./hook-output.ts";
+import { isRelayedAgentMessage, normalizePromptInput } from "./prompt-input.ts";
 // triggers.json is imported statically: bundler inlines it into the oma binary;
 // standalone bun runs resolve the sibling file (pi / direct run).
 import embeddedTriggers from "./triggers.json" with { type: "json" };
-import type { HandlerCtx, HandlerResult, HookInput, Vendor } from "./types.ts";
+import type { HandlerCtx, HandlerResult, HookInput } from "./types.ts";
+import { detectVendorFromInput, getProjectDir } from "./vendor-detect.ts";
 
 const MAX_SKILLS = 3;
 const SESSION_TTL_MS = 60 * 60 * 1000;
-const DEFAULT_CJK_SCRIPTS = ["ko", "ja", "zh"];
 
 // ── Vendor Detection ──────────────────────────────────────────
-
-function inferVendorFromScriptPath(): Vendor | null {
-  const path = import.meta.filename;
-  if (path.includes(`${join(".gemini", "antigravity-cli", "hooks")}`))
-    return "antigravity";
-  if (path.includes(`${join(".cursor", "hooks")}`)) return "cursor";
-  if (path.includes(`${join(".qwen", "hooks")}`)) return "qwen";
-  if (path.includes(`${join(".claude", "hooks")}`)) return "claude";
-  if (path.includes(`${join(".gemini", "hooks")}`)) return "gemini";
-  if (path.includes(`${join(".codex", "hooks")}`)) return "codex";
-  if (path.includes(`${join(".grok", "hooks")}`)) return "grok";
-  if (path.includes(`${join(".kiro", "hooks")}`)) return "kiro";
-  // pi auto-loads the bridge from `.pi/extensions/oma/`; the core scripts are
-  // copied alongside it and spawned as subprocesses from there.
-  if (path.includes(`${join(".pi", "extensions")}`)) return "pi";
-  return null;
-}
-
-function detectVendor(input: Record<string, unknown>): Vendor {
-  const event = input.hook_event_name as string | undefined;
-  const hookEventName = input.hookEventName as string | undefined;
-  const byScriptPath = inferVendorFromScriptPath();
-  if (byScriptPath) return byScriptPath;
-
-  // agy (Antigravity) sends no hook_event_name; detect by its stdin shape.
-  if (isAgyInput(input)) return "antigravity";
-
-  if (process.env.GROK_WORKSPACE_ROOT || hookEventName?.includes("prompt")) {
-    if (process.env.GROK_WORKSPACE_ROOT) return "grok";
-  }
-
-  if (
-    process.env.KIRO_PROJECT_DIR ||
-    event === "userPromptSubmit" ||
-    hookEventName === "userPromptSubmit"
-  ) {
-    return "kiro";
-  }
-
-  if (event === "PreInvocation") return "antigravity";
-  if (event === "BeforeAgent") return "gemini";
-  if (event === "beforeSubmitPrompt") return "cursor";
-  if (event === "UserPromptSubmit") {
-    if ("session_id" in input && !("sessionId" in input)) return "codex";
-  }
-  if (process.env.QWEN_PROJECT_DIR) return "qwen";
-  return "claude";
-}
-
-function getProjectDir(vendor: Vendor, input: Record<string, unknown>): string {
-  let dir: string;
-  switch (vendor) {
-    case "codex":
-    case "cursor":
-      dir = (input.cwd as string) || process.cwd();
-      break;
-    case "gemini":
-      dir = process.env.GEMINI_PROJECT_DIR || process.cwd();
-      break;
-    case "antigravity":
-      dir =
-        agyProjectDir(input) ||
-        (input.cwd as string) ||
-        process.env.ANTIGRAVITY_PROJECT_DIR ||
-        process.env.AGY_PROJECT_DIR ||
-        process.env.GEMINI_PROJECT_DIR ||
-        process.cwd();
-      break;
-    case "qwen":
-      dir = process.env.QWEN_PROJECT_DIR || process.cwd();
-      break;
-    case "grok":
-      dir =
-        process.env.GROK_WORKSPACE_ROOT ||
-        (input.cwd as string) ||
-        process.cwd();
-      break;
-    case "kiro":
-      dir =
-        process.env.KIRO_PROJECT_DIR || (input.cwd as string) || process.cwd();
-      break;
-    default:
-      dir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-      break;
-  }
-  return resolveGitRoot(dir);
-}
 
 function getSessionId(input: Record<string, unknown>): string {
   return (
@@ -140,32 +49,13 @@ function getSessionId(input: Record<string, unknown>): string {
 
 interface SkillsTriggerConfig {
   skills?: Record<string, { keywords: Record<string, string[]> }>;
-  cjkScripts?: string[];
 }
 
 /**
- * Load the skills-trigger config from the embedded (bundler-inlined /
- * sibling-resolved) triggers.json. Returns {} on any shape error.
+ * The embedded (bundler-inlined / sibling-resolved) triggers.json. Read only,
+ * so it is shared instead of deep-cloned on every prompt.
  */
-function loadTriggersConfig(): SkillsTriggerConfig {
-  try {
-    return structuredClone(embeddedTriggers) as SkillsTriggerConfig;
-  } catch {
-    return {};
-  }
-}
-
-function detectLanguage(projectDir: string): string {
-  const prefsPath = join(projectDir, ".agents", "oma-config.yaml");
-  if (!existsSync(prefsPath)) return "en";
-  try {
-    const content = readFileSync(prefsPath, "utf-8");
-    const match = content.match(/^language:\s*(\S+)/m);
-    return match?.[1] ?? "en";
-  } catch {
-    return "en";
-  }
-}
+const TRIGGERS = embeddedTriggers as unknown as SkillsTriggerConfig;
 
 // ── Pattern Building ──────────────────────────────────────────
 
@@ -173,14 +63,16 @@ export function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function buildTriggerPatterns(
-  triggers: string[],
-  lang: string,
-  cjkScripts: string[],
-): RegExp[] {
+/**
+ * Boundaries depend only on the trigger itself (same rule as
+ * keyword-detector): ASCII triggers need word boundaries, triggers containing
+ * non-ASCII text match as substrings. The configured response language must
+ * not strip boundaries — `language: ko` used to make "work" match "network".
+ */
+export function buildTriggerPatterns(triggers: string[]): RegExp[] {
   return triggers.map((kw) => {
     const escaped = escapeRegex(kw).replace(/\s+/g, "\\s+");
-    if (cjkScripts.includes(lang) || /[^\p{ASCII}]/u.test(kw)) {
+    if (/[^\p{ASCII}]/u.test(kw)) {
       return new RegExp(escaped, "i");
     }
     return new RegExp(`\\b${escaped}\\b`, "i");
@@ -235,36 +127,73 @@ export interface SkillMatch {
   matchedTriggers: string[];
 }
 
-export function matchSkills(
-  prompt: string,
-  lang: string,
-  skills: SkillEntry[],
+interface CompiledSkillTriggers {
+  triggers: string[];
+  patterns: RegExp[];
+}
+
+// Compiled per config object and skill name. The embedded config is a single
+// shared object, so every prompt after the first reuses the compiled regexes
+// (none use the `g` flag, so test() is stateless).
+const compiledSkillCache = new WeakMap<
+  SkillsTriggerConfig,
+  Map<string, CompiledSkillTriggers | null>
+>();
+
+function compiledTriggersFor(
   config: SkillsTriggerConfig,
-): SkillMatch[] {
-  const cjkScripts = config.cjkScripts ?? DEFAULT_CJK_SCRIPTS;
-  const matches: SkillMatch[] = [];
+  skillName: string,
+): CompiledSkillTriggers | null {
+  let perConfig = compiledSkillCache.get(config);
+  if (!perConfig) {
+    perConfig = new Map();
+    compiledSkillCache.set(config, perConfig);
+  }
+  if (perConfig.has(skillName)) return perConfig.get(skillName) ?? null;
 
-  for (const skill of skills) {
-    const jsonEntry = config.skills?.[skill.name];
-    if (!jsonEntry) continue;
-
+  const jsonEntry = config.skills?.[skillName];
+  let compiled: CompiledSkillTriggers | null = null;
+  if (jsonEntry) {
+    // All languages merged, never gated by config language: users prompt in
+    // whichever language they think in (`language` controls the RESPONSE
+    // language). A keyword written in language X can only match a prompt
+    // containing X-script text, so merging cannot fire on unrelated prompts.
     const jsonTriggers = [
       ...(jsonEntry.keywords["*"] ?? []),
       ...(jsonEntry.keywords.en ?? []),
-      ...(lang !== "en" ? (jsonEntry.keywords[lang] ?? []) : []),
+      ...Object.entries(jsonEntry.keywords)
+        .filter(([key]) => key !== "*" && key !== "en")
+        .flatMap(([, entries]) => entries),
     ];
 
     const seen = new Set<string>();
-    const allTriggers: string[] = [];
+    const triggers: string[] = [];
     for (const t of jsonTriggers) {
       const key = t.toLowerCase();
       if (seen.has(key)) continue;
       seen.add(key);
-      allTriggers.push(t);
+      triggers.push(t);
     }
-    if (allTriggers.length === 0) continue;
+    if (triggers.length > 0) {
+      compiled = { triggers, patterns: buildTriggerPatterns(triggers) };
+    }
+  }
+  perConfig.set(skillName, compiled);
+  return compiled;
+}
 
-    const patterns = buildTriggerPatterns(allTriggers, lang, cjkScripts);
+export function matchSkills(
+  prompt: string,
+  skills: SkillEntry[],
+  config: SkillsTriggerConfig,
+): SkillMatch[] {
+  const matches: SkillMatch[] = [];
+
+  for (const skill of skills) {
+    const compiled = compiledTriggersFor(config, skill.name);
+    if (!compiled) continue;
+
+    const { triggers: allTriggers, patterns } = compiled;
     const matched: string[] = [];
     let score = 0;
 
@@ -466,14 +395,12 @@ export function formatClaudeSlashSkillContext(
   entry: ClaudeSlashSkillEntry,
 ): string {
   return [
-    `[OMA CLAUDE SLASH SKILL INVOKED: ${entry.name}]`,
-    `User explicitly typed /${entry.name}. Claude Code deprecated \`.claude/commands/\`, so this slash-only workflow lives in SKILL.md with \`disable-model-invocation: true\` — it is NOT in the available-skills list and is NOT callable via the Skill tool.`,
-    "",
-    `Honor the user's explicit invocation by reading \`${entry.skillRelPath}\` and following its instructions:`,
+    `[OMA SLASH SKILL INVOKED: ${entry.name}]`,
+    `The user explicitly invoked /${entry.name}. Follow the skill content below.`,
+    `Source: ${entry.skillRelPath}`,
+    "Read referenced workflow / resource files as needed.",
     "",
     entry.body,
-    "",
-    "Read any referenced workflow / resource files and proceed step by step. Do NOT respond that the skill is unavailable.",
   ].join("\n");
 }
 
@@ -496,7 +423,6 @@ export function formatContext(matches: SkillMatch[]): string {
   ];
   for (const m of matches) {
     lines.push(`- **${m.name}** — \`${m.relPath}\``);
-    lines.push(`  Matched triggers: ${m.matchedTriggers.join(", ")}`);
   }
   lines.push("");
   lines.push(
@@ -524,6 +450,11 @@ export async function run(
 
   if (!prompt.trim()) return null;
 
+  // Relayed inter-agent messages (teammate reports, idle notifications) are
+  // not user intent — their content routinely contains skill trigger words
+  // and produced false skill suggestions. Same guard as keyword-detector.
+  if (isRelayedAgentMessage(prompt)) return null;
+
   // Claude-specific: slash-skill resolution must run BEFORE the slash early-exit
   // and persistent-workflow guard (same order as the original standalone path).
   if (vendor === "claude") {
@@ -542,12 +473,10 @@ export async function run(
   if (startsWithSlashCommand(prompt)) return null;
   if (isPersistentWorkflowActive(projectDir, sessionId)) return null;
 
-  const lang = detectLanguage(projectDir);
-  const config = loadTriggersConfig();
   const cleaned = stripCodeBlocks(prompt);
   const skills = discoverSkills(projectDir);
 
-  const matches = matchSkills(cleaned, lang, skills, config);
+  const matches = matchSkills(cleaned, skills, TRIGGERS);
   if (matches.length === 0) return null;
 
   const { fresh, nextState } = filterFreshMatches(
@@ -572,10 +501,10 @@ async function main() {
     process.exit(0);
   }
 
-  const vendor = detectVendor(input);
+  const vendor = detectVendorFromInput(input, "prompt", import.meta.filename);
   const projectDir = getProjectDir(vendor, input);
   const sessionId = getSessionId(input);
-  let prompt = (input.prompt as string) ?? "";
+  let prompt = normalizePromptInput(input.prompt);
 
   // agy's PreInvocation stdin carries no `prompt`; recover it from the
   // transcript, and only act on the first invocation of a turn.

@@ -45,7 +45,7 @@ jobs:
 node = "24"
 bun = "latest"
 
-[tasks.release:check]
+[tasks."release:check"]
 description = "Check release-please status"
 run = '''
 #!/usr/bin/env bash
@@ -58,16 +58,16 @@ echo "Latest releases:"
 gh release list --limit 5
 '''
 
-[tasks.release:manifest]
+[tasks."release:manifest"]
 description = "Show current release manifest"
 run = "cat .release-please-manifest.json"
 
-[tasks.release:changelog]
+[tasks."release:changelog"]
 description = "Preview changelog (local dry-run)"
 run = '''
 #!/usr/bin/env bash
 echo "Recent conventional commits:"
-git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD | grep -E "^(feat|fix|docs|style|refactor|test|chore|ci)(\(.+\))?:"
+git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD | grep -E "^(feat|fix|perf|build|revert|docs|style|refactor|test|chore|ci)(\(.+\))?:"
 '''
 ```
 
@@ -79,11 +79,11 @@ Release Please recognizes these commit types:
 |------|--------------|-------------|
 | `feat:` | minor | New feature |
 | `fix:` | patch | Bug fix |
-| `docs:` | patch | Documentation |
-| `style:` | patch | Code style (no logic) |
-| `refactor:` | patch | Code refactoring |
-| `test:` | patch | Tests |
-| `chore:` | patch | Maintenance |
+| `docs:` | no release by default; project config may opt in | Documentation |
+| `style:` | no release by default; project config may opt in | Code style (no logic) |
+| `refactor:` | no release by default; project config may opt in | Code refactoring |
+| `test:` | no release by default; project config may opt in | Tests |
+| `chore:` | no release by default; project config may opt in | Maintenance |
 | `feat!:` | major | Breaking change |
 | `fix!:` | major | Breaking bug fix |
 
@@ -114,8 +114,8 @@ Release Please recognizes these commit types:
 ### 1. Develop Features
 ```bash
 # Make changes with conventional commits
-git commit -m "feat(cli): add infrastructure skills category"
-git commit -m "fix(cli): correct skill installation path"
+git commit -m "feat(infra): add infrastructure skills category"
+git commit -m "fix(shared): correct skill installation path"
 git commit -m "docs: update installation guide"
 ```
 
@@ -130,21 +130,16 @@ Automatically creates a PR like:
 - Includes updated CHANGELOG.md
 - Includes version bump in package.json
 
-### 4. Review and Merge
-```bash
-# Check the release PR
-gh pr list --label "autorelease: pending"
+### 4. Review the release PR
 
-# Review changes
-git fetch origin
-git diff origin/main...release-please--branches--main
-
-# Merge via GitHub (creates release)
-```
+Review the version and changelog in the release PR before merging through the
+project's normal merge policy. This action alone does not auto-merge release PRs,
+sync OMA prompt manifests, or publish a package; those require explicit project
+automation.
 
 ### 5. Verify Release
 ```toml
-[tasks.release:verify]
+[tasks."release:verify"]
 description = "Verify latest release"
 run = '''
 #!/usr/bin/env bash
@@ -157,17 +152,17 @@ gh release view --json assets
 '''
 ```
 
-## Manual Release Trigger
+## Release Status
 
-If needed, manually trigger release-please:
+Inspect release status without triggering a workflow:
 
 ```toml
-[tasks.release:trigger]
-description = "Manually trigger release-please (CI will handle)"
+[tasks."release:status"]
+description = "Show release-please status"
 run = '''
 #!/usr/bin/env bash
-echo "Triggering release-please..."
-echo "Push to main will trigger the workflow automatically"
+echo "Release-please status:"
+echo "Workflow dispatch requires a separately configured workflow_dispatch trigger."
 echo ""
 echo "Current status:"
 mise run release:check
@@ -177,7 +172,7 @@ mise run release:check
 ## Post-Release Tasks
 
 ```toml
-[tasks.release:cleanup]
+[tasks."release:cleanup"]
 description = "Cleanup after release"
 run = '''
 #!/usr/bin/env bash
@@ -203,7 +198,7 @@ echo "Release cleanup complete"
 ## Troubleshooting
 
 ```toml
-[tasks.release:debug]
+[tasks."release:debug"]
 description = "Debug release issues"
 run = '''
 #!/usr/bin/env bash
@@ -211,7 +206,7 @@ echo "Release Debugging"
 echo ""
 
 echo "1. Conventional commits since last tag:"
-git log --pretty=format:"%s" $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD | grep -E "^(feat|fix|docs|style|refactor|test|chore|ci)(\(.+\))?:" || echo "  No conventional commits found"
+git log --pretty=format:"%s" $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD | grep -E "^(feat|fix|perf|build|revert|docs|style|refactor|test|chore|ci)(\(.+\))?:" || echo "  No conventional commits found"
 
 echo ""
 echo "2. Release Please config files:"

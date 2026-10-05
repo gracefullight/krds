@@ -1,3 +1,7 @@
+---
+oma-docs: skip
+---
+
 # Bug Report Template
 
 Use this template when documenting bugs in the Knowledge Base.
@@ -171,27 +175,17 @@ const user = data?.user?.profile?.name ?? 'Unknown';
 
 ### Testing Performed
 
-- [x] **Regression test added**
-  - File: `src/components/UserProfile.test.tsx`
-  - Coverage: Null profile, undefined user, missing name
-
-- [x] **Manual testing**
-  - Tested original reproduction steps
-  - Tested edge cases (null, undefined, empty)
-  - Verified fix works in all browsers
-
-- [x] **Related areas checked**
-  - Found similar pattern in `TeamProfile.tsx` - also fixed
-  - Checked all `.profile.` usages - 3 more locations updated
-
-- [x] **Performance impact**: None | [Describe if any]
+- [ ] Regression test: [file, cases, command and actual outcome]
+- [ ] Manual reproduction: [steps, environment and actual outcome]
+- [ ] Related areas: [scope actually checked and findings]
+- [ ] Performance: [measurement or not checked]
 
 ### Test Results
 
-**Unit Tests**: 15/15 passing
-**Integration Tests**: 8/8 passing
-**E2E Tests**: 3/3 passing
-**Manual QA**: Verified on Chrome, Firefox, Safari
+**Unit Tests**: [command, passed/failed/skipped counts, or not run]
+**Integration Tests**: [command and actual outcome, or not run]
+**E2E Tests**: [command and actual outcome, or not run]
+**Manual QA**: [browsers/devices actually checked, or not checked]
 
 ---
 
@@ -263,11 +257,8 @@ const name = user.profile.name; // Crashes if profile undefined
 
 ## Communication
 
-**Notified**:
-- [x] Product Manager - Impact assessment
-- [x] QA Team - Additional testing needed
-- [x] Users affected - Via email/announcement
-- [ ] Other teams - [Specify]
+**Communication**: [Only record messages actually sent within authorized scope;
+otherwise mark not sent. Do not send email or chat solely to fill this template.]
 
 **Changelog Entry**:
 ```markdown
@@ -325,6 +316,10 @@ const name = user.profile.name; // Crashes if profile undefined
 - Screenshots (if text description is clear)
 - Stack trace (if no error thrown)
 - Migration notes (if no DB/config changes)
+- Communication, Metrics, Sign-off (org-process sections; skip when running as an autonomous agent)
+
+**For Simple/Medium bugs**: the condensed template in
+`debugging-checklist.md` §Documentation Template is sufficient.
 
 **Optional sections to add**:
 - Timeline (for long-running bugs)
