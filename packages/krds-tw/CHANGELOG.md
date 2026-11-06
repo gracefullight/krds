@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+### Patch Changes
+
+- First npm publish of KRDS-TW (Tailwind CSS v4 + Base UI design system).
+
 - 0.6.0: Migrate hand-rolled to Base UI primitives
   - Dialog → Base UI Dialog (focus trap, escape, scroll lock)
   - Tooltip → Base UI Tooltip (Floating UI positioning)
