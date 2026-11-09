@@ -1,117 +1,53 @@
-# Trust Registry Reference
+# Source provenance and optional domain diagnostics
 
-Domain trust scoring strategy for search results.
-Uses heuristic pattern matching + Tranco domain ranking for validation.
+Ordinary search results use provenance and inspected content rather than a
+mandatory domain score. The CLI's existing domain registry remains available as
+an optional diagnostic; this resource does not maintain another score table.
 
-## Trust Levels
+## Evidence to retain
 
-| Level | Score Range | Label | Description |
-|-------|-----------|-------|-------------|
-| verified | 0.85-0.95 | **** | Official documentation, vendor sites, standards bodies |
-| community | 0.50-0.70 | *** | User-generated, curated platforms |
-| external | 0.20-0.49 | ** | Third-party content sources |
-| unknown | (none) | (none) | Cannot determine trust level |
+- Source URL or remote repository/file reference and actual provider/route.
+- Source type when established: official documentation, primary material,
+  community discussion, secondary analysis, or unknown.
+- Whether the relevant original content was read in full, read as an excerpt, or
+  not read. Search snippets alone are limited evidence.
+- The passage or code context supporting the answer and its relevance.
+- Publication date, retrieval time and version/revision when observed.
+- Access, archive, freshness, version and provider-fallback limitations.
 
-## Scoring Rules
+Do not infer official ownership from a hosting domain or a `docs.*` prefix.
+Context7 can supply relevant documentation excerpts, but library resolution does
+not verify every statement. GitHub/GitLab host both authoritative upstream code
+and unrelated repositories. A DOI identifies a record, not the truth of a claim.
 
-1. **Domain-level only**: score applies to the entire domain, not sub-paths
-2. **Unknown domains are NOT excluded**: they appear with `—` label
-3. **`--strict` filter**: only shows results with score >= 0.85 (verified+)
-4. **Sort tiebreaker**: when relevance is equal, higher trust score ranks first
+## Source constraints
 
-## Score Resolution
+`--strict` retains suitable primary or official material with inspected content
+supporting the question. Report when ownership, version or content cannot be
+established. Do not make a source pass by assigning it a higher score.
 
-### Step 1: Classify domain by pattern (category)
+`--wide` includes broader material with its provenance and read-status limits.
+It does not relax an explicit official-site, repository, version or date scope.
+Unknown provenance does not require discarding a relevant source in this mode.
 
-First match wins.
+## Optional CLI diagnostic
 
-#### verified patterns
-
-| Pattern | Score | Rationale |
-|---------|-------|-----------|
-| Domain matches Context7 library source | 0.95 | Context7 resolved = official docs |
-| `docs.*` or `*.docs.*` subdomain | 0.90 | Official documentation subdomain |
-| `developers.*` subdomain | 0.85 | Developer portal convention |
-| Known TLD: `*.gov`, `*.edu` | 0.90 | Institutional domains |
-| Known standards: `w3.org`, `tc39.es`, `ietf.org`, `owasp.org` | 0.95 | Standards bodies |
-| Canonical framework/language site | 0.95 | e.g., react.dev, go.dev, doc.rust-lang.org |
-
-#### community patterns
-
-| Pattern | Score | Rationale |
-|---------|-------|-----------|
-| `github.com`, `gitlab.com` | 0.60 | Code hosting (content quality varies) |
-| `stackoverflow.com`, `*.stackexchange.com` | 0.65 | Curated Q&A |
-| `wikipedia.org` | 0.65 | Community-curated encyclopedia |
-| Package registries: `npmjs.com`, `pypi.org`, `crates.io`, `pub.dev` | 0.60 | Package metadata |
-| `reddit.com` | 0.50 | Forum discussion |
-
-#### external patterns
-
-| Pattern | Score | Rationale |
-|---------|-------|-----------|
-| Blog platforms: `medium.com`, `dev.to`, `hashnode.com`, `substack.com` | 0.35 | Unvetted individual content |
-| Blog platforms (KR): `velog.io`, `tistory.com` | 0.30 | Korean blog platforms |
-| Tutorial aggregators: `w3schools.com`, `geeksforgeeks.org` | 0.30 | Variable quality |
-| Higher-quality tutorials: `freecodecamp.org`, `baeldung.com` | 0.45 | Editorially reviewed |
-
-#### unknown
-
-Everything not matching above patterns.
-
-### Step 2: Validate with Tranco ranking (optional)
-
-Use the Tranco siterank API to verify domain legitimacy:
+Use the existing command when the user requests domain diagnostics or a numeric
+domain threshold, or when that information is needed to interpret a source:
 
 ```bash
-curl -s "https://siterank.redirect2.me/api/rank.json?domain={domain}"
+oma search trust <domain>
 ```
 
-Response:
-```json
-{ "success": true, "domain": "react.dev", "rank": 12301 }
-{ "success": false, "domain": "sketchy.xyz", "rank": 0 }
-```
+The result contains the CLI's `domain`, `level`, `score`, `tags` and resolution
+`source` (`registry`, `heuristic` or `tranco`). Preserve those fields as returned;
+unknown scores stay unknown. Do not hand-score or upgrade domains.
 
-**Tranco determines popularity, NOT content quality.**
-Use it as a validator, not a scorer:
+The CLI's `verified` label is a domain-registry classification, not evidence that
+a page was read, a claim was checked, or requested version/freshness constraints
+were met. Popularity is not authority. Keep these diagnostics separate from
+source/content evidence; they are not required for every URL or a ranking pass.
 
-| Tranco Result | Effect on Score |
-|--------------|----------------|
-| Ranked (any position) | Confirms domain is real and established. Keep heuristic score. |
-| Not ranked + pattern matched | Domain is niche but category is clear. Keep heuristic score. |
-| Not ranked + no pattern match | Genuinely unknown. Label as `unknown —`. |
-
-**Rate limit**: free for light non-commercial use. Do NOT call for every result.
-Call only when heuristic returns `unknown` and you need validation.
-
-### Step 3: Cache in Serena memory
-
-Cache resolved scores to avoid re-evaluation:
-
-```
-write_memory("trust-registry-cache", resolved_scores)
-read_memory("trust-registry-cache")
-```
-
-Cache is project-scoped and survives skill updates.
-
-## Lookup Algorithm
-
-```
-1. Extract domain from result URL (strip protocol, path, query)
-2. Check Serena memory cache (trust-registry-cache)
-3. If cache miss → apply heuristic pattern matching (Step 1)
-4. If heuristic returns unknown → call Tranco API for validation (Step 2)
-5. Attach [level, tags, score] to result
-6. Write newly resolved scores to cache (Step 3)
-```
-
-## Data Sources
-
-| Source | Purpose | Cost | API |
-|--------|---------|------|-----|
-| Heuristic patterns | Domain category classification | Free | N/A (built-in rules) |
-| [Tranco List](https://tranco-list.eu/) | Domain popularity validation | Free | `siterank.redirect2.me/api/rank.json` |
-| [redirect2me/siterank](https://github.com/redirect2me/siterank) | Self-hostable Tranco API | Free, OSS | Self-host option |
-| Serena memory | Score caching | Free | MCP memory tools |
+Cache a requested diagnostic within the session. Any persisted cache belongs in
+generated state and records resolution time/source. Do not copy the registry or
+its numeric tables into skill definitions.

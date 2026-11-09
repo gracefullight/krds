@@ -124,3 +124,47 @@
 - Similarity score distribution monitored by policy domain
 - Prompt token waste tracked for bad retrieval
 ```
+
+## Example 5: Anti-Pattern Remediation on a Live Table
+
+**Input**: "Our `products` table stores tags as a comma-separated column, prices as FLOAT, and category lookups are slow. Fix it without downtime."
+
+**Output**:
+```md
+## Findings (anti-pattern review)
+- CSV-in-column: `products.tags VARCHAR` holds comma-separated tags -> junction table
+- Floating-point money: `products.price FLOAT` -> NUMERIC(12,2)
+- Slow category lookup: Seq Scan confirmed via EXPLAIN (ANALYZE); estimated 200 rows vs actual 1.8M -> stale stats + missing composite index
+
+## Remediation Plan (expand-contract, four deploys)
+1. Expand (additive only)
+   - CREATE TABLE product_tags(product_id FK, tag_id FK, PRIMARY KEY(product_id, tag_id))
+   - ALTER TABLE products ADD COLUMN price_amount NUMERIC(12,2) (nullable)
+   - CREATE INDEX CONCURRENTLY idx_products_category_active ON products(category_id, is_active)
+2. Migrate (dual-write + backfill)
+   - App writes tags to both column and junction table; price to both columns
+   - Backfill in 10k-row PK batches with checkpointing; replication lag watched, throttled at threshold
+   - Parity: row-count + sampled checksum comparison recorded
+3. Switch (reads behind flag)
+   - Reads flip to product_tags / price_amount; old paths kept for rollback; 1-week soak
+4. Contract (separate deploy, after soak + final backup)
+   - Drop products.tags and products.price; VALIDATE NOT NULL on price_amount via CHECK NOT VALID first
+
+## Verification
+- ANALYZE products; EXPLAIN (ANALYZE, BUFFERS) before/after recorded: Seq Scan -> Index Scan, p95 420ms -> 6ms
+- lock_timeout = '2s' + retry on every DDL; no COPY-algorithm DDL on the hot table
+```
+
+## Example 6: New Order Approval Flow
+
+**Input**: "Add a trigger that approves orders, charges the card, and sends email when status becomes READY."
+
+**Recommendation**: Strongly recommend an explicit application command for approval and a versioned eligibility policy. Persist the validated transition and an outbox event in one transaction; use a worker for payment/email with idempotency, bounded retry, and a defined recovery path for partial success. Keep FK/UNIQUE/CHECK constraints and concurrency protection in the DB. A status update or ORM save hook must not silently become the workflow entry point.
+
+## Example 7: Existing Procedure and Expiry Job
+
+**Input**: "The existing settlement procedure calculates fees, and a DB job marks subscriptions expired. Keep using them because that is our convention."
+
+**Recommendation**: Strongly recommend application ownership of fee policy and business job execution; existing convention alone is not retention evidence. First inspect API, batch, admin, and direct SQL writers. Version fee policies and record which version produced a settlement; validate `expires_at` when an action occurs rather than relying on the expiry job having run.
+
+**Transition**: Compare old/new decisions without charging or notifying twice, coordinate one execution owner across old app instances and DB routines, and preserve a tested rollback path during the soak window. Keep DB constraints, atomic updates, RLS, change audit, and efficient SQL aggregation. An audit trigger that records every affected writer may remain with documented coverage and bypass limits. Retain a DB calculation routine only with a concrete reason, such as measured data-local processing cost, plus correctness/concurrency tests and deployment/recovery evidence.

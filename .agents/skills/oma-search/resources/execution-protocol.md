@@ -1,115 +1,86 @@
-# Search Agent - Execution Protocol
+# Search and retrieval execution
 
-## Step 0: Parse Query
+The parent SKILL.md owns route selection and execution order. Load the selected
+route here; supporting routes address a specific evidence gap.
 
-1. **Extract flags** from the query string:
-   - `--docs`, `--code`, `--web`: force specific route
-   - `--strict`: only verified+ sources (trust score >= 0.85)
-   - `--wide`: all sources with trust labels
-   - `--gitlab`: force `glab api` for code route
-2. **Classify intent** using `resources/intent-rules.md`:
-   - If flag is present: skip classification, use flag
-   - If no flag: apply keyword pattern matching
-   - If ambiguous: use `web` + `docs` parallel (default fallback)
-3. **Log** selected mode and route(s) for transparency
+## docs
 
-## Step 1: Route Dispatch
+1. Resolve the library with Context7 `resolve-library-id`, then query the relevant
+   documentation with `query-docs`. Carry the requested version and topic through.
+2. If Context7 misses or returns irrelevant material, discover the library's
+   official documentation with an available search provider. Preserve version and
+   official-source constraints; this fallback does not admit community tutorials.
+3. Inspect the returned passages or page. Identify excerpt-only access and any
+   version mismatch instead of treating library resolution as claim verification.
 
-### docs route
-1. Call Context7 `resolve-library-id` with the library/framework name
-2. If resolved: call `query-docs` with the library ID and query topic
-3. If NOT resolved: fall back to `web` route with notice to user
+## web
 
-### web route
-1. Use runtime native search tool (WebSearch, Google Search, Bing, etc.)
-2. If native search fails or returns blocked/empty:
-   - Enter the bypass fallback (see below)
-3. Collect top results with URLs
+1. Resolve `providers.web` or the explicit `--provider` override. Use
+   `oma search providers` for registration, selection and credential metadata.
+   `oma doctor` checks credential presence, not key validity, quota or API
+   reachability. Preserve an adapter's reported credential error.
+2. For `native`, use the web-search tools exposed by the current runtime. The CLI
+   cannot substitute for an unavailable runtime-native tool.
+3. For `brave` or `exa`, use the selected CLI adapter:
 
-#### Bypass Fallback (on native search failure)
-Delegate to the native CLI: `oma search fetch <url>`. The pipeline
-auto-escalates through four strategies and stops on the first success:
-
-- **api**: platform-specific handlers (Twitter syndication, Reddit JSON,
-  HN Firebase, arXiv Atom, SE v2.3, Bluesky AT Protocol, Mastodon, Wikipedia,
-  CrossRef, OpenLibrary, Lobste.rs, dev.to, V2EX, npm, PyPI, Naver blog/finance).
-- **probe**: parallel Jina Reader + WebFetch + curl UA variants (first-wins).
-- **impersonate**: Python `curl_cffi` subprocess (safari→chrome→firefox;
-  Korean hosts prefer safari). Auto-skips remaining TLS targets on
-  JS-essential markers.
-- **browser**: `puppeteer-core` + system Chrome via CDP. No MCP runtime
-  dependency. Install Chrome or set `OMA_CHROME_PATH`.
-
-Sidecar: add `--include-archive` to try AMP → archive.today → Wayback
-Machine when all primary strategies fail. Archive hits tag `provenance`
-so consumers can deprioritize cached content.
-
-Flags: `--only <list>`, `--skip <list>`, `--timeout <sec>`, `--locale <v>`,
-`--pretty`. Exit codes: 0=ok, 2=blocked, 3=not-found, 4=invalid-input,
-5=auth-required, 6=timeout, 1=error.
-
-### code route
-1. Detect platform from user-provided URL or context:
-   - URL contains `github.com` -> use `gh search code "query"`
-   - URL contains `gitlab.com` -> use `glab api "/search?scope=blobs&search=query"`
-   - No URL (keyword only) -> use `gh search code` (default, largest OSS coverage)
-   - `--gitlab` flag -> force `glab api`
-2. Parse CLI output into structured results
-3. Include repo name, file path, and match context
-
-### local route
-Delegate entirely to Serena MCP:
-- `find_symbol` for named code entities
-- `search_for_pattern` for arbitrary text patterns
-- `get_symbols_overview` for structural exploration
-
-Do NOT duplicate Serena's functionality. Simply pass through.
-
-## Step 2: Collect Results
-
-1. Gather results from all dispatched routes
-2. Normalize into uniform format:
+   ```bash
+   oma search web "<query>" --provider brave
+   oma search web "<query>" --provider exa
    ```
-   { source: "docs|web|code|local", title, url, domain, snippet }
-   ```
-3. Deduplicate by URL
 
-## Step 3: Trust Scoring
+   Execute only the selected command. Default credential sources are
+   `BRAVE_SEARCH_API_KEY` / vault `brave-search` and `EXA_API_KEY` / vault
+   `exa-search`; configured references take precedence. Never print key values.
+4. Preserve query, source, date and version constraints. Collect actual result
+   URLs. Search excerpts do not establish that the complete source was read.
+5. An unavailable or unauthenticated explicit provider is a failed route, not an
+   empty result and not permission to switch providers. A permitted provider
+   switch must be named. If discovery yields no URL, refine or report no result;
+   do not call a URL reader with an invented target.
 
-1. For each result with a URL, extract the domain
-2. Resolve trust score (see `resources/trust-registry.md`):
-   a. Check Serena memory cache (`trust-registry-cache`)
-   b. If cache miss: apply heuristic pattern matching (domain patterns → category + score)
-   c. If heuristic returns unknown: call Tranco API (`siterank.redirect2.me`) for validation
-3. Attach trust level, tags, and score:
-   - Resolved: use level and score
-   - Unresolved: label as `unknown` with score `—`
-4. Write newly resolved scores to Serena memory cache
-5. If `--strict` mode: filter out results below `verified` (< 0.85)
-   - If 0 results remain: suggest `--wide` rerun
-6. Sort by: relevance first, trust score as tiebreaker
+## code
 
-## Step 4: Present Results
+Use `oma search code "<query>"`, which wraps `gh search code` or `glab api`.
+Preserve explicit host/repository constraints. Use `--host gitlab` for an explicit
+GitLab host, and `--language`, `--repo` and `--limit` when requested. Default to
+GitHub only when no host constraint exists.
 
-Format output as:
-```
-Query: "{query}"
-Mode: {mode} ({auto|flag})
+Retain repository, file path, match context and revision when available. A match
+on a hosting domain does not establish ownership or implementation correctness.
 
-{ROUTE} #{n}  {title} — {source}     [{tags} {stars} {score}]
-```
+## fetch
 
-Example:
-```
-Query: "Next.js middleware authentication"
-Mode: docs + web (auto)
+Use this route only with a URL supplied by the user or discovered by a search.
+Read it through an available runtime URL reader/browser or the CLI:
 
-DOCS #1  Next.js Middleware — next.js docs     [verified,lang-docs 0.95]
-DOCS #2  Authentication — next-auth.js docs    [verified,lib-docs 0.90]
-WEB  #3  Middleware Auth Guide — vercel.com     [verified,vendor 0.90]
-WEB  #4  Next.js Auth Tutorial — dev.to        [external,blog 0.35]
-CODE #5  middleware.ts — vercel/next.js         [github]
+```bash
+oma search fetch <url>
 ```
 
-## On Error
-See `resources/error-playbook.md` for recovery steps.
+The CLI owns retrieval strategies and archive recovery. Use
+`oma search fetch --help` for available controls instead of duplicating the
+strategy implementation in this skill. Retain access/authentication errors,
+returned retrieval provenance and archive snapshot dates. An archived page does
+not establish current state.
+
+Useful flags include `--only`, `--skip`, `--timeout`, `--locale` and `--pretty`.
+Exit codes: 0=ok, 2=blocked, 3=not-found, 4=invalid-input, 5=auth-required,
+6=timeout, 1=error. Follow `error-playbook.md` for a failed retrieval.
+
+## Local-code handoff
+
+Local project symbols, files and references are outside this router. Use the
+configured code-intelligence capability directly under
+`../../_shared/core/code-intelligence.md`. Do not install or track a repository,
+silently switch providers, or broaden native search beyond that contract.
+
+## Results
+
+Keep route, actual provider, title, URL or file reference, source type, relevance,
+content-read status and the passage supporting the answer. Distinguish full
+content, inspected excerpts and unread search results. Include publication date,
+retrieval time, source version/revision and archive/fallback limits when observed;
+leave unknown fields unknown. Deduplicate URLs and preserve source constraints.
+
+The parent skill does not require a fixed report layout or a numeric trust lookup.
+Use `trust-registry.md` for provenance interpretation and optional diagnostics.

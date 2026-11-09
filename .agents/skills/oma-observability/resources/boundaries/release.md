@@ -160,7 +160,7 @@ spec:
 
 ---
 
-## 5. Feature Flags via OpenFeature (CNCF Graduated, 2024-11)
+## 5. Feature Flags via OpenFeature (CNCF Incubating, 2023-11-21)
 
 Source: <https://openfeature.dev> | CNCF graduation: <https://www.cncf.io/projects/openfeature/>
 
@@ -186,7 +186,7 @@ application layer while Flagger controls infrastructure-level traffic weight.
 
 ## 6. Observing Feature Flag Evaluations
 
-OTel semantic conventions: `feature_flag.*` (Experimental as of semconv 1.27.0).
+OTel semantic conventions: `feature_flag.*` (Release Candidate as of semconv 1.43.0).
 
 Key span attributes emitted on each flag evaluation:
 

@@ -1,11 +1,10 @@
 [features]
 goals = true
-child_agents_md = true
-
 hooks = true
+
 [mcp_servers.serena]
-command = "serena"
-args = [ "start-mcp-server", "--context", "codex", "--project", ".", "--open-web-dashboard", "false" ]
+command = "oma"
+args = [ "bridge", "--context", "oma" ]
 startup_timeout_sec = 90
 
 [mcp_servers.serena.env]

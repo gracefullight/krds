@@ -1,60 +1,63 @@
-# Design Audit Checklist
+# Design Delivery Checks
 
-## 1. Responsive (MANDATORY, run first)
-- [ ] All sections render correctly at 375px width
-- [ ] No horizontal scroll at any breakpoint
-- [ ] Touch targets >= 44x44pt on mobile
-- [ ] Text readable without zooming on mobile (min 16px body)
-- [ ] Images/videos scale or have mobile alternatives
-- [ ] Navigation collapses appropriately (hamburger/drawer)
-- [ ] Buttons stack vertically on mobile if needed (flex-col)
-- [ ] No fixed-width containers causing overflow
+Run checks that apply to the requested operation. Record the action and result;
+a checked item without supporting evidence is not a passed verification.
 
-## 2. WCAG 2.2 Accessibility
-- [ ] Text contrast >= 4.5:1 AA (normal text)
-- [ ] Large text contrast >= 3:1 AA (18px bold / 24px+)
-- [ ] UI component contrast >= 3:1 against adjacent colors
-- [ ] Focus indicators visible with >= 3:1 contrast
-- [ ] All images have appropriate alt text (decorative: alt="")
-- [ ] Semantic HTML landmarks (header, nav, main, footer)
-- [ ] Sequential heading hierarchy (h1 → h2 → h3, no skips)
-- [ ] One h1 per page
-- [ ] prefers-reduced-motion respected for all animations
-- [ ] All interactive elements keyboard-accessible
-- [ ] Skip-to-content link present
-- [ ] aria-label on icon-only buttons
-- [ ] No content conveyed by color alone
+## Scope and provenance
 
-## 3. Nielsen's 10 Heuristics
-- [ ] Visibility of system status (loading, progress, feedback)
-- [ ] Match between system and real world (familiar language, conventions)
-- [ ] User control and freedom (undo, back, escape, close)
-- [ ] Consistency and standards (same patterns throughout)
-- [ ] Error prevention (confirmations for destructive actions)
-- [ ] Recognition rather than recall (visible options, no memorization)
-- [ ] Flexibility and efficiency (shortcuts for expert users)
-- [ ] Aesthetic and minimalist design (no unnecessary elements)
-- [ ] Help users recognize and recover from errors (clear messages)
-- [ ] Help and documentation (if needed, searchable and task-oriented)
+- [ ] The result matches the requested audit, design document, direction, or
+  implementation; any product/doc/token changes are within the authorized scope.
+- [ ] The applicable upstream supplier or local contract was selected through
+  [external-design-skills.md](external-design-skills.md); any supplier source and
+  available version/revision are recorded.
+- [ ] Findings distinguish inspected facts, assumptions, proposals, and changes.
+- [ ] References, assets, quotations, and product claims have an identified
+  source; placeholders are labeled.
 
-## 4. AI Slop Check
-- [ ] Passes the "AI made this" test (would a human designer be proud?)
-- [ ] No purple gradient backgrounds
-- [ ] No Inter-only or Geist-only typography without justification
-- [ ] No triple-nested cards
-- [ ] No bounce easing on all animations
-- [ ] No generic hero with 3-metric stats row
-- [ ] No gradient + glassmorphism + blur triple combo
-- [ ] No gradient orbs/blobs as primary decoration
-- [ ] Texture/noise preferred over plain gradients where applicable
-- [ ] Design reflects project-specific context, not a generic template
-- [ ] Custom fonts justified by brand needs, not used by default
+## Existing product and project contract
 
-## 5. Design System Consistency
-- [ ] All colors from the defined palette (no hardcoded hex outside system)
-- [ ] All spacing from 8px grid scale (4, 8, 12, 16, 24, 32, 48, 64, 96, 128)
-- [ ] Typography uses the defined type scale (no arbitrary font sizes)
-- [ ] Component variants consistent (same border-radius, shadow, border treatment)
-- [ ] Dark/light theme tokens defined if applicable
-- [ ] CSS custom properties used for all design tokens
-- [ ] Tailwind config extends theme correctly (no arbitrary values in templates)
+- [ ] The redesign scope and preserved brand, URLs, navigation, form fields,
+  analytics events, content, and legal text follow
+  [redesign-protocol.md](redesign-protocol.md).
+- [ ] Supported languages are recorded. CJK text uses fonts with suitable
+  coverage and fallback; supplied Latin references have not replaced that policy.
+- [ ] A changed `DESIGN.md` contains the nine sections and a usable Section 9
+  defined in [design-md-spec.md](design-md-spec.md).
+- [ ] Token changes map semantic roles to the existing project format and theme
+  source under [design-tokens.md](design-tokens.md).
+- [ ] Product implementation follows `oma-frontend` or `oma-mobile` and the existing stack.
+- [ ] A data table or grid follows [data-grid.md](data-grid.md): column alignment,
+  a one-line filter toolbar, one line per row, and a check with real data.
+
+## Rendered responsive evidence
+
+- [ ] Identify the page/component, route or artifact, revision, and states tested.
+- [ ] Record the actual viewport widths and relevant breakpoints tested,
+  including the target's narrow mobile width when mobile web is in scope.
+- [ ] Inspect the affected content and controls for overflow, overlap, truncation,
+  and loss of actions at those sizes; record any unresolved finding and location.
+- [ ] Exercise affected navigation, forms, overlays, and media where they change
+  with viewport or input mode. Real-device claims identify the device tested.
+
+## Rendered accessibility evidence
+
+- [ ] State the applicable project accessibility target and the affected states.
+- [ ] Exercise affected actions with the keyboard; record focus visibility,
+  reading/order issues, and overlay focus/escape behavior where relevant.
+- [ ] Measure contrast for changed foreground/background pairs and relevant
+  states; report the values and target, rather than judging from a screenshot.
+- [ ] Inspect affected labels, names, semantic structure, error announcements,
+  and image alternatives using the available browser/accessibility tools.
+- [ ] Exercise reduced-motion behavior when motion changes, and the relevant
+  touch/hover behavior when those interactions change.
+- [ ] Record automated checks separately from manual inspection; neither is
+  reported as complete accessibility coverage.
+
+## Handoff and limits
+
+- [ ] The implementation handoff identifies affected files/screens, accepted design
+  decisions, semantic token roles, preserved behavior, and acceptance criteria.
+- [ ] List checks that passed, findings that remain, and checks that were not run.
+  A document-only task reports rendered checks as pending, not passed.
+- [ ] Audit-only delivery contains findings and recommendations; product source,
+  design documents, tokens, dependencies, and tool settings remain unmodified.
