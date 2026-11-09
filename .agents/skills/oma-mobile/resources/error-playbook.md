@@ -1,7 +1,7 @@
 # Mobile Agent - Error Recovery Playbook
 
 When you encounter a failure, find the matching scenario and follow the recovery steps.
-Do NOT stop or ask for help until you have exhausted the playbook.
+Use the relevant recovery steps. If required information or authority is missing, pause the dependent action and continue independent work.
 
 ---
 
@@ -93,9 +93,45 @@ Do NOT stop or ask for help until you have exhausted the playbook.
 
 ---
 
+## React Native: Metro / Build Failure
+
+**Symptoms**: Metro bundler errors, `Unable to resolve module`, pod install failures, Gradle errors
+
+1. **Unable to resolve module**: check the import path and `tsconfig.json`/`babel.config.js` path aliases (`@api`, `@store`, ...) agree; then `npx react-native start --reset-cache`
+2. **iOS pod failure**: `cd ios && pod install --repo-update`; New Architecture (0.76+) requires up-to-date pods for Nitro/TurboModules (e.g., react-native-mmkv v4 needs RN 0.76+)
+3. **Gradle failure**: check `android/build.gradle` versions match the RN release template; clean with `cd android && ./gradlew clean`
+4. **Native module mismatch after upgrade**: rebuild the app binary — JS-only reload cannot load new native modules
+5. If persists: note in result with full error; may be an environment issue
+
+---
+
+## React Native: TypeScript / Test Failure
+
+**Symptoms**: `npx tsc --noEmit` errors, jest failures, RNTL matcher errors
+
+1. Read the error: file, line, expected vs actual type
+2. Navigation typing: screens must use the typed props from `RootStackParamList` — never `any`
+3. Matcher not found (`toBeOnTheScreen` etc.): matchers are built into `@testing-library/react-native` ≥12.4 — remove any `@testing-library/jest-native` residue from jest setup
+4. Query hook tests: wrap in a fresh `QueryClientProvider` per test (`retry: false`); async UI needs `await screen.findBy...`, not `getBy...`
+5. **NEVER**: `@ts-ignore` / `as any` to silence type errors
+
+---
+
+## React Native: Stale Cache / Offline Issues
+
+**Symptoms**: UI shows old data, mutations don't refresh lists, cache gone after restart
+
+1. Mutation missing invalidation? Every mutation must invalidate the affected query keys (list AND detail) via the shared key factory
+2. Cache not surviving restart: `gcTime` must be >= the persister's `maxAge` (default 24h); a short `gcTime` lets GC prune entries from the persisted MMKV snapshot
+3. Offline behavior dead: confirm `onlineManager.setEventListener` is wired to NetInfo — RN has no default online detection
+4. Optimistic update ghosts: `setQueryData` must return `old` unchanged when the cache entry is absent — never fabricate `[]`
+5. Persisted schema drift after model changes: bump the persister `buster` string to drop the old snapshot
+
+---
+
 ## Rate Limit / Quota / Memory Fallback
 
-Same as the backend playbook: see `../../oma-backend/resources/error-playbook.md` §"Rate Limit / Quota Error (Gemini API)" and §"Serena Memory Unavailable".
+Same as the backend playbook: see `../../oma-backend/resources/error-playbook.md` §"Rate Limit / Quota Error (LLM runtime)" and the configured code-intelligence or memory fallback guidance.
 
 ---
 
@@ -103,7 +139,9 @@ Same as the backend playbook: see `../../oma-backend/resources/error-playbook.md
 
 **Symptoms**: Build error from the `swift-openapi-generator` plugin such as `error: openapi.yaml not found` or YAML parse error; the build fails before any Swift file is compiled.
 
+<!-- oma-docs:ignore-start -->
 1. Confirm the spec exists at `Core/Networking/openapi.yaml` — this is where the build plugin looks.
+<!-- oma-docs:ignore-end -->
 2. If the file is absent: re-sync it from the backend (`curl -o Sources/Core/Networking/openapi.yaml https://<backend>/api-docs/openapi.yaml` or copy from the CI artifact). The iOS project is a **consumer** of the spec; never edit `openapi.yaml` directly.
 3. If the file is present but the error is a parse error: validate the YAML (`python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" Sources/Core/Networking/openapi.yaml`); fix the upstream spec and re-sync.
 4. After syncing, `swift build` will regenerate `Client`, `Operations`, and `Components` automatically — no manual code-gen step needed.
@@ -132,7 +170,9 @@ Same as the backend playbook: see `../../oma-backend/resources/error-playbook.md
 1. The root cause is that the OpenAPI spec does not declare that HTTP status code for the operation. The generator only emits cases for status codes listed in the spec.
 2. Do NOT add the case manually to the generated file — it will be overwritten on the next `swift build`.
 3. Ask the backend team to add the missing status code to the spec (e.g., add `409: description: Conflict` under the operation's `responses:`).
+<!-- oma-docs:ignore-start -->
 4. Re-sync `Core/Networking/openapi.yaml` once the spec is updated.
+<!-- oma-docs:ignore-end -->
 5. Run `swift build` to regenerate; the new response case will appear and the compile error will resolve.
 6. Update the Swift `switch` in the service layer to handle the new case explicitly.
 
@@ -143,11 +183,11 @@ Same as the backend playbook: see `../../oma-backend/resources/error-playbook.md
 **Symptoms**: Mutating a property on the view model has no visual effect; the view does not re-render even though the value changed.
 
 1. Confirm the view model class is annotated with `@Observable` (Observation framework, **not** `ObservableObject`). Without the macro the view has no tracking infrastructure.
-2. Check the deployment target: `@Observable` requires **iOS 17.0+**. If the target is set to iOS 16 or earlier the macro compiles but observation tracking is absent — raise the minimum deployment target in `Package.swift` (`.iOS(.v17)`) and the Xcode project settings.
-3. Verify the view holds the VM with `@State` (not a plain `let` or `var`): `@State private var viewModel: MyViewModel`. A non-`@State` reference is not tracked by SwiftUI.
-4. If the VM is passed into a child view that needs to mutate it, use `@Bindable` in the child: `@Bindable var viewModel: MyViewModel`. Passing it as a plain argument prevents change propagation.
+2. Check framework availability against supported OS versions. SwiftUI Observation integration requires iOS 17+. Preserve an older target using its supported observation mechanism or availability-gated implementation; changing minimum support requires a product decision.
+3. Check that body reads the observable properties that should trigger an update and that those properties are not @ObservationIgnored. Plain let/var references to @Observable models can be observed. Use @State when the view owns the instance lifetime.
+4. Use @Bindable when the child needs bindings such as $viewModel.title. Passing an observable reference as a plain argument does not prevent property observation or direct mutation.
 5. Confirm properties are mutated on the **main actor**. Mutations from a background `Task` without `await MainActor.run { … }` (or `@MainActor` on the method) can update state off-main and miss the SwiftUI render pass.
-6. Avoid wrapping the `@Observable` class in another `@Published` property or `ObservableObject` — mixing the two observation systems breaks change tracking.
+6. When adapting an existing ObservableObject boundary, verify which layer owns and publishes the values read by the view instead of assuming the mechanisms automatically bridge.
 
 ---
 

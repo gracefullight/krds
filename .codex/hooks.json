@@ -18,11 +18,11 @@
           {
             "name": "oma-hook-PreToolUse",
             "type": "command",
-            "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'PreToolUse' --matcher 'Bash'",
-            "timeout": 10
+            "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'PreToolUse' --matcher 'Bash|apply_patch|Edit|Write'",
+            "timeout": 26
           }
         ],
-        "matcher": "Bash"
+        "matcher": "Bash|apply_patch|Edit|Write"
       }
     ],
     "Stop": [
@@ -32,7 +32,44 @@
             "name": "oma-hook-Stop",
             "type": "command",
             "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'Stop'",
-            "timeout": 10
+            "timeout": 40
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "name": "oma-hook-PostToolUse",
+            "type": "command",
+            "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'PostToolUse' --matcher 'apply_patch|Edit|Write'",
+            "timeout": 21
+          }
+        ],
+        "matcher": "apply_patch|Edit|Write"
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "name": "oma-hook-SubagentStart",
+            "type": "command",
+            "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'SubagentStart'",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "name": "oma-hook-SubagentStop",
+            "type": "command",
+            "command": "'.codex/hooks/oma-hook.sh' --vendor 'codex' --event 'SubagentStop'",
+            "timeout": 8
           }
         ]
       }

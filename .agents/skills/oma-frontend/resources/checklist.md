@@ -4,13 +4,16 @@ Run through every item before submitting your work.
 
 ## Next.js 16 Conventions
 - [ ] Request-proxy/auth-gate file is named `proxy.ts` (NOT `middleware.ts`) and exports `proxy` (NOT `middleware`)
+<!-- oma-docs:ignore-start -->
 - [ ] Do NOT flag `src/proxy.ts` as dead code or recommend renaming to `middleware.ts`; `proxy.ts` is the canonical Next.js 16+ convention
+<!-- oma-docs:ignore-end -->
 - [ ] Config flags use the `Proxy` form (e.g. `skipProxyUrlNormalize`), not the legacy `Middleware` form
+- [ ] Every `<Link>` passes `prefetch={false}`; any prefetching link is a deliberate high-intent target with an inline reason
 
 ## TypeScript
 - [ ] Strict mode, no `any` types
 - [ ] Explicit interfaces for all component props
-- [ ] No TypeScript errors (`npx tsc --noEmit`)
+- [ ] No TypeScript errors (run the project's configured `typecheck` command; preserve framework checks and the selected TypeScript 7/native-preview executable)
 
 ## Styling
 - [ ] Tailwind CSS only (no inline styles, no CSS modules)
@@ -31,6 +34,15 @@ Run through every item before submitting your work.
 - [ ] Error state (user-friendly message + retry action)
 - [ ] Empty state (helpful message + CTA)
 - [ ] Optimistic updates where appropriate
+
+## Recommended product-interface review (advisory)
+
+For new or substantially changed admin consoles, dashboards, SaaS product UI,
+and internal tools, recommend `oma-design` with Interface Design
+`design-review` using [product-interface-review.md](../../oma-design/resources/product-interface-review.md).
+Record `completed`, `recommended-not-run` with a reason, or `not-applicable`.
+An unavailable or omitted advisory review does not block completion; the task's
+required functional, responsive, and accessibility checks still apply.
 
 ## Deferred / Stub Markers (transparency)
 - [ ] Every deferred external integration is wrapped in `// TODO(oma-deferred): <vendor or feature>`
@@ -54,6 +66,7 @@ React 19 + recent `eslint-plugin-react-hooks` flag these as hard errors. They ar
 
 ## Performance
 - [ ] No unnecessary re-renders (check with React DevTools Profiler)
+- [ ] Memoization matches the project's React Compiler setting: compiler ON (`reactCompiler` in `next.config.*`) → no hand-written `useMemo`/`useCallback`/`React.memo` in new code; compiler OFF → memoize manually (see `tech-stack.md` §React Compiler)
 - [ ] Code splitting for route-level components
 - [ ] Images optimized and lazy-loaded
 

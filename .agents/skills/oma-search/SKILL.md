@@ -1,177 +1,124 @@
 ---
 name: oma-search
-description: Intent-based search router with trust scoring. Routes queries to optimal channels (Context7 docs, native web search, gh/glab code search, Serena local) and attaches domain trust labels. Use for search, find, lookup, reference, docs, code search, and web research.
+description: "Find external documentation, web sources, or remote code with citations. Local code navigation uses the configured code tools."
 ---
 
-# Search Agent - Intent-Based Search Router
+# Search Router
 
 ## Scheduling
 
 ### Goal
-Classify information-seeking requests, route them to the best search channel, attach trust labels, and return source-grounded results.
+Select the search or retrieval channel needed by the request and return sources
+with supporting evidence and retrieval limits.
 
 ### Intent signature
-- User asks to search, find, look up, reference docs, inspect official documentation, search GitHub/GitLab code, or gather web research.
-- Another skill needs reusable search infrastructure with trust scoring.
+- Find external documentation, web information, or remote implementation examples.
+- Read a known external URL or supply external sources to another skill.
 
 ### When to use
-- Finding official library/framework documentation
-- Web research for tutorials, examples, comparisons, and solutions
-- Searching GitHub/GitLab code for implementation patterns
-- Any query where the search channel is unclear (auto-routing)
-- Other skills needing search infrastructure (shared invocation)
+Library documentation, web research, remote code search, known-URL reading, and
+requests whose external source channel needs selection.
 
 ### When NOT to use
-- Local codebase exploration only -> use Serena MCP directly
-- Git history or blame analysis -> use SCM Agent
-- Full architecture research -> use Architecture Agent (may invoke this skill internally)
+- Pure local code exploration -> use configured code intelligence directly under
+  `../_shared/core/code-intelligence.md`; do not dispatch this skill.
+- Git history/blame -> `oma-scm`; architecture analysis -> `oma-architecture`.
 
 ### Expected inputs
-- Query string, intent hint, or explicit flags such as `--docs`, `--code`, `--web`, `--strict`, `--wide`, `--gitlab`
-- Optional required source type, recency, domain, or trust constraints
+Query or known URL; optional route hint (`docs`, `web`, `code`, `fetch`); version,
+recency, host, repository and source constraints; optional web-provider override.
+Explicit `--docs`, `--code` or `--web` selects the search route. `--gitlab` selects
+the remote code host. `--strict` requires suitable primary or official sources
+with inspected supporting content; `--wide` includes broader results with their
+limitations. These modifiers preserve the request's source constraints.
 
 ### Expected outputs
-- Ranked search results with route, source, trust label, and concise relevance summary
-- Fallback explanation when primary route fails
-- Source links or references suitable for the calling skill
+An answer or relevant source list with source URL/file reference, route, actual
+provider, source type, content-read status, supporting evidence and material
+limitations. Include publication, retrieval and version details when observed.
+Do not invent results, dates, sources or certainty.
 
 ### Dependencies
-- Context7 MCP for docs, runtime-native web search, `gh`/`glab` for code, Serena for local search
-- `resources/intent-rules.md`, `resources/trust-registry.md`, execution protocol, examples, and checklist
-
-### Control-flow features
-- Branches by classified intent, user flags, route success/failure, and trust constraints
-- May call web/docs/code/local tools
-- Scores domains at domain level only
+Context7 for documentation; the configured `providers.web` (`native`, `brave` or
+`exa`) for web discovery; `oma search code`/`gh`/`glab` for remote code; runtime
+retrieval tools or `oma search fetch` for known URLs. `oma search providers`
+reports registration, selection and credential metadata; `oma doctor` checks
+credential presence without verifying validity or API reachability.
 
 ## Structural Flow
 
-### Entry
-1. Parse the query and flags.
-2. Classify the search intent.
-3. Select one best route unless ambiguity or flags justify more.
-
-### Scenes
-1. **PREPARE**: Parse query and classify route.
-2. **ACT**: Dispatch to docs, web, code, or local search.
-3. **ACQUIRE**: Collect search results and source metadata.
-4. **VERIFY**: Apply trust scoring and route-specific quality checks.
-5. **FINALIZE**: Present ranked results or fallback status.
-
-### Transitions
-- If `--docs`, `--code`, `--web`, `--strict`, `--wide`, or `--gitlab` is provided, flags override classifier.
-- If docs route fails, fall back to web.
-- If web search needs fetch escalation, use `oma search fetch` strategies.
-- If query is purely local, use Serena MCP instead of web.
+### Routes
+| Route | Execution | Scope |
+|---|---|---|
+| `docs` | Context7 library resolution and queries; official-site discovery when needed | Official documentation within requested version constraints |
+| `web` | Selected web provider: runtime tools for `native`, CLI adapter for `brave` or `exa` | Discover URLs relevant to a query |
+| `code` | `oma search code` through the selected code host | Remote implementation matches within host/repository constraints |
+| `fetch` | Available URL reader/browser or `oma search fetch <url>` | Read a URL already supplied or discovered |
 
 ### Failure and recovery
-- If primary route fails, fall forward to the next appropriate route.
-- If trust score is weak, label it instead of hiding uncertainty.
-- If no reliable results exist, report that and suggest a narrower query.
+- Missing/empty documentation lookup: use official-site discovery while retaining
+  the documentation route's version and source limits.
+- Selected web provider unavailable, unauthenticated or rate-limited: report its
+  failure. Do not silently replace an explicit provider choice with native search.
+- Search returns no candidate URLs: refine within the original constraints or
+  report no result. URL retrieval cannot replace missing search results.
+- A known URL cannot be read: use the retrieval-specific recovery reference and
+  preserve access/authentication errors and archive provenance.
+- No source meets `--strict`: report the source or evidence gap. A broader result
+  set does not automatically satisfy the strict request.
 
 ### Exit
-- Success: results are routed, trust-scored, and source-grounded.
-- Partial success: route failures or trust limitations are explicit.
+Return supported results and disclose failed routes, unread sources, stale or
+archived content, and version limits. A provider name or domain label does not
+verify an individual claim.
 
 ## Logical Operations
 
-### Actions
-| Action | SSL primitive | Evidence |
-|--------|---------------|----------|
-| Parse query and flags | `READ` | User request |
-| Classify intent | `SELECT` | Intent rules |
-| Dispatch search route | `CALL_TOOL` | Docs, web, code, local tools |
-| Collect results | `READ` | Search outputs |
-| Score trust | `VALIDATE` | Trust registry |
-| Rank and format | `INFER` | Relevance and trust |
-| Report results | `NOTIFY` | Final answer |
+### Canonical workflow path
+1. Resolve the requested outcome and constraints. Hand pure local-code requests
+   directly to configured code intelligence. For external work, select one primary
+   route; use `resources/intent-rules.md` only when selection is unclear.
+2. Execute that route using `resources/execution-protocol.md`. Resolve the web
+   provider from configuration or the request override. Add another route only
+   when the remaining evidence gap needs it; do not fan out by default.
+3. Read the relevant content needed to support the answer. Retain URLs and
+   inspection status, deduplicate results, and apply source/version constraints.
+   Use `resources/trust-registry.md` for provenance rules or an explicitly needed
+   optional domain diagnostic; no numeric lookup is required for ordinary results.
+4. Rank by relevance and source suitability for the question. Return the requested
+   answer or sources with evidence, the actual route/provider and material limits.
 
-### Tools and instruments
-- Context7 docs tools
-- Runtime-native web search
-- `gh search code` or `glab api`
-- Serena MCP for local project search
-
-### Canonical command path
+### CLI entry points
 ```bash
-gh search code "<query>"
-glab api "/search?scope=blobs&search=<query>"
+oma search providers
+oma search web "<query>" [--provider <id>] [--limit <n>]
+oma search code "<query>" [--host gitlab] [--language <lang>] [--repo <owner/repo>]
+oma search fetch <url>
+oma search trust <domain>
 ```
-
-For docs and web routes, use the runtime's available official-docs or web-search tools after classifying intent; do not duplicate routes unless the intent is ambiguous.
-
-### Resource scope
-| Scope | Resource target |
-|-------|-----------------|
-| `NETWORK` | Web/docs/source-code search targets |
-| `CODEBASE` | Local files when local search is selected |
-| `PROCESS` | `gh`, `glab`, and CLI search commands |
-| `MEMORY` | Query classification, trust labels, selected results |
-
-### Preconditions
-- Query and route constraints are clear enough to classify.
-- Required search tools are available or fallback is possible.
-
-### Effects and side effects
-- Performs external searches or local code searches.
-- Produces ranked references that may influence downstream implementation or research.
+Use `api`, `rss`, `meta`, `media`, `archive` or `doctor` only when the selected
+operation needs that primitive. `trust` remains an optional domain diagnostic.
 
 ### Guardrails
-1. **Classify intent before searching**: every query goes through IntentClassifier first
-2. **One query, one best route**: avoid redundant multi-route unless intent is ambiguous
-3. **Trust score every result**: all non-local results get domain trust labels from the registry
-4. **Flags override classifier**: user-provided flags (`--docs`, `--code`, `--web`, `--strict`, `--wide`, `--gitlab`) always take precedence
-5. **Fail forward**: if primary route fails, fall back gracefully (docs->web, web->`oma search fetch` strategies)
-6. **No additional MCP required**: Context7 for docs, runtime native for web, CLI for code, Serena for local
-7. **Vendor-agnostic web search**: use whatever the current runtime provides (WebSearch, Google, Bing)
-8. **Domain-level trust only**: do not attempt sub-path or page-level scoring
+- Preserve explicit route, provider, source, host, version and date constraints.
+- Keep query discovery separate from reading an existing URL.
+- Treat search snippets and excerpts as limited evidence; identify unread sources.
+- Do not manufacture trust scores or promote Context7/GitHub results to claim-level
+  verification based on their provider or hosting domain.
+- Do not repeat successful routes, search local project files via the web, install
+  a provider or track a repository automatically.
 
-### Routes
-
-| Route | Primary Tool | Fallback | Trigger |
-|-------|-------------|----------|---------|
-| `docs` | Context7 MCP (`resolve-library-id` → `query-docs`) | `web` route | Official docs, API reference |
-| `web` | Runtime native search | `oma search fetch` (api/probe/impersonate/browser) | Tutorials, examples, solutions |
-| `code` | `gh search code` / `glab api` | (none) | Implementation patterns, repos |
-| `local` | Serena MCP (delegate) | (none) | Current project files, symbols |
-
-### Default Workflow
-1. **Parse**: Extract query, detect flags, classify intent
-2. **Route**: Dispatch to the appropriate search channel(s)
-3. **Collect**: Gather results from dispatched routes
-4. **Score**: Attach trust labels to each result domain
-5. **Present**: Format and rank results for the user
-
-### Invocation
-
-#### Standalone
-```
-/oma-search "React Server Components streaming"
-/oma-search --docs "Next.js middleware"
-/oma-search --code "PKCE implementation"
-/oma-search --strict "JWT refresh token rotation"
-```
-
-#### Shared Infrastructure (from other skills)
-Other skills reference oma-search by specifying intent and query:
-1. State intent: `docs` | `web` | `code` | `local`
-2. Pass query string
-3. Use Trust Score in results to weigh source reliability
+### Resource scope and effects
+Search may contact external services and spawn configured provider or code-host
+processes. Retrieval may launch an available browser. Query constraints and
+provenance are session context; persistent caches belong in generated state, not
+skill definitions. Local source navigation belongs to the configured code tools.
 
 ## References
-Follow `resources/execution-protocol.md` step by step.
-See `resources/examples.md` for input/output examples.
-Use `resources/intent-rules.md` for intent classification reference.
-Use `resources/trust-registry.md` for domain trust scoring reference.
-Before submitting, run `resources/checklist.md`.
-Vendor-specific execution protocols are injected automatically by `oma agent:spawn`.
-Source files live under `../_shared/runtime/execution-protocols/{vendor}.md`.
-- Execution steps: `resources/execution-protocol.md`
-- Intent classification: `resources/intent-rules.md`
-- Trust registry: `resources/trust-registry.md`
-- Examples: `resources/examples.md`
-- Checklist: `resources/checklist.md`
-- Error recovery: `resources/error-playbook.md`
-- Context loading: `../_shared/core/context-loading.md`
-- Context budget: `../_shared/core/context-budget.md`
-- Lessons learned: `../_shared/core/lessons-learned.md`
+- Route selection: `resources/intent-rules.md` (unclear external request)
+- Execution: `resources/execution-protocol.md` (selected route only)
+- Provenance and optional domain diagnostics: `resources/trust-registry.md` (source/evidence interpretation)
+- Recovery: `resources/error-playbook.md` (route failure)
+- Result checks: `resources/checklist.md` (applicable source and evidence checks)
+- Examples: `resources/examples.md` (unfamiliar input or boundary)
+- Local-code handoff: `../_shared/core/code-intelligence.md` (local requests)

@@ -1,7 +1,7 @@
 # Backend Agent - Error Recovery Playbook
 
 When you encounter a failure, find the matching scenario and follow the recovery steps.
-Do NOT stop or ask for help until you have exhausted the playbook.
+Use the relevant recovery steps. If required information or authority is missing, pause the dependent action and continue independent work.
 
 ---
 
@@ -27,7 +27,7 @@ Do NOT stop or ask for help until you have exhausted the playbook.
    - Test expects old behavior → update test
    - Implementation has a bug → fix implementation
 4. Run the specific failing test with verbose output
-5. After fix, run full test suite to check for regressions
+5. After the fix, run affected regression tests; run a broader suite only when impact or project requirements justify it
 6. **After 3 failures**: Try a different approach. Record current attempt in progress and implement alternative
 
 ---
@@ -38,7 +38,7 @@ Do NOT stop or ask for help until you have exhausted the playbook.
 
 1. Read the error; is it a conflict with existing migration?
 2. Check current DB state: Check current migration state
-3. If migration conflicts: Rollback one migration step then fix migration script
+3. Inspect applied steps and partial changes first. In production or shared environments, prefer a reviewed forward fix. Roll back only in disposable development databases or with a tested, data-safe down migration; do not rewrite an already-applied migration.
 4. If schema mismatch: compare model with actual DB schema
 5. **NEVER do this**: Force-mark migrations as applied (risk of data loss)
 
@@ -68,26 +68,25 @@ Do NOT stop or ask for help until you have exhausted the playbook.
 
 ---
 
-## Rate Limit / Quota Error (Gemini API)
+## Rate Limit / Quota Error (LLM runtime)
 
-**Symptoms**: `429`, `RESOURCE_EXHAUSTED`, `rate limit exceeded`
+**Symptoms**: `429`, `RESOURCE_EXHAUSTED`, `rate limit exceeded` (any vendor runtime — Gemini, Claude, Codex, etc.)
 
-1. **Stop immediately**; do not make additional API calls
-2. Save current work to `progress-{agent-id}[-{sessionId}].md`
-3. Record Status: `quota_exceeded` in `result-{agent-id}[-{sessionId}].md`
-4. Specify remaining tasks so orchestrator can retry later
+1. Identify the source. An expected rate-limit response from the application under review is a test result, not an agent-provider quota failure.
+2. For provider quota exhaustion, stop affected provider calls and record the unavailable checks; continue independent authorized work when possible.
+3. Preserve injected session/task/run IDs and the claim path. Save progress/results under the configured memory base using the task/run-scoped names in `../../_shared/runtime/memory-protocol.md`.
+4. Use a valid claim status (`partial`, `blocked`, or `failed`) with the actual cause and unresolved work per `../../_shared/runtime/result-contract.md`; do not invent a `quota_exceeded` status.
 
 ---
 
-## Serena Memory Unavailable
+## Workflow State Unavailable
 
-**Symptoms**: `write_memory` / `read_memory` failure, timeout
+Follow `../../_shared/runtime/memory-protocol.md`; state storage is independent of the code-intelligence provider.
 
-1. Retry once (may be transient error)
-2. If 2 consecutive failures: fall back to local files
-   - progress → write to `/tmp/progress-{agent-id}[-{sessionId}].md`
-   - result → write to `/tmp/result-{agent-id}[-{sessionId}].md`
-3. Add `memory_fallback: true` flag to result
+1. Use the injected progress/result paths and session/task identity.
+2. If a file operation fails, retry once when the failure may be transient.
+3. Preserve work and report the failed path and error to the coordinator. Do not silently redirect artifacts to `/tmp` or mark a missing result as completed.
+4. For read-only tasks, return the result through the runtime's response channel as required by the dispatch contract.
 
 ---
 

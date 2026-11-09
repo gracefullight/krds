@@ -1,16 +1,7 @@
 # DB Agent - Execution Protocol
 
-## Step 0: Prepare
-1. **Assess difficulty**: see `../../_shared/core/difficulty-guide.md`
-   - **Simple**: small schema adjustment or index review
-   - **Medium**: new bounded context, migration, or backup/capacity update
-   - **Complex**: engine selection, major redesign, multi-tenant or high-scale workload
-2. **Clarify workload**
-   - Functional flows, critical queries, write/read ratio, peak TPS, retention, RPO, RTO
-   - Compliance or audit constraints, PII, multi-region, reporting needs
-3. **Budget context**: follow `../../_shared/core/context-budget.md`
-4. **If vector search is involved**, read `resources/vector-db.md`
-5. **If security, audit, backup, or resilience requirements are central**, read `resources/iso-controls.md`
+## Preparation
+Use the task's scope, existing project conventions, and acceptance criteria. Follow `../../_shared/core/execution-policy.md` when it has not already been supplied. Read only references needed by the selected operation; consult lessons or recovery guides for an observed issue. Expand planning depth only when the change requires it.
 
 ## Step 1: Explore
 - Identify actors and external views that need data
@@ -25,6 +16,7 @@
 - Decide relational vs non-relational:
   - Prefer relational when joins, strong integrity, and transactional consistency dominate
   - Prefer NoSQL when aggregate reads/writes, massive scale, flexible schema, or distribution tolerance dominate
+  - Prefer a graph model only when variable-depth traversals or relationship-pattern queries dominate the workload; adjacency (`parent_id`, junction tables) in a relational engine handles shallow, fixed-depth traversals fine
   - Prefer vector retrieval only for semantic similarity workloads; do not replace keyword/search engines blindly
 - Screen for anti-pattern signals early:
   - comma-separated values in one column
@@ -33,6 +25,8 @@
   - polymorphic foreign keys
   - missing FK constraints
   - blind surrogate-key usage
+  - business policies, implicit workflows, or external side effects in affected triggers, stored procedures/functions, views, DB jobs, or ORM hooks
+- For the affected logic, identify callers and all writers (API, batch, admin, import, direct SQL); use `resources/anti-patterns.md` §5 to distinguish application responsibilities from DB enforcement
 - Record assumptions and open risks
 - If vector retrieval is needed, define:
   - hybrid vs pure vector retrieval
@@ -52,10 +46,16 @@
   - normalize to **3NF** minimum
   - define PK, FK, unique, check, default, nullability
   - document transaction boundaries and target isolation level
+  - apply the application ownership policy in `resources/anti-patterns.md` §5 to both new and existing business logic; recommend alternatives and transition priorities, and document technical evidence for any retention
 - NoSQL path:
   - model around access patterns and aggregate boundaries
   - define sharding/partition keys, secondary indexes, TTL, duplication policy
   - document consistency model, conflict strategy, and repair/reconciliation approach
+- Graph path:
+  - model nodes/edges from the traversal questions the business actually asks, not from the ERD
+  - define edge direction, cardinality, and properties; decide which lookups still need secondary indexes on node properties
+  - document traversal depth expectations and whether the engine's strength (index-free adjacency) is actually exercised
+  - keep source-of-truth entities in the primary store when the graph is a derived projection; document the sync path
 - Vector path:
   - define embedding model, dimension, normalization, and metadata versioning
   - define chunking policy, overlap, and document-type-specific chunk rules
@@ -74,7 +74,9 @@
   - continuity and recovery alignment for ISO 22301
 
 ## Step 3: Optimize
-- Validate hot paths against indexes and partitions
+- Validate hot paths against indexes and partitions; tune with `resources/query-tuning.md` (measure -> explain -> nominate -> test, never guesswork)
+- If optimization requires schema changes on live tables, plan them via `resources/migration-playbook.md` (expand-contract, lock-aware DDL, batched backfill)
+- If moving existing DB business logic into the application, use the same playbook's ownership cutover steps to preserve writer coverage and avoid duplicate side effects
 - For vector systems:
   - benchmark recall vs latency on production-like queries
   - measure ANN parameter tradeoffs, filter pushdown cost, and write amplification
@@ -104,7 +106,8 @@
 
 ## Step 4: Verify
 - Run `resources/checklist.md`
-- Confirm every schema change updated:
+- For a schema-design task, confirm affected existing artifacts were updated;
+  for scoped tuning, record SQL/plan evidence instead of creating this full set:
   - glossary
   - standards table
   - capacity estimate
@@ -115,6 +118,7 @@
   - retrieval evaluation set
   - re-index / re-embedding migration notes
 - Confirm anti-pattern findings were either fixed or explicitly accepted with rationale
+- For affected DB business logic, confirm a strong improvement recommendation and concrete application alternative were given even when implementation is deferred; retention needs technical evidence, and planned transitions need writer coverage, preserved DB guarantees, effect ownership, and rollback
 - Call out ISO 27001 / 27002-relevant risks and recommended controls when applicable
 - Call out ISO 22301-relevant continuity and recovery gaps when applicable
 - Call out any intentional denormalization or weaker consistency with reason
