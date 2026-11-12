@@ -19,12 +19,18 @@
         "claude",
         "codex",
         "commandcode",
+        "copilot",
         "cursor",
-        "gemini",
         "grok",
+        "kimi",
         "kiro",
         "qwen"
       ]
+    },
+    "style": {
+      "type": "string",
+      "enum": ["copilot"],
+      "description": "Write the vendor-native flat hook file instead of the default nested settings merge."
     },
     "hookDir": {
       "type": "string",
@@ -68,8 +74,21 @@
       "minProperties": 1
     },
     "statusLine": {
-      "$ref": "#/$defs/hookRef",
-      "description": "Hook script for the status line display (Claude / agy use root statusLine; Qwen nests under ui via statusLineKey)."
+      "type": "object",
+      "description": "Hook script for the status line display (Claude / agy use root statusLine; Qwen nests under ui via statusLineKey).",
+      "required": ["hook"],
+      "additionalProperties": false,
+      "properties": {
+        "hook": {
+          "type": "string",
+          "description": "Filename of the hook script in .agents/hooks/core/."
+        },
+        "options": {
+          "type": "object",
+          "description": "Extra vendor statusLine fields written alongside type/command (e.g. Qwen respectUserColors, hideContextIndicator).",
+          "additionalProperties": true
+        }
+      }
     },
     "statusLineKey": {
       "type": "string",
@@ -86,6 +105,11 @@
     "flatHookEntries": {
       "type": "boolean",
       "description": "When true, settings hook entries are written as flat {command, timeout[, matcher]} objects under each event key (Cursor hooks.json format) instead of nested {matcher, hooks:[...]} groups (Claude Code format)."
+    },
+    "skipSettingsMerge": {
+      "type": "boolean",
+      "description": "When true, the generic installer copies hook scripts and writes the oma-hook.sh wrapper but does NOT merge hook entries into settingsFile. Used by Kiro, whose CLI reads hooks from a dedicated agent config (.kiro/agents/oma-hooks.json via applyKiroOmaHooksAgent) — the generic .kiro/settings/cli.json merge would be dead config Kiro never reads. `extra` (statusLine/permissions) is still applied when present.",
+      "default": false
     }
   },
   "$defs": {
@@ -105,10 +129,14 @@
         },
         "timeout": {
           "type": "integer",
-          "description": "Max execution time in seconds.",
+          "description": "Max execution time in seconds. The persistent-mode Stop hook runs a completion gate capped at GATE_TIMEOUT_MS (60s), so its entry MUST exceed that plus margin (70s); the contract test in cli/__tests__/hooks-persistent-mode.test.ts enforces timeout*1000 > GATE_TIMEOUT_MS. Other hooks stay small.",
           "minimum": 1,
-          "maximum": 30,
+          "maximum": 120,
           "default": 5
+        },
+        "loopLimit": {
+          "type": ["integer", "null"],
+          "description": "Cursor `stop` hook only: caps how many times the hook may auto-resubmit a followup_message (Cursor's loop_limit). null = uncapped; omit for Cursor's default (5). Ignored by other vendors."
         }
       }
     },

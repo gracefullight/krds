@@ -3,3 +3,28 @@ language: ko
 date_format: ISO
 timezone: Asia/Seoul
 model_preset: claude
+
+# Added by oma migration 022 — moved from .agents/skills/*/config/*.yaml, which `oma update` overwrites. Edit freely.
+hwp:
+  version:
+    pinned: 2.4.0
+agents:
+  default:
+    cli: gemini
+mcp:
+  devtools_browsers: []
+vendors:
+  - claude
+providers:
+  web: native
+  code_intelligence: serena
+  semantic_memory: agentmemory
+
+# Added by oma migration 022 — moved from .agents/skills/*/config/*.yaml, which `oma update` overwrites. Edit freely.
+video:
+  default_compositor: hyperframes
+  providers:
+    compositor:
+      order:
+        - hyperframes
+        - mpt

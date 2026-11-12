@@ -1,7 +1,11 @@
 # OMA L1 Event Spec
 
 This file defines the minimum durable event contract for cross-runtime workflow state.
-Events are appended to `.agents/state/sessions/{sid}/events.jsonl`.
+Events are appended under the selected home profile:
+`${OMA_STATE_HOME:-~/.oma}/u/{OMA_PROFILE:-0}/sessions/{sid}/events.jsonl`.
+Use `oma state get <sid>` or `oma state list` for inspection rather than assuming
+a project-local path. `.agents/state/sessions/` is the legacy migration source;
+coordination memories and agent-run receipts retain their separate project paths.
 
 ## Common Fields
 
@@ -54,39 +58,32 @@ Readers MUST derive state by sorting valid events by `(ts, eventId)`. Raw file o
     "eventId": { "type": "string", "minLength": 1 },
     "ts": { "type": "string", "format": "date-time" },
     "sid": { "type": "string", "minLength": 1 },
-    "kind": {
-      "type": "string",
-      "enum": [
-        "boundary",
-        "session.created",
-        "workflow.phase",
-        "gate.passed",
-        "gate.failed",
-        "blocker.raised",
-        "decision.made",
-        "decision.missing",
-        "session.ended"
-      ]
-    },
+    "kind": { "type": "string", "minLength": 1 },
     "writerPid": { "type": "integer" },
     "vendor": { "type": "string" },
     "vendorSid": { "type": "string" },
     "parentEventId": { "type": "string" },
     "causalityKey": { "type": "string" },
-    "payload": { "type": "object" }
+    "payload": {
+      "type": "object",
+      "properties": {
+        "instanceId": { "type": "string", "pattern": "\\S" }
+      }
+    }
   },
   "allOf": [
     {
       "if": { "properties": { "kind": { "const": "decision.made" } } },
       "then": {
+        "required": ["payload"],
         "properties": {
           "payload": {
             "type": "object",
             "required": ["subject", "decision", "rationale"],
             "properties": {
-              "subject": { "type": "string", "minLength": 1 },
-              "decision": { "type": "string", "minLength": 1 },
-              "rationale": { "type": "string", "minLength": 1 }
+              "subject": { "type": "string", "pattern": "\\S" },
+              "decision": { "type": "string", "pattern": "\\S" },
+              "rationale": { "type": "string", "pattern": "\\S" }
             }
           }
         }
@@ -95,6 +92,7 @@ Readers MUST derive state by sorting valid events by `(ts, eventId)`. Raw file o
     {
       "if": { "properties": { "kind": { "const": "session.ended" } } },
       "then": {
+        "required": ["payload"],
         "properties": {
           "payload": {
             "type": "object",
@@ -102,6 +100,35 @@ Readers MUST derive state by sorting valid events by `(ts, eventId)`. Raw file o
             "properties": {
               "status": { "enum": ["completed", "failed"] }
             }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "skill.routed" } } },
+      "then": {
+        "required": ["payload"],
+        "properties": {
+          "payload": {
+            "type": "object",
+            "required": ["skill", "source", "stage"],
+            "properties": {
+              "skill": { "type": "string", "pattern": "\\S" },
+              "source": { "enum": ["user-explicit", "hook-trigger", "model-description"] },
+              "stage": { "enum": ["suggested", "loaded"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "blocker.raised" } } },
+      "then": {
+        "required": ["payload"],
+        "properties": {
+          "payload": {
+            "required": ["summary"],
+            "properties": { "summary": { "type": "string", "pattern": "\\S" } }
           }
         }
       }
@@ -136,6 +163,12 @@ Required payload fields:
 
 - `workflow`
 - `category`
+
+Optional payload fields:
+
+- `trigger`: why the workflow was routed — `{ "source": "keyword", "matchedKeyword": "..." }` or `{ "source": "user-explicit", ... }`. Never the prompt text.
+
+A `skill-routing` session (category `routing`) is created on demand to hold routing records when no workflow session owns the work; see `skill.routed`. It is ended as `completed` (reason `routing session idle`) once it has had no non-boundary event for two hours and is either replaced in the `routing` slot or its vendor session's route memory expires (12 hours), so `oma state archive` can collect it.
 
 ### `workflow.phase`
 
@@ -194,6 +227,29 @@ Optional payload fields:
 
 - `alternatives`
 - `evidence`
+- `instanceId`: concrete finding, revision, or attempt identifier. Required when the event must satisfy a workflow checkpoint.
+
+> **Substitute real content.** Fill `decision` and `rationale` with the actual choice and cause. Preserve the fixed `subject`; use the same concrete `instanceId` in the emitted payload and verifier. Empty or whitespace-only decision fields are rejected. An optional decision without `instanceId` is retained but cannot satisfy a required checkpoint.
+
+Use an instance that changes when the reviewed item changes: iteration plus plan revision, a finding ID plus patch/revalidation revision, or a target path plus patch revision. A single session-wide constant allows old decisions to satisfy later work. Keep IDs identical for emit and verify; do not emit literal angle-bracket placeholders.
+
+### `skill.routed`
+
+Records which OMA skill was routed and why. Written by hooks; agents do not emit it.
+
+Required payload fields:
+
+- `skill`: skill directory name under `.agents/skills/`.
+- `source`: `user-explicit` (the user named `/<skill>` or `$<skill>`), `hook-trigger` (a `triggers.json` keyword matched), or `model-description` (the model loaded a skill the hook never suggested, routing from the skill description).
+- `stage`: `suggested` (hook injected the suggestion) or `loaded` (the skill was actually loaded: Claude `Skill` tool, or a SKILL.md read).
+
+Optional payload fields:
+
+- `matchedTriggers`: matched trigger keywords (hook-trigger). The prompt text is never recorded.
+- `score`
+- `via`: tool that loaded the skill.
+
+Records go to the active main workflow session when it was created by the same vendor session or has non-boundary activity within two hours; otherwise to a per-vendor-session `skill-routing` session. Each skill is recorded once per stage per vendor session.
 
 ### `decision.missing`
 
@@ -203,6 +259,7 @@ Required payload fields:
 
 - `workflow`
 - `checkpoint`
+- `instanceId`
 - `missing`
 - `remediation`
 
@@ -214,21 +271,29 @@ Required payload fields:
 
 - `status`: `completed` or `failed`.
 
-## `oma_emit` Helper
+Optional payload fields:
 
-Workflows may define this shell helper before emitting required decisions:
+- `reason`: completion cause or failure reason.
 
-```bash
-oma_emit() {
-  kind="$1"
-  payload="$2"
-  oma state:emit "$kind" "$payload"
-}
-```
+Completion gates and explicit workflow completion end the session as `completed`. Exhausted budgets end it as `failed` with a reason. A failed retryable gate keeps the session active. Terminal events remove matching active-index entries. Persistent-mode termination also exports the coordination summary; other callers can use `oma state summary`. Unsupported terminal statuses are diagnosed and do not mark a session completed.
+
+## Emitting Decisions
+
+Call `oma state emit` **directly** at each required checkpoint — do not wrap it in a shell helper.
+
+Do not depend on shell functions or helper state carrying across independent tool calls.
 
 Required decision example:
 
 ```bash
-oma_emit "decision.made" '{"subject":"ultrawork.plan-approved","decision":"Proceed with the approved plan.","rationale":"PLAN_GATE passed and the user confirmed scope."}'
-oma state:verify --workflow ultrawork --checkpoint plan-approved
+oma state emit "decision.made" '{"subject":"ultrawork.plan-approved","instanceId":"iteration-1:plan-v2","decision":"Use SQLite for the local append-only retry ledger.","rationale":"The approved scope requires cross-process serialization without a hosted service."}'
+oma state verify --workflow ultrawork --checkpoint plan-approved --instance "iteration-1:plan-v2"
 ```
+
+Required verification matches both `subject` and `instanceId` and checks nonblank decision content, including historical records. A decision for an earlier iteration, patch, or finding cannot satisfy the current checkpoint. `oma doctor` reports malformed event envelopes and payloads without rewriting the authoritative log.
+
+## Route Selection Decisions
+
+When a skill chooses among alternative routes at runtime (an upstream supplier, vendor, engine, backend, or mode), record the choice and its reason as an optional `decision.made` with `--category routing`. Follow `route-selection.md` in this directory. These records are not verifier checkpoints.
+
+Core kinds above have stable contracts. Additional event kinds may be used by extensions; they do not satisfy core decision or terminal contracts.
