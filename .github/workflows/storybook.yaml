@@ -32,7 +32,8 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        # ? CI에는 git 훅(hk)이 필요 없으므로 prepare 스크립트를 건너뛴다
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Build Storybook
         run: bun turbo build --filter=@gracefullight/krds-storybook
