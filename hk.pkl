@@ -1,0 +1,48 @@
+amends "pkl/Config.pkl"
+
+local linters = new Mapping<String, Step | Group> {
+  ["biome"] = new Step {
+    glob = List("*")
+    exclude = List(
+      "**/.agents/**",
+      "**/.claude/**",
+      "**/.codex/**",
+      "**/.cursor/**",
+      "**/.gemini/**",
+      "**/.qwen/**",
+      "**/.serena/**",
+      "**/.github/skills/**",
+      "**/dist/**",
+      "**/node_modules/**"
+    )
+    check = "bun biome check --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {{files}}"
+    fix = "bun biome check --fix --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {{files}}"
+  }
+  ["sort-package-json"] = new Step {
+    glob = "package.json"
+    check = "bun sort-package-json --check {{files}}"
+    fix = "bun sort-package-json {{files}}"
+  }
+}
+
+hooks = new {
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps = linters
+  }
+  ["prepare-commit-msg"] {
+    steps = new {
+      ["devmoji"] = new Step {
+        check = "bun devmoji -e"
+      }
+    }
+  }
+  ["commit-msg"] {
+    steps = new {
+      ["commitlint"] = new Step {
+        check = "bun commitlint --edit {{commit_msg_file}} --config commitlint.config.ts"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
+
 - Monorepo managed by `bun` workspaces and Turborepo.
 - `apps/storybook`: Storybook for component docs; stories in `apps/storybook/stories`.
 - `apps/sample`: Next.js sample app; code in `apps/sample/src`, assets in `apps/sample/public`.
@@ -8,6 +9,7 @@
 - `packages/krds-icons`: React icon components. Source in `packages/krds-icons/src`, build output in `dist`.
 
 ## Build, Test, and Development Commands
+
 - Root install: `bun install` (uses `bun@1`).
 - Develop all (parallel): `bun run dev` (Turbo runs each package’s `dev`).
 - Build all: `bun run build` (Turbo caches `dist`, `.next`, `storybook-static`).
@@ -19,22 +21,26 @@
   - Libraries: `bun run --cwd packages/krds dev` | `bun run --cwd packages/krds-icons dev` (tsup watch)
 
 ## Coding Style & Naming Conventions
+
 - Language: TypeScript; React 19; MUI v7 peer deps in `packages/krds`.
 - Formatter/Linter: Biome (`biome.json`). Spaces indentation; double quotes; organized imports; `kebab-case` filenames enforced.
-- Pre-commit: lint-staged runs `biome check --fix`; `package.json` is normalized by `sort-package-json`.
+- Pre-commit: `hk` runs `biome check --fix` and `sort-package-json`; `package.json` is normalized by `sort-package-json`.
 - Do not edit `dist`; change files under `src` only.
 
 ## Testing Guidelines
+
 - Framework: Vitest (`vitest.config.ts`; `passWithNoTests: true`).
 - Location/Names: co-locate tests with code using `*.test.ts` or `*.test.tsx`.
 - Run: `bun run test` locally; add UI changes to Storybook stories in `apps/storybook/stories`.
 
 ## Commit & Pull Request Guidelines
+
 - Commits: Conventional Commits enforced by commitlint (e.g., `feat:`, `fix:`, `docs:`, `chore:`).
 - PRs should include: clear description, linked issues, screenshots/GIFs for UI, and notes on Storybook/story or test updates.
 - Keep diffs minimal and focused; update docs and stories when introducing or changing components.
 
 ## Security & Configuration Tips
+
 - Use `bun` consistently; avoid `npm`/`yarn`/`pnpm` lockfiles.
 - Never commit secrets; if needed for apps, use local `.env` files ignored by VCS.
 - Publishing: root script `publish-packages` runs builds and Changesets; do not run it from forks.
@@ -77,20 +83,20 @@ Run workflows only when explicitly requested or detected by a hook; never self-i
 
 Read the relevant file from `.agents/rules/` when working on matching code.
 
-| Rule | File | Scope |
-|------|------|-------|
-| backend | `.agents/rules/backend.md` | on request |
-| commit | `.agents/rules/commit.md` | on request |
-| database | `.agents/rules/database.md` | **/*.{sql,prisma} |
-| debug | `.agents/rules/debug.md` | on request |
-| design | `.agents/rules/design.md` | on request |
-| dev-workflow | `.agents/rules/dev-workflow.md` | on request |
-| frontend | `.agents/rules/frontend.md` | **/*.{tsx,jsx,css,scss} |
-| i18n-arb | `.agents/rules/i18n-arb.md` | **/*.arb |
-| i18n-guide | `.agents/rules/i18n-guide.md` | always |
-| infrastructure | `.agents/rules/infrastructure.md` | **/*.{tf,tfvars,hcl} |
-| market | `.agents/rules/market.md` | on request |
-| mobile | `.agents/rules/mobile.md` | **/*.{dart,swift,kt} |
-| quality | `.agents/rules/quality.md` | on request |
+| Rule           | File                              | Scope                   |
+| -------------- | --------------------------------- | ----------------------- |
+| backend        | `.agents/rules/backend.md`        | on request              |
+| commit         | `.agents/rules/commit.md`         | on request              |
+| database       | `.agents/rules/database.md`       | **/*.{sql,prisma}       |
+| debug          | `.agents/rules/debug.md`          | on request              |
+| design         | `.agents/rules/design.md`         | on request              |
+| dev-workflow   | `.agents/rules/dev-workflow.md`   | on request              |
+| frontend       | `.agents/rules/frontend.md`       | **/*.{tsx,jsx,css,scss} |
+| i18n-arb       | `.agents/rules/i18n-arb.md`       | **/*.arb                |
+| i18n-guide     | `.agents/rules/i18n-guide.md`     | always                  |
+| infrastructure | `.agents/rules/infrastructure.md` | **/*.{tf,tfvars,hcl}    |
+| market         | `.agents/rules/market.md`         | on request              |
+| mobile         | `.agents/rules/mobile.md`         | **/*.{dart,swift,kt}    |
+| quality        | `.agents/rules/quality.md`        | on request              |
 
 <!-- OMA:END -->
