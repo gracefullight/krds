@@ -26,7 +26,6 @@
     "axios": "^1.21.1",
     "devmoji": "^2.3.0",
     "es-toolkit": "^1.53.2",
-    "sort-package-json": "^4.1.0",
     "turbo": "^2.11.11",
     "typescript": "^6.0.3",
     "vitest": "^5.1.0"

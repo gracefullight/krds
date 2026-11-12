@@ -24,7 +24,7 @@
 
 - Language: TypeScript; React 19; MUI v7 peer deps in `packages/krds`.
 - Formatter/Linter: Biome (`biome.json`). Spaces indentation; double quotes; organized imports; `kebab-case` filenames enforced.
-- Pre-commit: `hk` runs `biome check --fix` and `sort-package-json`; `package.json` is normalized by `sort-package-json`.
+- Pre-commit: `hk` runs `biome check --fix`; `package.json` keys are sorted alphabetically
 - Do not edit `dist`; change files under `src` only.
 
 ## Testing Guidelines

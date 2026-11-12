@@ -18,11 +18,6 @@ local linters = new Mapping<String, Step | Group> {
     check = "bun biome check --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {{files}}"
     fix = "bun biome check --fix --unsafe --no-errors-on-unmatched --files-ignore-unknown=true {{files}}"
   }
-  ["sort-package-json"] = new Step {
-    glob = "package.json"
-    check = "bun sort-package-json --check {{files}}"
-    fix = "bun sort-package-json {{files}}"
-  }
 }
 
 hooks = new {
