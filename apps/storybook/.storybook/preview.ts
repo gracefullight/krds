@@ -1,9 +1,8 @@
-import type { Decorator, Preview } from "@storybook/react";
-import { createElement } from "react";
-
 import { createKrdsTheme } from "@gracefullight/krds";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { withThemeFromJSXProvider } from "@storybook/addon-themes";
+import type { Decorator, Preview } from "@storybook/react";
+import { createElement } from "react";
 
 import "@gracefullight/krds/reset.css";
 import "./krds-tw-entry.css";

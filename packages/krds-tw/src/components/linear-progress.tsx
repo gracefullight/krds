@@ -21,7 +21,6 @@ const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(
       <div
         ref={ref}
         role="progressbar"
-        tabIndex={0}
         aria-valuenow={clampedValue}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -44,4 +43,5 @@ const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(
 );
 
 LinearProgress.displayName = "LinearProgress";
+
 export { LinearProgress, type LinearProgressProps };

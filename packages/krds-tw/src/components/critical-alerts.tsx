@@ -4,7 +4,7 @@ import {
   SystemInfo,
   SystemWarning,
 } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 type CriticalAlertsSeverity = "info" | "warning" | "danger";

@@ -1,14 +1,13 @@
 "use client";
 
+import { Collapse, Drawer, List, ListItemText } from "@mui/material";
 import type { KeyboardEvent } from "react";
+import { useCallback, useRef, useState } from "react";
+import * as S from "#/components/blocks/main-menu/main-menu.styles";
 import type {
   MainMenuItem,
   MainMenuProps,
 } from "#/components/blocks/main-menu/main-menu.types";
-
-import { Collapse, Drawer, List, ListItemText } from "@mui/material";
-import { useCallback, useRef, useState } from "react";
-import * as S from "#/components/blocks/main-menu/main-menu.styles";
 
 /**
  * MainMenu — KRDS 메인 메뉴 (v1.1.0)
@@ -247,14 +246,12 @@ export default function MainMenu({ items, headerOffset = 64 }: MainMenuProps) {
             />
           ) : (
             // 햄버거 아이콘
-            <>
-              <path
-                d="M3 6h18M3 12h18M3 18h18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </>
+            <path
+              d="M3 6h18M3 12h18M3 18h18"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
           )}
         </svg>
       </S.HamburgerButton>

@@ -1,6 +1,5 @@
-import type { Components } from "@mui/material";
-
 import { getPalette } from "@gracefullight/krds-tokens";
+import type { Components } from "@mui/material";
 import { checkboxClasses, svgIconClasses } from "@mui/material";
 
 declare module "@mui/material/Checkbox" {}

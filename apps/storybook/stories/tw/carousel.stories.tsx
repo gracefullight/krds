@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Carousel } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Carousel> = {
   title: "KRDS-TW/Carousel",

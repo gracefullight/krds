@@ -20,7 +20,7 @@ The official MUI (Material UI) theme and component library for the Korea Design 
 ### 1. Install the Package
 
 ```bash
-pnpm install @gracefullight/krds
+bun add @gracefullight/krds
 ```
 
 ### 2. Apply the Theme

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { InfoBox, InfoBoxItem } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof InfoBox> = {
   title: "KRDS-TW/InfoBox",

@@ -2,7 +2,7 @@
 
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
 import { Close } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ─────────────────────────────────────────────

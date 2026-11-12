@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { InPageNavigation } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 
 const meta: Meta<typeof InPageNavigation> = {

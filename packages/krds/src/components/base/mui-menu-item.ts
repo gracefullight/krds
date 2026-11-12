@@ -1,6 +1,5 @@
-import type { Components } from "@mui/material";
-
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
+import type { Components } from "@mui/material";
 import { menuItemClasses } from "@mui/material";
 
 declare module "@mui/material/MenuItem" {}

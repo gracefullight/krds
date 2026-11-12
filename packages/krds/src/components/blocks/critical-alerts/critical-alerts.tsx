@@ -1,14 +1,13 @@
-import type {
-  CriticalAlertsProps,
-  CriticalAlertsSeverity,
-} from "#/components/blocks/critical-alerts/critical-alerts.types";
-
 import { ArrowRight, Emergency } from "@gracefullight/krds-icons";
 import { getPalette } from "@gracefullight/krds-tokens";
 import InfoIcon from "@mui/icons-material/Info";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Button } from "@mui/material";
 import * as S from "#/components/blocks/critical-alerts/critical-alerts.styles";
+import type {
+  CriticalAlertsProps,
+  CriticalAlertsSeverity,
+} from "#/components/blocks/critical-alerts/critical-alerts.types";
 
 export default function CriticalAlerts({
   severity,

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { MainMenu } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const sampleItems = [
   {

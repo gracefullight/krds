@@ -575,5 +575,5 @@ function DatePicker({
 
 DatePicker.displayName = "DatePicker";
 
-export { DatePicker };
 export type { DatePickerProps };
+export { DatePicker };

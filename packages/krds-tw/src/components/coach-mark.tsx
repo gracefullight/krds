@@ -251,5 +251,5 @@ CoachMark.displayName = "CoachMark";
 // Exports
 // ---------------------------------------------------------------------------
 
-export { CoachMark };
 export type { CoachMarkProps, CoachMarkStep };
+export { CoachMark };

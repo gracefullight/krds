@@ -1,8 +1,7 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { getPalette } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { formHelperTextClasses } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/TextField" {
   interface TextFieldPropsSizeOverrides {

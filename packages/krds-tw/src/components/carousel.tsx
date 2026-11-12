@@ -164,7 +164,7 @@ function useCarouselIndex(
   onChange: ((index: number) => void) | undefined,
 ): [number, (index: number) => void] {
   const [uncontrolled, setUncontrolled] = useState(defaultIndex);
-  const activeIndex = controlled !== undefined ? controlled : uncontrolled;
+  const activeIndex = controlled === undefined ? uncontrolled : controlled;
 
   const setIndex = useCallback(
     (next: number) => {

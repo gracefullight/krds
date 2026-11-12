@@ -1,8 +1,8 @@
 import { ArrowLeft, ArrowRight } from "@gracefullight/krds-icons";
 import {
   type ComponentProps,
-  type ReactNode,
   forwardRef,
+  type ReactNode,
   useMemo,
 } from "react";
 import { cn } from "#/utils/cn";
@@ -366,4 +366,5 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
 );
 
 Pagination.displayName = "Pagination";
+
 export { Pagination, type PaginationProps };

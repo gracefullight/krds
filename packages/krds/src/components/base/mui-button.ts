@@ -1,8 +1,7 @@
-import type { Components } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
+import type { Components } from "@mui/material";
 import { buttonClasses } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 // ? https://mui.com/material-ui/api/button/
 declare module "@mui/material/Button" {

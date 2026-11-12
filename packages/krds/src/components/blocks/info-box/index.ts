@@ -1,7 +1,7 @@
 import InfoBox from "#/components/blocks/info-box/info-box";
 
-export { InfoBox };
 export type {
-  InfoBoxProps,
   InfoBoxItemProps,
+  InfoBoxProps,
 } from "#/components/blocks/info-box/info-box.types";
+export { InfoBox };

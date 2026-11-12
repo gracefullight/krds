@@ -1,10 +1,10 @@
 import {
   Children,
   type ComponentProps,
-  type ReactElement,
   cloneElement,
   forwardRef,
   isValidElement,
+  type ReactElement,
   useCallback,
   useState,
 } from "react";
@@ -75,4 +75,5 @@ const ChipGroup = forwardRef<HTMLFieldSetElement, ChipGroupProps>(
 );
 
 ChipGroup.displayName = "ChipGroup";
+
 export { ChipGroup, type ChipGroupProps };

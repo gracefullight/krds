@@ -1,11 +1,10 @@
 import type { DateCalendarProps } from "@mui/x-date-pickers";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof DateCalendar> = {
-  title: "KRDS-MUI/Calendar",
+  title: "KRDS-MUI/DateCalendar",
   component: DateCalendar,
   parameters: {
     design: {

@@ -1,16 +1,15 @@
-import type { BoxProps, StackProps, TypographyProps } from "@mui/material";
-import type { ComponentType } from "react";
-import type {
-  InfoBoxSize,
-  InfoBoxType,
-} from "#/components/blocks/info-box/info-box.types";
-
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
-import { Box, Stack, Typography, styled } from "@mui/material";
+import type { BoxProps, StackProps, TypographyProps } from "@mui/material";
+import { Box, Stack, styled, Typography } from "@mui/material";
+import type { ComponentType } from "react";
+import type {
+  InfoBoxSize,
+  InfoBoxType,
+} from "#/components/blocks/info-box/info-box.types";
 
 export const InfoBoxContainer: ComponentType<
   StackProps & { type: InfoBoxType }

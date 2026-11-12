@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { LinearProgress } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof LinearProgress> = {
   title: "KRDS-MUI/ProgressBar",

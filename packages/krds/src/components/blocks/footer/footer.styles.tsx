@@ -1,9 +1,7 @@
-import type { BoxProps, TypographyProps } from "@mui/material";
-import type { AnchorHTMLAttributes } from "react";
-import type { ComponentType } from "react";
-
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
-import { Box, Typography, styled } from "@mui/material";
+import type { BoxProps, TypographyProps } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
+import type { AnchorHTMLAttributes, ComponentType } from "react";
 
 export const FooterContainer: ComponentType<BoxProps> = styled(Box)(
   ({ theme }) => ({

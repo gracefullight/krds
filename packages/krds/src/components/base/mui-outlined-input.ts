@@ -1,10 +1,9 @@
-import type { Components, Theme } from "@mui/material";
-
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import {
   iconButtonClasses,
   inputAdornmentClasses,

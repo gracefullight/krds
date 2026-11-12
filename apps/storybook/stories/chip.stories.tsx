@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Chip, ChipGroup } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 
 const meta: Meta<typeof Chip> = {

@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
-
 import { Close, Login, Menu, Search } from "@gracefullight/krds-icons";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import * as S from "#/components/blocks/header/header.styles";
 import type { HeaderProps } from "#/components/blocks/header/header.types";

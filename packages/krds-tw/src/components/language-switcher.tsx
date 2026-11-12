@@ -109,5 +109,5 @@ LanguageSwitcher.displayName = "LanguageSwitcher";
 // Exports
 // ---------------------------------------------------------------------------
 
-export { LanguageSwitcher };
 export type { Language, LanguageSwitcherProps };
+export { LanguageSwitcher };

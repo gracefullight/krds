@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { SplashScreen } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof SplashScreen> = {
   title: "KRDS-MUI/SplashScreen",

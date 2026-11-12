@@ -5,7 +5,7 @@ React icon components for the KRDS design system.
 ## Installation
 
 ```bash
-pnpm add @gracefullight/krds-icons
+bun add @gracefullight/krds-icons
 ```
 
 ## Usage
@@ -27,10 +27,10 @@ export function MyComponent() {
 
 All icon components accept the following props:
 
-| Prop   | Type             | Default        | Description                         |
-|--------|------------------|---------------|-------------------------------------|
-| size   | number \| string | 24            | Width and height of the icon        |
-| color  | string           | currentColor  | Color of the icon                   |
-| title  | string           | undefined     | Accessible title for the icon       |
+| Prop  | Type             | Default      | Description                   |
+| ----- | ---------------- | ------------ | ----------------------------- |
+| size  | number \| string | 24           | Width and height of the icon  |
+| color | string           | currentColor | Color of the icon             |
+| title | string           | undefined    | Accessible title for the icon |
 
 In addition, all SVG attributes can be passed to the icons.

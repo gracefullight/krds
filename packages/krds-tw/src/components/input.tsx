@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 type InputSize = "small" | "medium" | "large";
@@ -93,4 +93,5 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = "Input";
+
 export { Input, type InputProps, type InputSize };

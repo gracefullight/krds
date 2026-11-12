@@ -1,5 +1,3 @@
-import type { Components, Theme } from "@mui/material";
-
 import {
   SystemDanger,
   SystemInfo,
@@ -11,6 +9,7 @@ import {
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { alertClasses, alertTitleClasses, svgIconClasses } from "@mui/material";
 
 declare module "@mui/material/Alert" {

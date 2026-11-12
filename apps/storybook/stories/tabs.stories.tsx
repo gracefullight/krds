@@ -1,7 +1,6 @@
+import { Tab, Tabs } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 import { type SyntheticEvent, useState } from "react";
-
-import { Tab, Tabs } from "@mui/material";
 
 const meta: Meta<typeof Tabs> = {
   title: "KRDS-MUI/Tabs",

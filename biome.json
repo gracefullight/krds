@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,19 +7,17 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["**/dist/**"]
+    "includes": ["**", "!**/dist", "!**/*.css"]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
         "noUselessStringConcat": "error",
@@ -32,13 +30,9 @@
         "noUnusedImports": "error",
         "noUnusedPrivateClassMembers": "error",
         "noUnusedVariables": "error",
-        "useArrayLiterals": "error",
         "useHookAtTopLevel": "error"
       },
-      "nursery": {
-        "noEnum": "error",
-        "noNestedTernary": "error"
-      },
+      "nursery": {},
       "style": {
         "noNegationElse": "error",
         "noParameterProperties": "error",
@@ -56,25 +50,37 @@
           }
         },
         "useImportType": "error",
-        "useThrowNewError": "error"
+        "useThrowNewError": "error",
+        "useArrayLiterals": "error",
+        "noEnum": "error",
+        "noNestedTernary": "error"
       },
       "suspicious": {
         "noEmptyBlockStatements": "error",
         "useAwait": "error",
         "useErrorMessage": "error"
+      },
+      "a11y": {
+        "useAriaPropsSupportedByRole": "warn",
+        "noNoninteractiveTabindex": "warn",
+        "noNoninteractiveElementToInteractiveRole": "warn"
+      },
+      "performance": {
+        "noDynamicNamespaceImportAccess": "warn"
       }
     },
-    "ignore": [
-      ".vscode",
-      "dist",
-      ".agents",
-      ".claude",
-      ".codex",
-      ".cursor",
-      ".gemini",
-      ".qwen",
-      ".serena",
-      ".github/skills"
+    "includes": [
+      "**",
+      "!**/.vscode",
+      "!**/dist",
+      "!**/.agents",
+      "!**/.claude",
+      "!**/.codex",
+      "!**/.cursor",
+      "!**/.gemini",
+      "!**/.qwen",
+      "!**/.serena",
+      "!**/.github/skills"
     ]
   },
   "javascript": {

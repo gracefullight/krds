@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { InfoBox, type InfoBoxProps } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof InfoBox> = {
   title: "KRDS-MUI/InfoBox",

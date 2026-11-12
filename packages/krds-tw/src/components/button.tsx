@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 type ButtonVariant = "primary" | "secondary" | "tertiary" | "text";
@@ -75,4 +75,5 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
-export { Button, type ButtonProps, type ButtonVariant, type ButtonSize };
+
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant };

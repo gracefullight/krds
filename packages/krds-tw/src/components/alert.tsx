@@ -4,7 +4,7 @@ import {
   SystemSuccess,
   SystemWarning,
 } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 type AlertSeverity = "danger" | "warning" | "success" | "info";
@@ -79,4 +79,5 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
 );
 
 Alert.displayName = "Alert";
+
 export { Alert, type AlertProps, type AlertSeverity };

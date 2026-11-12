@@ -1,7 +1,7 @@
 "use client";
 
 import { Collapsible as BaseCollapsible } from "@base-ui-components/react/collapsible";
-import { type ReactNode, forwardRef } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ─────────────────────────────────────────────

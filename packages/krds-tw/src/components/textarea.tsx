@@ -2,8 +2,8 @@ import { Field } from "@base-ui-components/react/field";
 import {
   type ChangeEvent,
   type ComponentProps,
-  type ReactNode,
   forwardRef,
+  type ReactNode,
   useId,
   useState,
 } from "react";
@@ -150,8 +150,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const ariaDescribedBy = buildAriaDescribedBy(
       externalDescribedBy,
-      helperText !== undefined ? helperId : undefined,
-      maxLength !== undefined ? counterId : undefined,
+      helperText === undefined ? undefined : helperId,
+      maxLength === undefined ? undefined : counterId,
     );
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -215,4 +215,5 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 
 Textarea.displayName = "Textarea";
+
 export { Textarea, type TextareaProps };

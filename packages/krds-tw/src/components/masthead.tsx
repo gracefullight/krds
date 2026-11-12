@@ -32,4 +32,5 @@ function Masthead({
 }
 
 Masthead.displayName = "Masthead";
+
 export { Masthead, type MastheadProps };

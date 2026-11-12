@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ─────────────────────────────────────────────
@@ -93,8 +93,8 @@ TextList.displayName = "TextList";
 
 export {
   TextList,
+  type TextListItem,
+  type TextListMarker,
   type TextListProps,
   type TextListVariant,
-  type TextListMarker,
-  type TextListItem,
 };

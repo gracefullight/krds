@@ -1,6 +1,4 @@
 import type { IconProps } from "@gracefullight/krds-icons";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import * as Icons from "@gracefullight/krds-icons";
 import {
   Box,
@@ -10,6 +8,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 
 const meta = {

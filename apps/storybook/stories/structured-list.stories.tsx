@@ -1,7 +1,6 @@
 import type { StructuredListProps } from "@gracefullight/krds/components";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { StructuredList } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<StructuredListProps> = {
   title: "KRDS-MUI/StructuredList",

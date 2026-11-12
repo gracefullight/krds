@@ -1,8 +1,5 @@
 // This file is auto-generated. Do not edit manually.
-export type { IconProps } from "#/types";
 
-// Export all icons
-export { XTwitter } from "#/icons/x-twitter";
 export { Accessibility } from "#/icons/accessibility";
 export { Analytics } from "#/icons/analytics";
 export { Annotation } from "#/icons/annotation";
@@ -30,8 +27,8 @@ export { Component } from "#/icons/component";
 export { Copy } from "#/icons/copy";
 export { Curser } from "#/icons/curser";
 export { Delete } from "#/icons/delete";
-export { DocumentCheck } from "#/icons/document-check";
 export { Document } from "#/icons/document";
+export { DocumentCheck } from "#/icons/document-check";
 export { DocumentFill } from "#/icons/document-fill";
 export { Download } from "#/icons/download";
 export { Dummy } from "#/icons/dummy";
@@ -46,10 +43,10 @@ export { ExpandMore } from "#/icons/expand-more";
 export { FaceSad } from "#/icons/face-sad";
 export { FaceSmile } from "#/icons/face-smile";
 export { Facebook } from "#/icons/facebook";
-export { FigmaMode } from "#/icons/figma-mode";
 export { FigmaBlur } from "#/icons/figma-blur";
 export { FigmaFilter } from "#/icons/figma-filter";
 export { FigmaLibrary } from "#/icons/figma-library";
+export { FigmaMode } from "#/icons/figma-mode";
 export { FigmaOpen } from "#/icons/figma-open";
 export { FigmaShadow } from "#/icons/figma-shadow";
 export { FigmaSpread } from "#/icons/figma-spread";
@@ -113,8 +110,11 @@ export { TokenTypoBox } from "#/icons/token-typo-box";
 export { Top } from "#/icons/top";
 export { Trophy } from "#/icons/trophy";
 export { Upload } from "#/icons/upload";
-export { ViewMode } from "#/icons/view-mode";
 export { ViewAll } from "#/icons/view-all";
+export { ViewMode } from "#/icons/view-mode";
 export { Visibility } from "#/icons/visibility";
 export { VisibilityOff } from "#/icons/visibility-off";
+// Export all icons
+export { XTwitter } from "#/icons/x-twitter";
 export { Youtube } from "#/icons/youtube";
+export type { IconProps } from "#/types";

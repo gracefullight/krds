@@ -1,12 +1,11 @@
-import type { Components, Theme } from "@mui/material";
-
 import { ArrowLeft, ArrowRight } from "@gracefullight/krds-icons";
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
-import { Typography, paginationItemClasses } from "@mui/material";
+import type { Components, Theme } from "@mui/material";
+import { paginationItemClasses, Typography } from "@mui/material";
 
 declare module "@mui/material/PaginationItem" {}
 

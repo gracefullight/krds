@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 interface BreadcrumbItem {
@@ -72,4 +72,5 @@ const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
 );
 
 Breadcrumbs.displayName = "Breadcrumbs";
-export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem };
+
+export { type BreadcrumbItem, Breadcrumbs, type BreadcrumbsProps };

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { SideNavigation } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof SideNavigation> = {
   title: "KRDS-MUI/SideNavigation",

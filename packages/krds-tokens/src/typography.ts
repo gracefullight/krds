@@ -313,24 +313,22 @@ interface TypographyStyle {
 
 type TypographyTokens = typeof TYPOGRAPHY;
 
-type ThreeLevelPaths<T> = T extends Record<
-  string,
-  Record<string, Record<string, TypographyStyle>>
->
-  ? {
-      [Platform in keyof T]: Platform extends string
-        ? {
-            [Category in keyof T[Platform]]: Category extends string
-              ? {
-                  [Size in keyof T[Platform][Category]]: Size extends string
-                    ? `${Platform}.${Category}.${Size}`
-                    : never;
-                }[keyof T[Platform][Category]]
-              : never;
-          }[keyof T[Platform]]
-        : never;
-    }[keyof T]
-  : never;
+type ThreeLevelPaths<T> =
+  T extends Record<string, Record<string, Record<string, TypographyStyle>>>
+    ? {
+        [Platform in keyof T]: Platform extends string
+          ? {
+              [Category in keyof T[Platform]]: Category extends string
+                ? {
+                    [Size in keyof T[Platform][Category]]: Size extends string
+                      ? `${Platform}.${Category}.${Size}`
+                      : never;
+                  }[keyof T[Platform][Category]]
+                : never;
+            }[keyof T[Platform]]
+          : never;
+      }[keyof T]
+    : never;
 
 type TypographyPaths = ThreeLevelPaths<TypographyTokens>;
 

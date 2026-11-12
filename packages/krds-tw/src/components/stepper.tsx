@@ -197,4 +197,5 @@ const Stepper = forwardRef<HTMLOListElement, StepperProps>(
 );
 
 Stepper.displayName = "Stepper";
-export { Stepper, type StepperProps, type StepItem };
+
+export { type StepItem, Stepper, type StepperProps };

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Link } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Link> = {
   title: "KRDS-MUI/Link",

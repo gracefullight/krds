@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 
 import "@gracefullight/krds/reset.css";
 import "@/app/globals.css";
+import { Container } from "@mui/material";
 import Providers from "@/components/providers";
 import pretendardGov from "@/lib/fonts";
-import { Container } from "@mui/material";
 
 export const metadata: Metadata = {
   title: {

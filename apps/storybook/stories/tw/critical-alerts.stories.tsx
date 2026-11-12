@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { CriticalAlerts } from "@gracefullight/krds-tw";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof CriticalAlerts> = {
   title: "KRDS-TW/CriticalAlerts",

@@ -2,7 +2,7 @@
 
 import { Popover } from "@base-ui-components/react/popover";
 import { PopoverHelp } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ---------------------------------------------------------------------------
@@ -165,16 +165,15 @@ SimpleContextualHelp.displayName = "SimpleContextualHelp";
 // Exports
 // ---------------------------------------------------------------------------
 
-export {
-  ContextualHelp,
-  ContextualHelpTrigger,
-  ContextualHelpContent,
-  SimpleContextualHelp,
-};
-
 export type {
+  ContextualHelpContentProps,
   ContextualHelpRootProps,
   ContextualHelpTriggerProps,
-  ContextualHelpContentProps,
   SimpleContextualHelpProps,
+};
+export {
+  ContextualHelp,
+  ContextualHelpContent,
+  ContextualHelpTrigger,
+  SimpleContextualHelp,
 };

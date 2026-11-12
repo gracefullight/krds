@@ -157,15 +157,15 @@ TabsContent.displayName = "TabsContent";
 
 export {
   Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsIndicator,
   TabsContent,
-  type TabsProps,
-  type TabsListProps,
-  type TabsTriggerProps,
-  type TabsIndicatorProps,
   type TabsContentProps,
-  type TabsVariant,
+  TabsIndicator,
+  type TabsIndicatorProps,
+  TabsList,
+  type TabsListProps,
+  type TabsProps,
   type TabsSize,
+  TabsTrigger,
+  type TabsTriggerProps,
+  type TabsVariant,
 };

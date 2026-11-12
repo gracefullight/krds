@@ -1,9 +1,8 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { menuClasses } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/Menu" {}
 

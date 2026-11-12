@@ -1,17 +1,23 @@
 // ? declare type 포함
 import "#/components/base";
 
-export * from "#/constants/classes";
-
 // ? token helper
 export {
   BREAKPOINTS,
+  getBorderWidth,
   getColor,
+  getFontSize,
+  getGap,
+  getGapLayout,
+  getPadding,
+  getPaddingCard,
   getPalette,
   getRadius,
-  getTypography,
   getShadow,
+  getSizeHeight,
+  getTypography,
 } from "@gracefullight/krds-tokens";
+export * from "#/constants/classes";
 
 // ? theme
 export { createKrdsTheme } from "#/create-krds-theme";

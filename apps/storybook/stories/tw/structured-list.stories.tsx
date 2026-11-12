@@ -1,8 +1,5 @@
-import type { Meta } from "@storybook/react";
-import type { ReactRenderer } from "@storybook/react";
-import type { StoryObj } from "@storybook/react";
-
 import { StructuredList } from "@gracefullight/krds-tw";
+import type { Meta, ReactRenderer, StoryObj } from "@storybook/react";
 
 // StructuredList uses a discriminated union for props,
 // so we type Meta with an empty args object to avoid "never" inference.

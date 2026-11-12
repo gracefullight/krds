@@ -1,13 +1,12 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
+import { useCallback, useRef, useState } from "react";
+import * as S from "#/components/blocks/side-navigation/side-navigation.styles";
 import type {
   SideNavigationItem,
   SideNavigationProps,
 } from "#/components/blocks/side-navigation/side-navigation.types";
-
-import { useCallback, useRef, useState } from "react";
-import * as S from "#/components/blocks/side-navigation/side-navigation.styles";
 
 /** 아래쪽 화살표 SVG 아이콘 (expand/collapse 용) */
 function ChevronDownIcon() {

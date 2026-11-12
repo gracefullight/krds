@@ -152,4 +152,5 @@ function SplashScreen({
 }
 
 SplashScreen.displayName = "SplashScreen";
+
 export { SplashScreen, type SplashScreenProps };

@@ -1,6 +1,5 @@
-import type { ColorTheme, PaletteKey, PaletteValue } from "#/token.types";
-
 import { get } from "es-toolkit/compat";
+import type { ColorTheme, PaletteKey, PaletteValue } from "#/token.types";
 import TOKENS from "#/tokens";
 
 export function getPalette<

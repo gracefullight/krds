@@ -1,10 +1,11 @@
-import type { StorybookConfig } from "@storybook/react-vite";
-
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { mergeConfig } from "vite";
 
 const html = String.raw;
+const require = createRequire(import.meta.url);
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -21,16 +22,9 @@ const config: StorybookConfig = {
   ],
   staticDirs: ["../public"],
   addons: [
-    {
-      name: getAbsolutePath("@storybook/addon-essentials"),
-      options: {
-        docs: true,
-      },
-    },
+    getAbsolutePath("@storybook/addon-docs"),
     getAbsolutePath("@storybook/addon-designs"),
-    getAbsolutePath("@storybook/addon-storysource"),
     getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/experimental-addon-test"),
   ],
 
   core: {

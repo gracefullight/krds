@@ -1,7 +1,6 @@
-import type { SideNavItemStyledProps } from "#/components/blocks/side-navigation/side-navigation.types";
-
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
 import { styled } from "@mui/material";
+import type { SideNavItemStyledProps } from "#/components/blocks/side-navigation/side-navigation.types";
 
 /** 사이드 내비게이션 루트 nav */
 export const SideNavRoot = styled("nav")({

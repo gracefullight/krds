@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Home } from "@gracefullight/krds-icons";
 import { Breadcrumbs, type BreadcrumbsProps, Link } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Breadcrumbs> = {
   title: "KRDS-MUI/Breadcrumbs",

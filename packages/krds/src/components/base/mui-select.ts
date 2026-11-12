@@ -1,11 +1,10 @@
-import type { Components, Theme } from "@mui/material";
-
 import { ArrowDown } from "@gracefullight/krds-icons";
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { outlinedInputClasses, selectClasses } from "@mui/material";
 import { krdsSelectClasses } from "#/constants/classes";
 

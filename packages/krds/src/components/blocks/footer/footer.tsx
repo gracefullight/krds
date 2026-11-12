@@ -1,12 +1,11 @@
+import type { ReactNode } from "react";
+import * as S from "#/components/blocks/footer/footer.styles";
 import type {
   FooterLink,
   FooterOrganization,
   FooterProps,
   FooterSocial,
 } from "#/components/blocks/footer/footer.types";
-
-import type { ReactNode } from "react";
-import * as S from "#/components/blocks/footer/footer.styles";
 
 // ─── 내부 서브컴포넌트 ────────────────────────────────────────────────────────
 

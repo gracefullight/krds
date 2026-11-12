@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, forwardRef, useId } from "react";
+import { type ComponentProps, forwardRef, type ReactNode, useId } from "react";
 import { cn } from "#/utils/cn";
 
 interface IdentifierLink {
@@ -138,4 +138,5 @@ const Identifier = forwardRef<HTMLElement, IdentifierProps>(
 );
 
 Identifier.displayName = "Identifier";
-export { Identifier, type IdentifierProps, type IdentifierLink };
+
+export { Identifier, type IdentifierLink, type IdentifierProps };

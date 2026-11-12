@@ -1,5 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import {
   Table,
   TableBody,
@@ -10,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Table> = {
   title: "KRDS-TW/Table",

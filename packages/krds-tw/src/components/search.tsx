@@ -127,4 +127,5 @@ function Search({
 }
 
 Search.displayName = "Search";
+
 export { Search, type SearchProps, type SearchSize };

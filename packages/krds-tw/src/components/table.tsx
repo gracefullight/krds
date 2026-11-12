@@ -126,13 +126,13 @@ TableCaption.displayName = "TableCaption";
 
 export {
   Table,
-  TableHeader,
   TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
-  TableCell,
   TableCaption,
-  type TableProps,
+  TableCell,
   type TableDensity,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  type TableProps,
+  TableRow,
 };

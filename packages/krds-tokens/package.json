@@ -14,17 +14,20 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "test": "vitest"
   },
   "dependencies": {
-    "es-toolkit": "^1.38.0"
+    "es-toolkit": "^1.53.2"
   },
   "devDependencies": {
-    "tsup": "^8.5.0",
-    "typescript": "^6"
+    "tsup": "^9.0.0",
+    "typescript": "^6.0.3"
   },
   "publishConfig": {
     "access": "public"

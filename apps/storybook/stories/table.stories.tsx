@@ -1,6 +1,3 @@
-import type { TableProps } from "@mui/material/Table";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import {
   Table,
   TableBody,
@@ -9,6 +6,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import type { TableProps } from "@mui/material/Table";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Table> = {
   title: "KRDS-MUI/Table",

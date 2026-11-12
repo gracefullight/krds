@@ -1,7 +1,5 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { getPalette } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import {
   checkboxClasses,
   formControlLabelClasses,
@@ -9,6 +7,7 @@ import {
   switchClasses,
   typographyClasses,
 } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/FormControlLabel" {}
 

@@ -1,14 +1,13 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { ArrowRight } from "@gracefullight/krds-icons";
 import { getPalette } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import {
   breadcrumbsClasses,
   buttonBaseClasses,
   linkClasses,
   svgIconClasses,
 } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/Breadcrumbs" {}
 

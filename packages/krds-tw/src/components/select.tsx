@@ -2,7 +2,7 @@
 
 import { Select as BaseSelect } from "@base-ui-components/react/select";
 import { ArrowDropDown, RoundCheck } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ---------------------------------------------------------------------------
@@ -268,24 +268,23 @@ SimpleSelect.displayName = "SimpleSelect";
 // Exports
 // ---------------------------------------------------------------------------
 
-export {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectIconTrigger,
-  SelectContent,
-  SelectItem,
-  SimpleSelect,
-};
-
 export type {
+  SelectContentProps,
+  SelectIconProps,
+  SelectItemProps,
   SelectProps,
+  SelectSize,
   SelectTriggerProps,
   SelectValueProps,
-  SelectIconProps,
-  SelectContentProps,
-  SelectItemProps,
-  SimpleSelectProps,
   SimpleSelectItem,
-  SelectSize,
+  SimpleSelectProps,
+};
+export {
+  Select,
+  SelectContent,
+  SelectIconTrigger,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SimpleSelect,
 };

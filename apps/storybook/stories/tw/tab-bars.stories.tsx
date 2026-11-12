@@ -1,8 +1,7 @@
 "use client";
 
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { TabBars } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 
 const meta: Meta<typeof TabBars> = {

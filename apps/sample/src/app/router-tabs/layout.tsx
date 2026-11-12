@@ -1,6 +1,6 @@
-import RouterTabs from "@/components/ui/tabs/router-tabs";
 import { Box, Typography } from "@mui/material";
 import type { PropsWithChildren } from "react";
+import RouterTabs from "@/components/ui/tabs/router-tabs";
 
 export default function RouterTabsLayout({ children }: PropsWithChildren) {
   return (

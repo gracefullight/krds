@@ -1,6 +1,5 @@
-import type { Components, Theme } from "@mui/material";
-
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 
 declare module "@mui/material/FormHelperText" {}
 

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Disclosure } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Disclosure> = {
   title: "KRDS-TW/Disclosure",

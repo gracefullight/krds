@@ -1,7 +1,6 @@
-import type { SplashScreenProps } from "#/components/blocks/splash-screen/splash-screen.types";
-
 import { LinearProgress } from "@mui/material";
 import * as S from "#/components/blocks/splash-screen/splash-screen.styles";
+import type { SplashScreenProps } from "#/components/blocks/splash-screen/splash-screen.types";
 
 export default function SplashScreen({
   slogan = "더 나은 내일을 함께합니다.",

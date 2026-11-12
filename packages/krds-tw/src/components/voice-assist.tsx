@@ -197,7 +197,7 @@ function VoiceAssist({
   const resolveText = useCallback((): string => {
     if (text) return text;
     if (typeof document !== "undefined") {
-      return document.body.innerText ?? "";
+      return document.body.textContent ?? "";
     }
     return "";
   }, [text]);

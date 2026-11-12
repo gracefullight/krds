@@ -125,4 +125,4 @@ function Radio({
 
 Radio.displayName = "Radio";
 
-export { Radio, type RadioProps, RadioGroup, type RadioGroupProps };
+export { Radio, RadioGroup, type RadioGroupProps, type RadioProps };

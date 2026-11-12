@@ -1,11 +1,10 @@
 "use client";
 
-import type { KeyboardEvent } from "react";
-import type { HelpPanelProps } from "#/components/blocks/help-panel/help-panel.types";
-
 import { ArrowLeft, ArrowRight, PanelClose } from "@gracefullight/krds-icons";
+import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import * as S from "#/components/blocks/help-panel/help-panel.styles";
+import type { HelpPanelProps } from "#/components/blocks/help-panel/help-panel.types";
 
 /**
  * HelpPanel — KRDS 도움 패널 / 따라하기 패널

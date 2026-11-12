@@ -1,7 +1,6 @@
-import type { ChipProps } from "#/components/blocks/chip/chip.types";
-
 import CheckIcon from "@mui/icons-material/Check";
 import * as S from "#/components/blocks/chip/chip.styles";
+import type { ChipProps } from "#/components/blocks/chip/chip.types";
 
 export default function Chip({
   size = "medium",

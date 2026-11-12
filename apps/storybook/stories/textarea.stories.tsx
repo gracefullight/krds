@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Textarea } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Textarea> = {
   title: "KRDS-MUI/Textarea",

@@ -1,9 +1,8 @@
 "use client";
 
+import { DevTool } from "@hookform/devtools";
 import type { PropsWithChildren } from "react";
 import type { FieldValues, SubmitHandler, UseFormProps } from "react-hook-form";
-
-import { DevTool } from "@hookform/devtools";
 import { FormProvider as RHFProvider, useForm } from "react-hook-form";
 
 export interface FormProviderProps extends UseFormProps, PropsWithChildren {

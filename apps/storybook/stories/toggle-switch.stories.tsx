@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { FormControlLabel, Switch, type SwitchProps } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Switch> = {
   title: "KRDS-MUI/ToggleSwitch",

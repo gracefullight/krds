@@ -1,6 +1,5 @@
-import type { Components, Theme } from "@mui/material";
-
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import {
   dialogActionsClasses,
   dialogClasses,

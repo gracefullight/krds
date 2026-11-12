@@ -1,7 +1,6 @@
+import { getPalette } from "@gracefullight/krds-tokens";
 import type { Components } from "@mui/material";
 import { responsiveTypography } from "#/utils/responsive-typography";
-
-import { getPalette } from "@gracefullight/krds-tokens";
 
 // ? https://github.com/mui/material-ui/blob/master/packages/mui-icons-material/lib/OpenInNew.js#L13
 const openInNewIconBase64 =

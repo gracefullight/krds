@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 export interface TabBarItem {
@@ -49,7 +49,7 @@ const TabBars = forwardRef<HTMLElement, TabBarsProps>(
         )}
         {...props}
       >
-        <ul role="tablist" className="flex w-full list-none m-0 p-0">
+        <ul className="flex w-full list-none m-0 p-0">
           {items.map((item) => {
             const isSelected = item.id === value;
 

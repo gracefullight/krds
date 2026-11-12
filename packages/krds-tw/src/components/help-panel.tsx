@@ -2,8 +2,8 @@
 
 import { Dialog } from "@base-ui-components/react/dialog";
 import { ArrowLeft, ArrowRight, PanelClose } from "@gracefullight/krds-icons";
-import { useCallback, useId, useState } from "react";
 import type { ReactNode } from "react";
+import { useCallback, useId, useState } from "react";
 import { cn } from "#/utils/cn";
 
 // ─────────────────────────────────────────────

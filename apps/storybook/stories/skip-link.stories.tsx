@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { SkipLink } from "@gracefullight/krds/components";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof SkipLink> = {
   title: "KRDS-MUI/SkipLink",

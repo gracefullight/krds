@@ -1,5 +1,3 @@
-import type { CSSProperties } from "react";
-
 import {
   BREAKPOINTS,
   getColor,
@@ -7,6 +5,7 @@ import {
 } from "@gracefullight/krds-tokens";
 import { createTheme } from "@mui/material/styles";
 import { toMerged } from "es-toolkit";
+import type { CSSProperties } from "react";
 import * as components from "#/components/base";
 
 declare module "@mui/material/styles" {

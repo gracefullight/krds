@@ -1,12 +1,11 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { badgeClasses } from "@mui/material";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/Badge" {
   interface BadgePropsColorOverrides {

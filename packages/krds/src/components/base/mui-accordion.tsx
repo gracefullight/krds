@@ -1,10 +1,9 @@
-import type { Components, Theme } from "@mui/material";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import { ArrowDown } from "@gracefullight/krds-icons";
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import { accordionClasses, accordionSummaryClasses } from "@mui/material";
 import { krdsAccordionClasses } from "#/constants/classes";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/material/Accordion" {}
 

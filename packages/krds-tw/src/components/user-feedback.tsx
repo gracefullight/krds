@@ -187,4 +187,5 @@ function UserFeedback({
 }
 
 UserFeedback.displayName = "UserFeedback";
-export { UserFeedback, type UserFeedbackProps, type FeedbackOption };
+
+export { type FeedbackOption, UserFeedback, type UserFeedbackProps };

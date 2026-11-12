@@ -1,13 +1,12 @@
-import type { BoxProps, ButtonBaseProps } from "@mui/material";
-import type { ComponentType } from "react";
-import type { ChipStyleProps } from "#/components/blocks/chip/chip.types";
-
 import {
   getPalette,
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { BoxProps, ButtonBaseProps } from "@mui/material";
 import { Box, ButtonBase, styled, svgIconClasses } from "@mui/material";
+import type { ComponentType } from "react";
+import type { ChipStyleProps } from "#/components/blocks/chip/chip.types";
 
 type ChipBaseProps = ButtonBaseProps & ChipStyleProps;
 

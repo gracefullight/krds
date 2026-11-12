@@ -1,5 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Close } from "@gracefullight/krds-icons";
 import {
   BottomSheet,
@@ -9,6 +7,7 @@ import {
   BottomSheetTitle,
   BottomSheetTrigger,
 } from "@gracefullight/krds-tw";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof BottomSheet> = {
   title: "KRDS-TW/BottomSheet",

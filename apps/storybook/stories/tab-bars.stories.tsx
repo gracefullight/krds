@@ -1,12 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import type { SyntheticEvent } from "react";
-
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
+import type { SyntheticEvent } from "react";
 import { useState } from "react";
 
 const meta: Meta<typeof BottomNavigation> = {

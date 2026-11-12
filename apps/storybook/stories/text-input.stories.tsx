@@ -1,13 +1,12 @@
-import type { OutlinedInputProps } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Delete, SystemSuccess, Visibility } from "@gracefullight/krds-icons";
+import type { OutlinedInputProps } from "@mui/material";
 import {
   IconButton,
   InputAdornment,
   OutlinedInput,
   TextField,
 } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof TextField> = {
   title: "KRDS-MUI/TextInput",

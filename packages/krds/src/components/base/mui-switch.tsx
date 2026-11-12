@@ -1,8 +1,7 @@
-import type { Components } from "@mui/material";
-
 import { getPalette, getRadius } from "@gracefullight/krds-tokens";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import type { Components } from "@mui/material";
 import {
   buttonBaseClasses,
   svgIconClasses,

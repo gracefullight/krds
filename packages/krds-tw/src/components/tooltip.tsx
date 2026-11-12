@@ -1,7 +1,7 @@
 "use client";
 
 import { Tooltip } from "@base-ui-components/react/tooltip";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 // ---------------------------------------------------------------------------
@@ -75,6 +75,6 @@ TooltipComponent.displayName = "Tooltip";
 
 export {
   TooltipComponent as Tooltip,
-  type TooltipProps,
   type TooltipPlacement,
+  type TooltipProps,
 };

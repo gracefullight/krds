@@ -1,7 +1,6 @@
 import type { FooterProps } from "@gracefullight/krds/components";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Footer } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Footer> = {
   title: "KRDS-MUI/Footer",

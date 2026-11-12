@@ -1,7 +1,7 @@
 import {
-  QueryClient,
   defaultShouldDehydrateQuery,
   isServer,
+  QueryClient,
 } from "@tanstack/react-query";
 
 // ? https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr
@@ -13,7 +13,7 @@ function makeQueryClient() {
       },
       dehydrate: {
         shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query),
-        shouldRedactErrors: (error) => {
+        shouldRedactErrors: (_error) => {
           // We should not catch Next.js server errors
           // as that's how Next.js detects dynamic pages
           // so we cannot redact them.
@@ -26,7 +26,7 @@ function makeQueryClient() {
   });
 }
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | undefined;
 
 export function getQueryClient() {
   if (isServer) {

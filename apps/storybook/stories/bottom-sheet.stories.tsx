@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { Close } from "@gracefullight/krds-icons";
 import { DialogTitle, IconButton, SwipeableDrawer } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof SwipeableDrawer> = {
   title: "KRDS-MUI/BottomSheet",

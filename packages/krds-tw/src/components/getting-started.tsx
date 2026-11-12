@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, type ReactNode, forwardRef, useId } from "react";
+import { type ComponentProps, forwardRef, type ReactNode, useId } from "react";
 import { cn } from "#/utils/cn";
 
 // ---------------------------------------------------------------------------

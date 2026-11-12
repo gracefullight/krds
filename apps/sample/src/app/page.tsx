@@ -4,19 +4,18 @@ import { Box, Button, Grid, Link, Stack, Typography } from "@mui/material";
 
 export default function Home() {
   return (
-    <Grid
-      container
+    <Stack
       direction="column"
-      justifyContent="space-between"
-      alignItems="center"
       sx={{
         minHeight: "100svh",
         padding: "80px",
         gap: "64px",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}
     >
       <Grid component="main">
-        <Stack direction="column" gap="32px">
+        <Stack direction="column" spacing="32px">
           <Typography variant="display-medium">NEXT.JS</Typography>
 
           <Box
@@ -97,6 +96,6 @@ export default function Home() {
           Go to nextjs.org
         </Link>
       </Grid>
-    </Grid>
+    </Stack>
   );
 }

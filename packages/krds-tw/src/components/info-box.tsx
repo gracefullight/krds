@@ -1,5 +1,5 @@
 import { SystemInfo } from "@gracefullight/krds-icons";
-import { type ComponentProps, type ReactNode, forwardRef } from "react";
+import { type ComponentProps, forwardRef, type ReactNode } from "react";
 import { cn } from "#/utils/cn";
 
 export type InfoBoxType = "primary" | "secondary";
@@ -126,4 +126,4 @@ InfoBox.displayName = "InfoBox";
 
 const InfoBoxWithItem = Object.assign(InfoBox, { Item: InfoBoxItem });
 
-export { InfoBoxWithItem as InfoBox, InfoBoxItem };
+export { InfoBoxItem, InfoBoxWithItem as InfoBox };

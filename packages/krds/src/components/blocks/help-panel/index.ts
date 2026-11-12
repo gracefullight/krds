@@ -1,8 +1,7 @@
+export { default as HelpPanel } from "#/components/blocks/help-panel/help-panel";
 export type {
-  HelpPanelProps,
   HelpPanelHelpProps,
+  HelpPanelProps,
   HelpPanelTutorialProps,
   HelpPanelTutorialStep,
 } from "#/components/blocks/help-panel/help-panel.types";
-
-export { default as HelpPanel } from "#/components/blocks/help-panel/help-panel";

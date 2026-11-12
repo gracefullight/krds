@@ -28,6 +28,8 @@ export * from "#/components/base/mui-pagination-item";
 export * from "#/components/base/mui-radio";
 export * from "#/components/base/mui-radio-group";
 export * from "#/components/base/mui-select";
+export * from "#/components/base/mui-slider";
+export * from "#/components/base/mui-snackbar";
 export * from "#/components/base/mui-step-connector";
 export * from "#/components/base/mui-step-icon";
 export * from "#/components/base/mui-step-label";

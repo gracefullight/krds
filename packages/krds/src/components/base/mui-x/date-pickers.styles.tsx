@@ -1,24 +1,23 @@
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import type {
   BoxProps,
   ButtonProps,
   DialogActionsProps,
   IconButtonProps,
 } from "@mui/material";
-import type { ComponentType } from "react";
-
-import {
-  getPalette,
-  getRadius,
-  getTypography,
-} from "@gracefullight/krds-tokens";
 import {
   Box,
   Button,
+  buttonClasses,
   DialogActions,
   IconButton,
-  buttonClasses,
   styled,
 } from "@mui/material";
+import type { ComponentType } from "react";
 
 export const HeaderContainer: ComponentType<BoxProps> = styled(Box)({
   display: "flex",

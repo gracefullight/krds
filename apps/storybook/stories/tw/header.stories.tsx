@@ -1,6 +1,6 @@
 import { Header } from "@gracefullight/krds-tw";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof Header> = {
   title: "KRDS-TW/Header",

@@ -1,11 +1,3 @@
-import type { Components, Theme } from "@mui/material";
-import type {
-  PickersActionBarProps,
-  PickersCalendarHeaderProps,
-} from "@mui/x-date-pickers";
-import type {} from "@mui/x-date-pickers/themeAugmentation";
-import { responsiveTypography } from "#/utils/responsive-typography";
-
 import {
   ArrowDropDown,
   ArrowLeft,
@@ -17,18 +9,23 @@ import {
   getRadius,
   getTypography,
 } from "@gracefullight/krds-tokens";
+import type { Components, Theme } from "@mui/material";
 import {
   Button,
-  Typography,
   formHelperTextClasses,
   iconButtonClasses,
   inputAdornmentClasses,
+  Typography,
 } from "@mui/material";
+import type {
+  PickersActionBarProps,
+  PickersCalendarHeaderProps,
+} from "@mui/x-date-pickers";
 import {
   dateCalendarClasses,
   dayCalendarClasses,
   monthCalendarClasses,
-  pickersDayClasses,
+  pickerDayClasses,
   pickersInputBaseClasses,
   pickersLayoutClasses,
   pickersOutlinedInputClasses,
@@ -36,7 +33,9 @@ import {
   usePickerActionsContext,
   yearCalendarClasses,
 } from "@mui/x-date-pickers";
+import type {} from "@mui/x-date-pickers/themeAugmentation";
 import * as S from "#/components/base/mui-x/date-pickers.styles";
+import { responsiveTypography } from "#/utils/responsive-typography";
 
 declare module "@mui/x-date-pickers/DatePicker" {
   interface FormControlPropsSizeOverrides {
@@ -348,7 +347,7 @@ export const MuiPickerPopper: Components["MuiPickerPopper"] = {
   },
 };
 
-export const MuiPickersDay: Components["MuiPickersDay"] = {
+export const MuiPickerDay: Components["MuiPickerDay"] = {
   styleOverrides: {
     root: ({ theme }) => ({
       ...getTypography("pc.label.medium"),
@@ -361,13 +360,13 @@ export const MuiPickersDay: Components["MuiPickersDay"] = {
         ...getTypography("mobile.label.medium"),
       },
 
-      [`&.${pickersDayClasses.selected}`]: {
+      [`&.${pickerDayClasses.selected}`]: {
         backgroundColor: `${getPalette("action.secondary-active")} !important`,
         color: getPalette("text.inverse-static"),
       },
 
-      [`&.${pickersDayClasses.today}`]: {
-        [`&:not(.${pickersDayClasses.selected})`]: {
+      [`&.${pickerDayClasses.today}`]: {
+        [`&:not(.${pickerDayClasses.selected})`]: {
           backgroundColor: getPalette("element.inverse"),
           border: "none",
         },
@@ -386,7 +385,7 @@ export const MuiPickersDay: Components["MuiPickersDay"] = {
         },
       },
 
-      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
+      [`&.${pickerDayClasses.dayOutsideMonth}`]: {
         color: getPalette("text.disabled"),
       },
     }),

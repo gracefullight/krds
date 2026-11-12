@@ -1,11 +1,10 @@
-import type { DropdownPanelStyledProps } from "#/components/blocks/main-menu/main-menu.types";
-
 import {
   getPalette,
   getShadow,
   getTypography,
 } from "@gracefullight/krds-tokens";
 import { styled } from "@mui/material";
+import type { DropdownPanelStyledProps } from "#/components/blocks/main-menu/main-menu.types";
 
 /** 전체 내비게이션 컨테이너 */
 export const NavContainer = styled("nav")(({ theme }) => ({

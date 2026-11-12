@@ -1,6 +1,5 @@
-import type { Components } from "@mui/material";
-
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import type { Components } from "@mui/material";
 import {
   bottomNavigationActionClasses,
   svgIconClasses,

@@ -1,8 +1,8 @@
 "use client";
 
 import { Dialog } from "@base-ui-components/react/dialog";
-import { type ComponentProps, forwardRef } from "react";
 import type React from "react";
+import { type ComponentProps, forwardRef } from "react";
 import { cn } from "#/utils/cn";
 
 // ─────────────────────────────────────────────
@@ -199,15 +199,15 @@ BottomSheetClose.displayName = "BottomSheetClose";
 
 export {
   BottomSheet,
-  BottomSheetTrigger,
-  BottomSheetContent,
-  BottomSheetHeader,
-  BottomSheetTitle,
   BottomSheetClose,
-  type BottomSheetProps,
-  type BottomSheetTriggerProps,
-  type BottomSheetContentProps,
-  type BottomSheetHeaderProps,
-  type BottomSheetTitleProps,
   type BottomSheetCloseProps,
+  BottomSheetContent,
+  type BottomSheetContentProps,
+  BottomSheetHeader,
+  type BottomSheetHeaderProps,
+  type BottomSheetProps,
+  BottomSheetTitle,
+  type BottomSheetTitleProps,
+  BottomSheetTrigger,
+  type BottomSheetTriggerProps,
 };

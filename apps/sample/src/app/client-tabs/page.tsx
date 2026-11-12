@@ -1,8 +1,7 @@
 "use client";
 
-import type { SyntheticEvent } from "react";
-
 import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
+import type { SyntheticEvent } from "react";
 import { useState } from "react";
 
 const tabs = [
@@ -29,7 +28,7 @@ export default function ClientTabsPage() {
   };
 
   return (
-    <Stack gap={2} divider={<Divider />}>
+    <Stack spacing={2} divider={<Divider />}>
       <Box>
         <Typography variant="heading-large">Client Tabs</Typography>
         <Tabs value={activeTab} onChange={handleTabChange} fill="contained">

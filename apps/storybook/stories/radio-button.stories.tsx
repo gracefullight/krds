@@ -1,7 +1,6 @@
 import type { RadioProps } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Radio> = {
   title: "KRDS-MUI/RadioButton",

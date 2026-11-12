@@ -331,7 +331,7 @@ function FileUpload({
         <ul className="flex flex-col gap-1" aria-label="선택된 파일 목록">
           {files.map((file, index) => (
             <FileItem
-              key={`${file.name}-${file.size}-${index}`}
+              key={`${file.name}-${file.size}-${file.lastModified}`}
               file={file}
               onRemove={() => handleRemove(index)}
               disabled={disabled}

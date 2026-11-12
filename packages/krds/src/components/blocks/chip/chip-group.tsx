@@ -1,7 +1,6 @@
-import type { ChipGroupProps } from "#/components/blocks/chip/chip.types";
-
 import { useCallback } from "react";
 import * as S from "#/components/blocks/chip/chip.styles";
+import type { ChipGroupProps } from "#/components/blocks/chip/chip.types";
 
 export default function ChipGroup({
   children,

@@ -1,10 +1,11 @@
+import {
+  getPalette,
+  getRadius,
+  getTypography,
+} from "@gracefullight/krds-tokens";
 import type { BoxProps, TypographyProps } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import type { ComponentType } from "react";
-
-import { getTypography } from "@gracefullight/krds-tokens";
-import { getPalette } from "@gracefullight/krds-tokens";
-import { getRadius } from "@gracefullight/krds-tokens";
-import { Box, Typography, styled } from "@mui/material";
 
 export const AlertContainer: ComponentType<BoxProps> = styled(Box)(
   ({ theme }) => ({

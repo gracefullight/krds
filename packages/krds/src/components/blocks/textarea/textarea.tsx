@@ -1,10 +1,8 @@
 import type { ChangeEvent, ReactNode } from "react";
 
 import { useId, useState } from "react";
-
-import type { TextareaProps } from "#/components/blocks/textarea/textarea.types";
-
 import * as S from "#/components/blocks/textarea/textarea.styles";
+import type { TextareaProps } from "#/components/blocks/textarea/textarea.types";
 
 // ─── 내부 헬퍼 ───────────────────────────────────────────────────────────────
 
@@ -16,8 +14,8 @@ function buildAriaDescribedBy(
 ): string | undefined {
   return (
     [
-      helperText !== undefined ? helperId : null,
-      maxLength !== undefined ? counterId : null,
+      helperText === undefined ? null : helperId,
+      maxLength === undefined ? null : counterId,
     ]
       .filter(Boolean)
       .join(" ") || undefined

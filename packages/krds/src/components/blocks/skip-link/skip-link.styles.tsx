@@ -1,8 +1,7 @@
-import type { BoxProps } from "@mui/material";
-import type { ComponentType } from "react";
-
 import { getPalette, getTypography } from "@gracefullight/krds-tokens";
+import type { BoxProps } from "@mui/material";
 import { Box, styled } from "@mui/material";
+import type { ComponentType } from "react";
 
 export const SkipLink: ComponentType<BoxProps> = styled(Box)(({ theme }) => ({
   ...getTypography("pc.body.small"),

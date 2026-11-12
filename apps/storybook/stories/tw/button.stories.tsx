@@ -1,6 +1,6 @@
 import { Button } from "@gracefullight/krds-tw";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof Button> = {
   title: "KRDS-TW/Button",

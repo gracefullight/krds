@@ -1,13 +1,12 @@
+import { SystemInfo } from "@gracefullight/krds-icons";
+import { Divider } from "@mui/material";
 import type { ReactElement } from "react";
+import { Children, cloneElement, isValidElement } from "react";
+import * as S from "#/components/blocks/info-box/info-box.styles";
 import type {
   InfoBoxItemProps,
   InfoBoxProps,
 } from "#/components/blocks/info-box/info-box.types";
-
-import { SystemInfo } from "@gracefullight/krds-icons";
-import { Divider } from "@mui/material";
-import { Children, cloneElement, isValidElement } from "react";
-import * as S from "#/components/blocks/info-box/info-box.styles";
 
 /**
  * InfoBox component for displaying information with different visual styles

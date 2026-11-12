@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { TablePagination } from "@mui/material";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof TablePagination> = {
   title: "KRDS-MUI/Pagination",

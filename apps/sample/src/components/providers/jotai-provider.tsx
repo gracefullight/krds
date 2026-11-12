@@ -1,9 +1,8 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-
 import { Provider } from "jotai";
 import { DevTools } from "jotai-devtools";
+import type { PropsWithChildren } from "react";
 
 import "jotai-devtools/styles.css";
 

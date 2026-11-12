@@ -1,7 +1,6 @@
 import type { HelpPanelProps } from "@gracefullight/krds/components";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { HelpPanel } from "@gracefullight/krds/components";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 
 const meta: Meta<HelpPanelProps> = {
