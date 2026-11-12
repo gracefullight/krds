@@ -18,7 +18,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-aliases.mjs dist",
     "dev": "tsup --watch",
     "test": "vitest"
   },
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "tsup": "^9.0.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "publishConfig": {
     "access": "public"

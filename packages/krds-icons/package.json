@@ -15,7 +15,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-aliases.mjs dist",
     "dev": "tsup --watch"
   },
   "devDependencies": {
@@ -23,7 +23,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tsup": "^9.0.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "react": "^19",

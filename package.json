@@ -27,7 +27,7 @@
     "devmoji": "^2.3.0",
     "es-toolkit": "^1.53.2",
     "turbo": "^2.11.11",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   },
   "packageManager": "bun@1.4.4"

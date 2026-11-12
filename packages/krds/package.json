@@ -25,7 +25,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-aliases.mjs dist",
     "dev": "tsup --watch",
     "test": "vitest"
   },
@@ -42,7 +42,7 @@
     "@types/react-dom": "^19.3.0",
     "happy-dom": "^21.0.4",
     "tsup": "^9.0.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   },
   "peerDependencies": {

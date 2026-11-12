@@ -49,25 +49,8 @@ const config: StorybookConfig = {
   `,
 
   typescript: {
-    reactDocgen: "react-docgen-typescript",
-    reactDocgenTypescriptOptions: {
-      // Speeds up Storybook build time
-      compilerOptions: {
-        allowSyntheticDefaultImports: false,
-        esModuleInterop: false,
-      },
-      // Makes union prop types like variant and size appear as select controls
-      shouldExtractLiteralValuesFromEnum: true,
-      // Makes string and boolean types that can be undefined appear as inputs and switches
-      shouldRemoveUndefinedFromOptional: true,
-      // Filter out third-party props from node_modules except @mui and krds packages
-      propFilter: (prop) =>
-        prop.parent
-          ? !/node_modules\/(?!@mui|@gracefullight\/krds)/.test(
-              prop.parent.fileName,
-            )
-          : true,
-    },
+    // ? TS7은 컴파일러 API를 제공하지 않으므로 babel 기반 react-docgen 사용
+    reactDocgen: "react-docgen",
   },
 };
 export default config;

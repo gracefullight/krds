@@ -162,9 +162,27 @@
 | sort-package-json               | 3.6 → **4.1**    |                                                                                                                                                                |
 | es-toolkit                      | 1.44 → **1.53**  |                                                                                                                                                                |
 | @types/node                     | 22 → **26**      |                                                                                                                                                                |
+| typescript                      | 6.0 → **7.0**    | 네이티브 tsc 선언 emit + 별칭 재작성, TS6 shim 제거 (§8 참조)                                                                                                  |
 
-**유일한 예외 — TypeScript 6.0.3 유지**: 최신 TS 7.0.2는 컴파일러 API를 제공하지 않아 tsup의 dts 생성(`rollup-plugin-dts`)이 불가하고, 호환 shim(`@typescript/typescript6`)도 tsup 9에서 `parseJsonConfigFileContent` 버그로 동작하지 않는다. 빌드 도구 체인 호환을 위해 TS는 최신 6.x(6.0.3)로 유지했다. TS7 전환은 tsup/rollup-plugin-dts의 TS7 지원 성숙 후 재검토.
+**TypeScript 7 채택 (shim 없음)**: 초기에는 TS7이 컴파일러 API를 제공하지 않아 tsup의 dts 생성(`rollup-plugin-dts`)이 불가하다고 판단해 6.0.3을 유지했으나, 이후 **TS6 호환 shim(`@typescript/typescript6`) 없이** TS7 네이티브 방식으로 전환했다. 상세는 §8.
 
 **Biome 2 마이그레이션 방침**: 신규 추천 규칙 중 기존 컴포넌트를 flagged하는 `a11y/useAriaPropsSupportedByRole`, `a11y/noNoninteractiveTabindex`, `a11y/noNoninteractiveElementToInteractiveRole`, `performance/noDynamicNamespaceImportAccess`는 `warn`으로 낮췄다(12건). 기존 컴포넌트의 맹목적 리팩터링 위험을 피하고 별도 a11y 패스 대상으로 남긴 것. 신규 코드는 모두 린트 클린.
 
 **pnpm → bun 전환**: 문서 5곳(`krds`/`krds-tokens`/`krds-icons` README, 스토리북 introduction.mdx)의 pnpm 명령을 bun으로 통일.
+
+## 8. TypeScript 7 네이티브 빌드 (shim 제거)
+
+TS7은 컴파일러 API를 제공하지 않아, TS6 API에 의존하는 도구(tsup의 `rollup-plugin-dts`, 스토리북 `react-docgen-typescript`)가 깨진다. TS6 호환 shim(`@typescript/typescript6`)은 임시 방편이므로 제거하고, 각 역할을 TS7 네이티브 방식으로 대체했다.
+
+| 역할                 | 이전 (TS6 API 의존)                 | 이후 (TS7 네이티브)                                                      |
+| -------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| JS 번들링            | tsup (esbuild)                      | tsup 유지 (`dts: false`) — 별칭 해석·CJS/ESM 듀얼 포맷·트리쉐이킹 담당   |
+| 선언 파일(dts)       | tsup `rollup-plugin-dts` (TS6 API)  | **TS7 네이티브 `tsc -p tsconfig.build.json`** (`emitDeclarationOnly`)    |
+| 선언 내 별칭 해석    | rollup이 번들하며 상대경로로 풀어줌 | **`scripts/rewrite-dts-aliases.mjs`** 가 emit 후 `#/*` → 상대경로 재작성 |
+| 스토리북 prop 문서화 | `react-docgen-typescript` (TS6 API) | `react-docgen` (babel 기반, TS API 불필요)                               |
+
+- 패키지별 `tsconfig.build.json`: `emitDeclarationOnly` + `rootDir: src` + `outDir: dist`, 테스트 파일 제외.
+- 빌드 스크립트: `tsup && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-aliases.mjs dist`.
+- `#/*` 별칭을 선언 파일에 남기면 소비자가 패키지 `imports` 필드 해석에 의존하게 되어 TS7 환경에서 타입이 깨지므로, emit 후 상대경로로 재작성하는 것이 핵심.
+- `@typescript/typescript6` shim 완전 제거, 전 워크스페이스 `typescript@7.0.2`.
+- 검증: 전체 빌드 6종 성공 + 테스트 175건 통과 + Biome 클린.
