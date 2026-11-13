@@ -72,7 +72,7 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
               }
             }}
             className={cn(
-              "rounded-full bg-element-gray transition-colors",
+              "relative rounded-full bg-element-gray transition-colors",
               "data-[checked]:bg-element-primary",
               "data-[disabled]:bg-element-disabled-light",
               trackSize[size],
@@ -81,7 +81,7 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           >
             <BaseSwitch.Thumb
               className={cn(
-                "absolute left-0.5 rounded-full bg-element-inverse transition-transform",
+                "absolute top-0.5 left-0.5 rounded-full bg-element-inverse transition-transform",
                 "data-[disabled]:bg-element-disabled-dark",
                 thumbSize[size],
                 thumbTranslate[size],
