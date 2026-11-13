@@ -58,12 +58,16 @@ function Snackbar({
     >
       <div className="flex items-start gap-3 rounded-xl bg-surface-inverse p-4 text-fg-basic-inverse shadow-3">
         {icon && (
-          <span aria-hidden="true" className="mt-0.5 shrink-0">
+          <span
+            aria-hidden="true"
+            className="flex h-8 shrink-0 items-center [&>svg]:block"
+          >
             {icon}
           </span>
         )}
 
-        <div className="min-w-0 flex-1">
+        {/* pad the first text line to the 32px row height of the icon and close button */}
+        <div className="min-w-0 flex-1 py-[calc((2rem-1lh)/2)] text-body-md">
           {title && <div className="text-body-md-bold">{title}</div>}
           {children && (
             <div className={cn("text-body-md", title && "mt-1")}>
@@ -77,7 +81,7 @@ function Snackbar({
             type="button"
             onClick={onAction}
             className={cn(
-              "shrink-0 cursor-pointer rounded border-none bg-transparent px-2 py-1",
+              "inline-flex h-8 shrink-0 cursor-pointer items-center rounded border-none bg-transparent px-2",
               "text-label-md font-bold text-fg-basic-inverse underline underline-offset-2",
               "hover:opacity-80",
               "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-primary",
