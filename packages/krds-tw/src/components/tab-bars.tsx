@@ -69,7 +69,7 @@ const TabBars = forwardRef<HTMLElement, TabBarsProps>(
                   onClick={handleClick}
                   className={cn(
                     "relative flex flex-1 flex-col items-center justify-center gap-1",
-                    "h-16 w-full min-w-0 px-1 py-3",
+                    "h-16 w-full min-w-0 px-1 py-2",
                     "text-label-xs font-bold select-none",
                     "transition-colors motion-reduce:transition-none",
                     "cursor-pointer border-0 bg-transparent",
@@ -91,12 +91,14 @@ const TabBars = forwardRef<HTMLElement, TabBarsProps>(
                   )}
                 >
                   <span
-                    className="flex h-6 w-6 items-center justify-center"
+                    className="flex h-6 w-6 shrink-0 items-center justify-center"
                     aria-hidden="true"
                   >
                     {item.icon}
                   </span>
-                  <span className="truncate max-w-full">{item.label}</span>
+                  <span className="max-w-full shrink-0 truncate">
+                    {item.label}
+                  </span>
                 </button>
               </li>
             );
